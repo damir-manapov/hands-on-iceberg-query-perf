@@ -248,13 +248,7 @@ async function main() {
   console.log(JSON.stringify(exampleRow, null, 1));
 
   // Measure immediately and collect result
-  const result = await measureSizes(
-    client,
-    TABLE_CONFIG,
-    name,
-    codec,
-    level
-  );
+  const result = await measureSizes(client, TABLE_CONFIG, name, codec, level);
 
   // 3) Print results & CSV
   console.log("\nRESULTS (bytes rounded):");
@@ -315,5 +309,3 @@ main().catch(e => {
   console.error(e);
   process.exit(1);
 });
-
-

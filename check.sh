@@ -11,7 +11,8 @@ yarn lint
 echo "🔧 Running ESLint..."
 yarn lint:fix
 
-echo "🎨 Checking code formatting..."
+echo "🎨 Formatting..."
+yarn format
 yarn format:check
 
 echo "🏗️  Building project..."
