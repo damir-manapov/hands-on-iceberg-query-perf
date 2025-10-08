@@ -1,0 +1,40 @@
+{
+  "name": "hands-on-iceberg-compression",
+  "version": "1.0.0",
+  "type": "module",
+  "author": "Damir Manapov",
+  "license": "MIT",
+  "scripts": {
+    "rmcheckpoints": "rm -rf .checkpoints",
+    "rebench": "yarn rmcheckpoints & yarn bench",
+    "bench": "tsx src/commands/bench.ts",
+    "plot": "tsx src/commands/plot.ts",
+    "bench:all": "yarn bench && yarn plot",
+    "build": "tsc -p tsconfig.json",
+    "lint": "tsc --noEmit",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "format": "prettier --write src/**/*.{ts,tsx,js,jsx,json,md}",
+    "format:check": "prettier --check src/**/*.{ts,tsx,js,jsx,json,md}",
+    "compose:base": "docker compose -f compose/docker-compose.yaml",
+    "compose:up": "yarn compose:base up -d",
+    "compose:down": "yarn compose:base down",
+    "compose:restart": "yarn compose:down && yarn compose:up",
+    "compose:logs": "yarn compose:base logs -f --tail=300",
+    "compose:ps": "yarn compose:base ps",
+    "compose:clean": "yarn compose:base down -v --remove-orphans",
+    "compose:exec": "yarn compose:base exec"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.0",
+    "@typescript-eslint/parser": "^8.46.0",
+    "chart.js": "^4.5.0",
+    "chartjs-node-canvas": "^5.0.0",
+    "csv-parse": "^6.1.0",
+    "eslint": "^9.37.0",
+    "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2"
+  }
+}
