@@ -1,5 +1,5 @@
 /**
- * load.ts — Generate, load & measure Iceberg/Parquet tables across codecs & levels using Trino
+ * load.ts — Generate, load & measure Iceberg/Parquet table
  */
 
 import * as fs from "node:fs";
@@ -17,7 +17,9 @@ import { ensureDir, humanNumber, humanSize, makeBatches } from "../utils";
 import { Limiter } from "../Limiter";
 import { TABLE_CONFIG } from "../config/tableConfig";
 import { LOAD } from "../config/load";
-import { CODECS } from "../config/codecs";
+// Fixed codec setup: always use zstd with level 6
+const FIXED_CODEC = "zstd" as const;
+const FIXED_LEVEL = 6 as const;
 
 function formatETA(ms: number): string {
   if (ms < 1000) return `${Math.round(ms)}ms`;
@@ -201,92 +203,79 @@ async function main() {
 
   ensureDir(LOAD.checkpointDir);
 
-  // 2) Create variants and load
-  const variants: Array<{ name: string; codec: string; level: number }> = [];
-  for (const { codec, levels } of CODECS) {
-    for (const level of levels) {
-      const suffix = `${codec}_l${String(level).padStart(2, "0")}`;
-      const name = `${TABLE_CONFIG.tableBase}_${suffix}`;
-      console.log(`Creating table ${name} (codec=${codec}, level=${level})…`);
-      const variantTableSQLs = createVariantTableSQLs(
-        TABLE_CONFIG,
-        name,
-        codec,
-        level
-      );
-      for (const sql of variantTableSQLs) {
-        await client.execute(sql);
-      }
-      const cpFile = path.join(LOAD.checkpointDir, `.cp_${name}.json`);
-      const t0 = Date.now();
-      await loadTable(
-        client,
-        limiter,
-        TABLE_CONFIG,
-        name,
-        LOAD.startId,
-        LOAD.totalRows,
-        LOAD.batchRows,
-        cpFile
-      );
-      const durationMs = Date.now() - t0;
-      const durationMinutes = (durationMs / 60000).toFixed(1);
-      console.log(`Load finished for ${name} in ${durationMinutes}min`);
-
-      if (LOAD.compactAfterLoad) {
-        await optimizeTable(
-          client,
-          `${TABLE_CONFIG.catalog}.${TABLE_CONFIG.schema}.${name}`
-        );
-      }
-
-      const exampleRow = await client.query(
-        createSelectExamplesSQL(TABLE_CONFIG, name)
-      );
-      console.log("exampleRow");
-      console.log(JSON.stringify(exampleRow, null, 1));
-
-      variants.push({ name, codec, level });
-    }
+  // 2) Create a table for zstd level 6, load data, and collect results
+  const codec = FIXED_CODEC;
+  const level = FIXED_LEVEL;
+  const suffix = `${codec}_l${String(level).padStart(2, "0")}`;
+  const name = `${TABLE_CONFIG.tableBase}_${suffix}`;
+  console.log(`Creating table ${name} (codec=${codec}, level=${level})…`);
+  const variantTableSQLs = createVariantTableSQLs(
+    TABLE_CONFIG,
+    name,
+    codec,
+    level
+  );
+  for (const sql of variantTableSQLs) {
+    await client.execute(sql);
   }
+  const cpFile = path.join(LOAD.checkpointDir, `.cp_${name}.json`);
+  const t0 = Date.now();
+  await loadTable(
+    client,
+    limiter,
+    TABLE_CONFIG,
+    name,
+    LOAD.startId,
+    LOAD.totalRows,
+    LOAD.batchRows,
+    cpFile
+  );
+  const durationMs = Date.now() - t0;
+  const durationMinutes = (durationMs / 60000).toFixed(1);
+  console.log(`Load finished for ${name} in ${durationMinutes}min`);
 
-  // 3) Measure sizes
-  const results: SizeRow[] = [];
-  for (const v of variants) {
-    const r = await measureSizes(
+  if (LOAD.compactAfterLoad) {
+    await optimizeTable(
       client,
-      TABLE_CONFIG,
-      v.name,
-      v.codec,
-      v.level
+      `${TABLE_CONFIG.catalog}.${TABLE_CONFIG.schema}.${name}`
     );
-    results.push(r);
   }
 
-  // 4) Print results & CSV
-  results.sort((a, b) =>
-    a.codec === b.codec ? a.level - b.level : a.codec.localeCompare(b.codec)
+  const exampleRow = await client.query(
+    createSelectExamplesSQL(TABLE_CONFIG, name)
+  );
+  console.log("exampleRow");
+  console.log(JSON.stringify(exampleRow, null, 1));
+
+  // Measure immediately and collect result
+  const result = await measureSizes(
+    client,
+    TABLE_CONFIG,
+    name,
+    codec,
+    level
   );
 
+  // 3) Print results & CSV
   console.log("\nRESULTS (bytes rounded):");
-  const pretty = results.map(r => ({
-    table: r.table_name,
-    codec: r.codec,
-    level: r.level,
-    rows: humanNumber(r.rows),
-    data_bytes: Math.round(r.data_bytes),
-    data_human: humanSize(r.data_bytes),
-    bytes_per_row: Math.round(r.bytes_per_row),
+  const pretty = {
+    table: result.table_name,
+    codec: result.codec,
+    level: result.level,
+    rows: humanNumber(result.rows),
+    data_bytes: Math.round(result.data_bytes),
+    data_human: humanSize(result.data_bytes),
+    bytes_per_row: Math.round(result.bytes_per_row),
     ...(LOAD.includeManifestBytes
       ? {
-          manifest_bytes: Math.round(r.manifest_bytes || 0),
-          manifest_human: humanSize(r.manifest_bytes || 0),
-          total_bytes: Math.round(r.total_bytes || r.data_bytes),
-          total_human: humanSize(r.total_bytes || r.data_bytes),
+          manifest_bytes: Math.round(result.manifest_bytes || 0),
+          manifest_human: humanSize(result.manifest_bytes || 0),
+          total_bytes: Math.round(result.total_bytes || result.data_bytes),
+          total_human: humanSize(result.total_bytes || result.data_bytes),
         }
       : {}),
-  }));
-  console.table(pretty);
+  };
+  console.table([pretty]);
 
   const headers = [
     "table_name",
@@ -300,27 +289,24 @@ async function main() {
       ? ["manifest_bytes", "manifest_human", "total_bytes", "total_human"]
       : []),
   ];
-  const lines = [headers.join(",")].concat(
-    results.map(r =>
-      [
-        r.table_name,
-        r.codec,
-        String(r.level),
-        humanNumber(r.rows),
-        String(r.data_bytes),
-        humanSize(r.data_bytes),
-        String(r.bytes_per_row),
-        ...(LOAD.includeManifestBytes
-          ? [
-              String(r.manifest_bytes ?? 0),
-              humanSize(r.manifest_bytes ?? 0),
-              String(r.total_bytes ?? r.data_bytes),
-              humanSize(r.total_bytes ?? r.data_bytes),
-            ]
-          : []),
-      ].join(",")
-    )
-  );
+  const row = [
+    result.table_name,
+    result.codec,
+    String(result.level),
+    humanNumber(result.rows),
+    String(result.data_bytes),
+    humanSize(result.data_bytes),
+    String(result.bytes_per_row),
+    ...(LOAD.includeManifestBytes
+      ? [
+          String(result.manifest_bytes ?? 0),
+          humanSize(result.manifest_bytes ?? 0),
+          String(result.total_bytes ?? result.data_bytes),
+          humanSize(result.total_bytes ?? result.data_bytes),
+        ]
+      : []),
+  ].join(",");
+  const lines = [headers.join(","), row];
   fs.writeFileSync(LOAD.resultsCsv, lines.join("\n"), "utf-8");
   console.log(`\nSaved CSV: ${LOAD.resultsCsv}`);
 }
