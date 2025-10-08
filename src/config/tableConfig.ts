@@ -1,5 +1,4 @@
 import { TableConfig } from "../types";
-import { generateRandomStrings } from "../utils";
 
 // Trino and entity config
 export const TABLE_CONFIG: TableConfig = {

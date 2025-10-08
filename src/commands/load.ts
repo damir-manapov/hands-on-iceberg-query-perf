@@ -1,12 +1,5 @@
 /**
- * bench.ts — Generate, load & measure Iceberg/Parquet tables across codecs & levels using Trino
- * Run:  npx ts-node bench.ts
- *
- * What it does:
- * 1) Creates a base schema (config-driven) + one table per (codec, level) variant
- * 2) Loads the same data volume into each table with batched INSERT..SELECT using sequence()
- * 3) (optional) CALL system.optimize(...) to normalize file sizes
- * 4) Measures storage from $files (+ optional manifests) and prints CSV + console table
+ * load.ts — Generate, load & measure Iceberg/Parquet tables across codecs & levels using Trino
  */
 
 import * as fs from "node:fs";
@@ -336,3 +329,5 @@ main().catch(e => {
   console.error(e);
   process.exit(1);
 });
+
+

@@ -6,8 +6,8 @@
   "license": "MIT",
   "scripts": {
     "rmcheckpoints": "rm -rf .checkpoints",
-    "rebench": "yarn rmcheckpoints & yarn bench",
-    "bench": "tsx src/commands/bench.ts",
+    "load": "tsx src/commands/load.ts",
+    "reload": "yarn rmcheckpoints & yarn load",
     "build": "tsc -p tsconfig.json",
     "lint": "tsc --noEmit",
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
