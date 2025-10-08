@@ -6,8 +6,8 @@ export const LOAD = {
   // totalRows: Number(process.env.TOTAL_ROWS ?? `${10_000_000}`),
   // totalRows: Number(process.env.TOTAL_ROWS ?? `${1_000_000}`),
   // totalRows: Number(process.env.TOTAL_ROWS ?? `${100_000}`),
-  batchRows: Number(process.env.BATCH_ROWS ?? `${100_000}`), // e.g., 5M per insert
-  // batchRows: Number(process.env.BATCH_ROWS ?? `${1_000_000}`), // e.g., 5M per insert
+  // batchRows: Number(process.env.BATCH_ROWS ?? `${100_000}`), // e.g., 5M per insert
+  batchRows: Number(process.env.BATCH_ROWS ?? `${1_000_000}`), // e.g., 5M per insert
   concurrency: Number(process.env.CONCURRENCY ?? "4"),
   createBaseSchema: (process.env.CREATE_BASE_SCHEMA ?? "true") === "true",
   compactAfterLoad: (process.env.COMPACT_AFTER_LOAD ?? "true") === "true",
