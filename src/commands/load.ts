@@ -206,8 +206,7 @@ async function main() {
   // 2) Create a table for zstd level 6, load data, and collect results
   const codec = FIXED_CODEC;
   const level = FIXED_LEVEL;
-  const suffix = `${codec}_l${String(level).padStart(2, "0")}`;
-  const name = `${TABLE_CONFIG.tableBase}_${suffix}`;
+  const name = TABLE_CONFIG.tableBase;
   console.log(`Creating table ${name} (codec=${codec}, level=${level})…`);
   const variantTableSQLs = createVariantTableSQLs(
     TABLE_CONFIG,
