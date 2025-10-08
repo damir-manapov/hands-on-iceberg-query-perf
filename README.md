@@ -95,9 +95,6 @@ WITH (sorted_by = ARRAY['order_date']);
 
 * Run: `yarn bench`
 
-![bytes_per_row](./assets/bytes_per_row.svg)
-![total_data_bytes](./assets/total_data_bytes.svg)
-
 ## Algorithms
 You need [Mermaid Preview](https://marketplace.visualstudio.com/items?itemName=vstirbu.vscode-mermaid-preview) extension to see gparhs in [vsc](https://code.visualstudio.com/)
 
