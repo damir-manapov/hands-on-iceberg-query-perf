@@ -43,7 +43,7 @@ type Rec = {
   total_bytes?: string | number; // may be missing if you didn’t include manifests
 };
 
-const toNum = (v: any): number => {
+const toNum = (v: null | undefined | string | number): number => {
   if (v === null || v === undefined || v === "") return NaN;
   if (typeof v === "number") return v;
   // strip quotes/commas if present
@@ -128,7 +128,10 @@ async function renderBar(
         legend: { position: "top" as const },
         tooltip: {
           callbacks: {
-            label: (ctx: any) => {
+            label: (ctx: {
+              parsed: { y: number | null | undefined };
+              dataset: { label: string };
+            }) => {
               const v = ctx.parsed.y;
               if (v == null || Number.isNaN(v))
                 return `${ctx.dataset.label}: n/a`;
@@ -150,7 +153,10 @@ async function renderBar(
     },
   };
 
-  const svg = chart.renderToBufferSync(cfg as any, "image/svg+xml");
+  const svg = chart.renderToBufferSync(
+    cfg as unknown as Parameters<typeof chart.renderToBufferSync>[0],
+    "image/svg+xml"
+  );
   const full = path.join(outDir, filename);
   console.log(full);
   fs.writeFileSync(full, svg);

@@ -22,11 +22,22 @@ export class TrinoClient {
   async execute(sql: string): Promise<void> {
     await this._run(sql, false);
   }
-  async query<T = any>(sql: string): Promise<T[]> {
+  async query<T = Record<string, unknown>>(sql: string): Promise<T[]> {
     const all = await this._run(sql, true);
     return all as T[];
   }
-  private async _run<T = any>(sql: string, collect: boolean): Promise<T[]> {
+  private async _run<T = Record<string, unknown>>(
+    sql: string,
+    collect: boolean
+  ): Promise<T[]> {
+    type TrinoColumn = { name: string };
+    type TrinoError = { message: string };
+    type TrinoPage = {
+      columns?: TrinoColumn[];
+      data?: unknown[][];
+      nextUri?: string;
+      error?: TrinoError;
+    };
     const res = await fetch(`${this.baseUrl()}/v1/statement`, {
       method: "POST",
       headers: {
@@ -37,16 +48,15 @@ export class TrinoClient {
     });
     if (!res.ok)
       throw new Error(`Trino POST ${res.status}: ${await res.text()}`);
-    let payload: any = await res.json();
-    let colNames: string[] | null =
-      payload.columns?.map((c: any) => c.name) ?? null;
-    const rowsArr: any[][] = [];
+    let payload: TrinoPage = (await res.json()) as TrinoPage;
+    let colNames: string[] | null = payload.columns?.map(c => c.name) ?? null;
+    const rowsArr: unknown[][] = [];
 
-    const take = (p: any) => {
+    const take = (p: TrinoPage) => {
       if (collect) {
         // (1) learn columns as soon as they show up
         if (!colNames && p.columns) {
-          colNames = p.columns.map((c: any) => c.name);
+          colNames = p.columns.map(c => c.name);
         }
         // (2) collect any data page we get
         if (p.data && Array.isArray(p.data)) {
@@ -62,7 +72,7 @@ export class TrinoClient {
       const poll = await fetch(payload.nextUri, { headers: this.headers() });
       if (!poll.ok)
         throw new Error(`Trino poll ${poll.status}: ${await poll.text()}`);
-      payload = await poll.json();
+      payload = (await poll.json()) as TrinoPage;
       if (!colNames && payload.columns) {
         // late columns; extremely rare
       }
@@ -73,7 +83,7 @@ export class TrinoClient {
     // Map arrays → objects if we have column names; else return arrays
     if (colNames) {
       return rowsArr.map(r => {
-        const obj: any = {};
+        const obj: Record<string, unknown> = {};
         if (colNames) {
           for (let i = 0; i < colNames.length; i++) obj[colNames[i]] = r[i];
         }

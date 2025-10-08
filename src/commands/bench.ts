@@ -40,12 +40,12 @@ function calculateBatchETA(
   currentTime: number
 ): string {
   if (completedBatches === 0) return "calculating...";
-  
+
   const elapsed = currentTime - startTime;
   const rate = completedBatches / elapsed; // batches per ms
   const remaining = totalBatches - completedBatches;
   const etaMs = remaining / rate;
-  
+
   return formatETA(etaMs);
 }
 
@@ -67,7 +67,7 @@ async function loadTable(
     // Checkpoint file doesn't exist or is invalid, start fresh
   }
   const pending = batches.filter(b => !cp.completedBatches.includes(b.index));
-  
+
   if (pending.length === 0) {
     console.log(`✓ All batches already completed for ${tableName}`);
     return;
@@ -76,7 +76,9 @@ async function loadTable(
   const startTime = Date.now();
   const totalBatches = batches.length;
 
-  console.log(`\n📊 Loading ${tableName}: ${pending.length}/${totalBatches} batches remaining`);
+  console.log(
+    `\n📊 Loading ${tableName}: ${pending.length}/${totalBatches} batches remaining`
+  );
 
   await Promise.all(
     pending.map(b =>
@@ -86,21 +88,30 @@ async function loadTable(
         const t0 = Date.now();
         try {
           // Calculate ETA before starting the batch
-          const eta = calculateBatchETA(cp.completedBatches.length, totalBatches, startTime, Date.now());
+          const eta = calculateBatchETA(
+            cp.completedBatches.length,
+            totalBatches,
+            startTime,
+            Date.now()
+          );
           console.log(`→ INSERT ${label} (ETA: ${eta})`);
           await client.execute(sql);
           const duration = ((Date.now() - t0) / 1000).toFixed(1);
-          
+
           // Update completed batches
           cp.completedBatches.push(b.index);
           cp.completedBatches.sort((a, z) => a - z);
-          const progress = ((cp.completedBatches.length / totalBatches) * 100).toFixed(1);
-          console.log(
-            `✔ OK ${label} in ${duration}s (${progress}% complete)`
-          );
+          const progress = (
+            (cp.completedBatches.length / totalBatches) *
+            100
+          ).toFixed(1);
+          console.log(`✔ OK ${label} in ${duration}s (${progress}% complete)`);
           fs.writeFileSync(cpFile, JSON.stringify(cp), "utf-8");
-        } catch (e: any) {
-          const message = `✖ FAIL ${label}: ${e?.message || e}\n\nSql:${sql}`;
+        } catch (e: unknown) {
+          const err = e as { message?: string } | string;
+          const message = `✖ FAIL ${label}: ${
+            typeof err === "string" ? err : err?.message || String(err)
+          }\n\nSql:${sql}`;
           console.error(message);
           throw new Error(message);
         }
@@ -113,11 +124,11 @@ async function optimizeTable(client: TrinoClient, fq: string) {
   const sql = `ALTER TABLE ${fq} EXECUTE optimize`;
   try {
     await client.execute(sql);
-  } catch (e: any) {
-    console.warn(
-      `(optimize skipped for ${fq}): ${e?.message || e}, sql: ${sql}`
-    );
-    throw new Error(e);
+  } catch (e: unknown) {
+    const err = e as { message?: string } | string;
+    const msg = typeof err === "string" ? err : err?.message || String(err);
+    console.warn(`(optimize skipped for ${fq}): ${msg}, sql: ${sql}`);
+    throw new Error(msg);
   }
 }
 
@@ -151,8 +162,8 @@ async function measureSizes(
       FROM ${cfg.catalog}.${cfg.schema}."${name}$manifests"
     `);
     manifest_bytes = Number(m?.[0]?.b ?? 0);
-  } catch (e: any) {
-    throw new Error(e);
+  } catch (e: unknown) {
+    throw new Error(String(e));
   }
   const total_bytes = data_bytes + manifest_bytes;
   return {
@@ -227,9 +238,7 @@ async function main() {
       );
       const durationMs = Date.now() - t0;
       const durationMinutes = (durationMs / 60000).toFixed(1);
-      console.log(
-        `Load finished for ${name} in ${durationMinutes}min`
-      );
+      console.log(`Load finished for ${name} in ${durationMinutes}min`);
 
       if (LOAD.compactAfterLoad) {
         await optimizeTable(

@@ -25,7 +25,7 @@ export type FieldSpec =
   | NumberSpec
   | StringSpec
   | DateSpec
-  | EnumSpec<any>
+  | EnumSpec<"string" | "int" | "bigint">
   | ArraySpec;
 
 export type TableConfig = {
