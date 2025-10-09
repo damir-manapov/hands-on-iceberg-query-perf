@@ -100,7 +100,7 @@ export const TABLE_CONFIGS: TableConfig[] = [
       row_28: {
         kind: "enum",
         base: "string",
-        values: generateRandomStrings(5, 1),
+        values: ['a', 'b', 'c', 'd', 'e'],
         nullable: 0,
       },
       row_29: { kind: "string", length: 8, nullable: 0 },
