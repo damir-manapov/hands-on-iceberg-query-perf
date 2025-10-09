@@ -3,42 +3,44 @@
 **Table:** iceberg.lab.events  
 **Total Rows:** 120,000,000  
 **Table Size:** 3.4 GB (3,688,470,477 bytes)  
-**Generated:** 2025-10-09T18:21:35.869Z  
+**Generated:** 2025-10-09T18:31:26.646Z  
 **Total Queries Run:** 30
 
 ## Summary
 
-- **Average Duration:** 689.7ms
-- **Fastest Query:** 153ms
-- **Slowest Query:** 816ms
+- **Average Duration:** 842.3ms
+- **Fastest Query:** 611ms
+- **Slowest Query:** 1769ms
+- **95th Percentile:** 1665.5ms
 
 ## Query Results
 
-| Description | Count | Avg Duration (ms) | Min Duration (ms) | Max Duration (ms) | Runs |
-|-------------|-------|-------------------|-------------------|-------------------|------|
-| Total count (no filters) | 0 | 713.0 | 611 | 764 | 3 |
-| Count by status = 'paid' | 0 | 714.7 | 613 | 767 | 3 |
-| Count by country = 'US' | 0 | 764.0 | 764 | 764 | 3 |
-| Count by age > 30 | 0 | 765.7 | 764 | 769 | 3 |
-| Count by amount > 1000 | 0 | 771.0 | 751 | 790 | 3 |
-| Count by date >= 2024-06-01 | 0 | 672.3 | 664 | 689 | 3 |
-| Count by status='paid' AND country='US' | 0 | 764.0 | 763 | 765 | 3 |
-| Count by age BETWEEN 25 AND 45 | 0 | 764.3 | 763 | 765 | 3 |
-| Count by tags CONTAINS 'alpha' | 0 | 154.3 | 153 | 155 | 3 |
-| Count by note IS NOT NULL | 0 | 814.0 | 813 | 816 | 3 |
+| Description | Count | Avg Duration (ms) | Min Duration (ms) | Max Duration (ms) | P95 Duration (ms) | Runs |
+|-------------|-------|-------------------|-------------------|-------------------|-------------------|------|
+| Total count (no filters) | 120,000,000 | 762.7 | 762 | 764 | 763.8 | 3 |
+| Count by status = 'paid' | 29,993,950 | 713.0 | 613 | 764 | 763.8 | 3 |
+| Count by country = 'US' | 23,519,319 | 764.3 | 764 | 765 | 764.9 | 3 |
+| Count by age > 30 | 91,592,190 | 663.0 | 611 | 763 | 748.2 | 3 |
+| Count by amount > 1000 | 102,603,028 | 789.3 | 780 | 805 | 802.8 | 3 |
+| Count by date >= 2024-06-01 | 70,162,775 | 756.7 | 711 | 782 | 781.5 | 3 |
+| Count by status='paid' AND country='US' | 5,877,990 | 712.3 | 612 | 764 | 763.7 | 3 |
+| Count by age BETWEEN 25 AND 45 | 40,071,504 | 717.0 | 612 | 773 | 772.3 | 3 |
+| Count by tags contains 'alpha' | 45,567,300 | 1699.7 | 1660 | 1769 | 1759.1 | 3 |
+| Count by note IS NOT NULL | 107,997,560 | 844.7 | 825 | 861 | 859.7 | 3 |
 
 ## Query Details
 
 ### Total count (no filters)
 
 ```sql
-SELECT COUNT(*) FROM iceberg.lab.events
+SELECT COUNT(*) as count FROM iceberg.lab.events
 ```
 
-- **Count:** 0
-- **Average Duration:** 713.0ms
-- **Min Duration:** 611ms
+- **Count:** 120,000,000
+- **Average Duration:** 762.7ms
+- **Min Duration:** 762ms
 - **Max Duration:** 764ms
+- **95th Percentile:** 763.8ms
 - **Runs:** 3
 
 ---
@@ -46,13 +48,14 @@ SELECT COUNT(*) FROM iceberg.lab.events
 ### Count by status = 'paid'
 
 ```sql
-SELECT COUNT(*) FROM iceberg.lab.events WHERE status = 'paid'
+SELECT COUNT(*) as count FROM iceberg.lab.events WHERE status = 'paid'
 ```
 
-- **Count:** 0
-- **Average Duration:** 714.7ms
+- **Count:** 29,993,950
+- **Average Duration:** 713.0ms
 - **Min Duration:** 613ms
-- **Max Duration:** 767ms
+- **Max Duration:** 764ms
+- **95th Percentile:** 763.8ms
 - **Runs:** 3
 
 ---
@@ -60,13 +63,14 @@ SELECT COUNT(*) FROM iceberg.lab.events WHERE status = 'paid'
 ### Count by country = 'US'
 
 ```sql
-SELECT COUNT(*) FROM iceberg.lab.events WHERE country = 'US'
+SELECT COUNT(*) as count FROM iceberg.lab.events WHERE country = 'US'
 ```
 
-- **Count:** 0
-- **Average Duration:** 764.0ms
+- **Count:** 23,519,319
+- **Average Duration:** 764.3ms
 - **Min Duration:** 764ms
-- **Max Duration:** 764ms
+- **Max Duration:** 765ms
+- **95th Percentile:** 764.9ms
 - **Runs:** 3
 
 ---
@@ -74,13 +78,14 @@ SELECT COUNT(*) FROM iceberg.lab.events WHERE country = 'US'
 ### Count by age > 30
 
 ```sql
-SELECT COUNT(*) FROM iceberg.lab.events WHERE age > 30
+SELECT COUNT(*) as count FROM iceberg.lab.events WHERE age > 30
 ```
 
-- **Count:** 0
-- **Average Duration:** 765.7ms
-- **Min Duration:** 764ms
-- **Max Duration:** 769ms
+- **Count:** 91,592,190
+- **Average Duration:** 663.0ms
+- **Min Duration:** 611ms
+- **Max Duration:** 763ms
+- **95th Percentile:** 748.2ms
 - **Runs:** 3
 
 ---
@@ -88,13 +93,14 @@ SELECT COUNT(*) FROM iceberg.lab.events WHERE age > 30
 ### Count by amount > 1000
 
 ```sql
-SELECT COUNT(*) FROM iceberg.lab.events WHERE amount > 1000
+SELECT COUNT(*) as count FROM iceberg.lab.events WHERE amount > 1000
 ```
 
-- **Count:** 0
-- **Average Duration:** 771.0ms
-- **Min Duration:** 751ms
-- **Max Duration:** 790ms
+- **Count:** 102,603,028
+- **Average Duration:** 789.3ms
+- **Min Duration:** 780ms
+- **Max Duration:** 805ms
+- **95th Percentile:** 802.8ms
 - **Runs:** 3
 
 ---
@@ -102,13 +108,14 @@ SELECT COUNT(*) FROM iceberg.lab.events WHERE amount > 1000
 ### Count by date >= 2024-06-01
 
 ```sql
-SELECT COUNT(*) FROM iceberg.lab.events WHERE created_at >= DATE '2024-06-01'
+SELECT COUNT(*) as count FROM iceberg.lab.events WHERE created_at >= DATE '2024-06-01'
 ```
 
-- **Count:** 0
-- **Average Duration:** 672.3ms
-- **Min Duration:** 664ms
-- **Max Duration:** 689ms
+- **Count:** 70,162,775
+- **Average Duration:** 756.7ms
+- **Min Duration:** 711ms
+- **Max Duration:** 782ms
+- **95th Percentile:** 781.5ms
 - **Runs:** 3
 
 ---
@@ -116,13 +123,14 @@ SELECT COUNT(*) FROM iceberg.lab.events WHERE created_at >= DATE '2024-06-01'
 ### Count by status='paid' AND country='US'
 
 ```sql
-SELECT COUNT(*) FROM iceberg.lab.events WHERE status = 'paid' AND country = 'US'
+SELECT COUNT(*) as count FROM iceberg.lab.events WHERE status = 'paid' AND country = 'US'
 ```
 
-- **Count:** 0
-- **Average Duration:** 764.0ms
-- **Min Duration:** 763ms
-- **Max Duration:** 765ms
+- **Count:** 5,877,990
+- **Average Duration:** 712.3ms
+- **Min Duration:** 612ms
+- **Max Duration:** 764ms
+- **95th Percentile:** 763.7ms
 - **Runs:** 3
 
 ---
@@ -130,27 +138,29 @@ SELECT COUNT(*) FROM iceberg.lab.events WHERE status = 'paid' AND country = 'US'
 ### Count by age BETWEEN 25 AND 45
 
 ```sql
-SELECT COUNT(*) FROM iceberg.lab.events WHERE age BETWEEN 25 AND 45
+SELECT COUNT(*) as count FROM iceberg.lab.events WHERE age BETWEEN 25 AND 45
 ```
 
-- **Count:** 0
-- **Average Duration:** 764.3ms
-- **Min Duration:** 763ms
-- **Max Duration:** 765ms
+- **Count:** 40,071,504
+- **Average Duration:** 717.0ms
+- **Min Duration:** 612ms
+- **Max Duration:** 773ms
+- **95th Percentile:** 772.3ms
 - **Runs:** 3
 
 ---
 
-### Count by tags CONTAINS 'alpha'
+### Count by tags contains 'alpha'
 
 ```sql
-SELECT COUNT(*) FROM iceberg.lab.events WHERE tags CONTAINS 'alpha'
+SELECT COUNT(*) as count FROM iceberg.lab.events WHERE contains(tags, 'alpha')
 ```
 
-- **Count:** 0
-- **Average Duration:** 154.3ms
-- **Min Duration:** 153ms
-- **Max Duration:** 155ms
+- **Count:** 45,567,300
+- **Average Duration:** 1699.7ms
+- **Min Duration:** 1660ms
+- **Max Duration:** 1769ms
+- **95th Percentile:** 1759.1ms
 - **Runs:** 3
 
 ---
@@ -158,13 +168,14 @@ SELECT COUNT(*) FROM iceberg.lab.events WHERE tags CONTAINS 'alpha'
 ### Count by note IS NOT NULL
 
 ```sql
-SELECT COUNT(*) FROM iceberg.lab.events WHERE note IS NOT NULL
+SELECT COUNT(*) as count FROM iceberg.lab.events WHERE note IS NOT NULL
 ```
 
-- **Count:** 0
-- **Average Duration:** 814.0ms
-- **Min Duration:** 813ms
-- **Max Duration:** 816ms
+- **Count:** 107,997,560
+- **Average Duration:** 844.7ms
+- **Min Duration:** 825ms
+- **Max Duration:** 861ms
+- **95th Percentile:** 859.7ms
 - **Runs:** 3
 
 ---

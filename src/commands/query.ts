@@ -22,6 +22,7 @@ interface QueryStats {
   avgDuration: number;
   minDuration: number;
   maxDuration: number;
+  p95Duration: number;
   runs: number;
 }
 
@@ -42,6 +43,23 @@ function formatBytes(bytes: number): string {
     u++;
   }
   return `${b.toFixed(1)} ${units[u]}`;
+}
+
+function calculatePercentile(values: number[], percentile: number): number {
+  if (values.length === 0) return 0;
+  if (values.length === 1) return values[0];
+  
+  const sorted = [...values].sort((a, b) => a - b);
+  const index = (percentile / 100) * (sorted.length - 1);
+  
+  if (Number.isInteger(index)) {
+    return sorted[index];
+  } else {
+    const lower = Math.floor(index);
+    const upper = Math.ceil(index);
+    const weight = index - lower;
+    return sorted[lower] * (1 - weight) + sorted[upper] * weight;
+  }
 }
 
 async function getTableMetadata(client: TrinoClient, tableName: string): Promise<TableMetadata> {
@@ -67,7 +85,7 @@ function generateMarkdownReport(
   tableName: string,
   tableMetadata: TableMetadata,
   queryStats: QueryStats[],
-  overallStats: { totalQueries: number; avgDuration: number; minDuration: number; maxDuration: number },
+  overallStats: { totalQueries: number; avgDuration: number; minDuration: number; maxDuration: number; p95Duration: number },
   timestamp: string
 ): string {
   const report = `# Query Performance Report
@@ -83,13 +101,14 @@ function generateMarkdownReport(
 - **Average Duration:** ${overallStats.avgDuration.toFixed(1)}ms
 - **Fastest Query:** ${overallStats.minDuration}ms
 - **Slowest Query:** ${overallStats.maxDuration}ms
+- **95th Percentile:** ${overallStats.p95Duration.toFixed(1)}ms
 
 ## Query Results
 
-| Description | Count | Avg Duration (ms) | Min Duration (ms) | Max Duration (ms) | Runs |
-|-------------|-------|-------------------|-------------------|-------------------|------|
+| Description | Count | Avg Duration (ms) | Min Duration (ms) | Max Duration (ms) | P95 Duration (ms) | Runs |
+|-------------|-------|-------------------|-------------------|-------------------|-------------------|------|
 ${queryStats.map(stats => 
-  `| ${stats.description} | ${stats.count.toLocaleString()} | ${stats.avgDuration.toFixed(1)} | ${stats.minDuration} | ${stats.maxDuration} | ${stats.runs} |`
+  `| ${stats.description} | ${stats.count.toLocaleString()} | ${stats.avgDuration.toFixed(1)} | ${stats.minDuration} | ${stats.maxDuration} | ${stats.p95Duration.toFixed(1)} | ${stats.runs} |`
 ).join('\n')}
 
 ## Query Details
@@ -105,6 +124,7 @@ ${stats.query}
 - **Average Duration:** ${stats.avgDuration.toFixed(1)}ms
 - **Min Duration:** ${stats.minDuration}ms
 - **Max Duration:** ${stats.maxDuration}ms
+- **95th Percentile:** ${stats.p95Duration.toFixed(1)}ms
 - **Runs:** ${stats.runs}
 
 ---
@@ -126,13 +146,23 @@ async function runQuery(
   console.log(`SQL: ${sql}`);
   
   const startTime = Date.now();
-  const result = await client.query<{ count: number }>(sql);
-  const duration = Date.now() - startTime;
   
-  const count = result[0]?.count ?? 0;
-  console.log(`✅ Count: ${count.toLocaleString()}, Duration: ${duration}ms`);
-  
-  return { query: sql, duration, count };
+  // Handle different query types
+  if (sql.includes('COUNT(*)')) {
+    const result = await client.query<{ count: number }>(sql);
+    const duration = Date.now() - startTime;
+    const count = result[0]?.count ?? 0;
+    console.log(`✅ Count: ${count.toLocaleString()}, Duration: ${duration}ms`);
+    return { query: sql, duration, count };
+  } else {
+    // For debug queries, just execute and show results
+    const result = await client.query(sql);
+    const duration = Date.now() - startTime;
+    console.log(`✅ Result:`, result);
+    console.log(`Duration: ${duration}ms`);
+    // Return count as 0 for non-count queries
+    return { query: sql, duration, count: 0 };
+  }
 }
 
 async function main() {
@@ -149,6 +179,12 @@ async function main() {
   console.log("📊 Gathering table metadata...");
   const tableMetadata = await getTableMetadata(client, fullTableName);
   console.log(`📈 Table has ${tableMetadata.totalRows.toLocaleString()} rows (${tableMetadata.totalSizeHuman})`);
+  
+  // Check if table has data
+  if (tableMetadata.totalRows === 0) {
+    console.log("⚠️  WARNING: Table has no data! Run 'yarn load' first to generate data.");
+    return;
+  }
   
   // Test queries with different filters
   const queries = createQueryDefinitions(fullTableName);
@@ -188,11 +224,12 @@ async function main() {
     const avgDuration = durations.reduce((a, b) => a + b, 0) / durations.length;
     const minDuration = Math.min(...durations);
     const maxDuration = Math.max(...durations);
+    const p95Duration = calculatePercentile(durations, 95);
     const count = runs[0].count; // All runs should have same count
     
     console.log(`\nQuery: ${query}`);
     console.log(`Count: ${count.toLocaleString()}`);
-    console.log(`Duration: avg=${avgDuration.toFixed(1)}ms, min=${minDuration}ms, max=${maxDuration}ms`);
+    console.log(`Duration: avg=${avgDuration.toFixed(1)}ms, min=${minDuration}ms, max=${maxDuration}ms, p95=${p95Duration.toFixed(1)}ms`);
   }
   
   // Overall statistics
@@ -200,12 +237,14 @@ async function main() {
   const overallAvg = allDurations.reduce((a, b) => a + b, 0) / allDurations.length;
   const overallMin = Math.min(...allDurations);
   const overallMax = Math.max(...allDurations);
+  const overallP95 = calculatePercentile(allDurations, 95);
   
   console.log(`\n🎯 OVERALL STATISTICS`);
   console.log(`Total queries run: ${results.length}`);
   console.log(`Average duration: ${overallAvg.toFixed(1)}ms`);
   console.log(`Fastest query: ${overallMin}ms`);
   console.log(`Slowest query: ${overallMax}ms`);
+  console.log(`95th percentile: ${overallP95.toFixed(1)}ms`);
   
   // Generate markdown report
   const timestamp = new Date().toISOString();
@@ -216,6 +255,7 @@ async function main() {
     const avgDuration = durations.reduce((a, b) => a + b, 0) / durations.length;
     const minDuration = Math.min(...durations);
     const maxDuration = Math.max(...durations);
+    const p95Duration = calculatePercentile(durations, 95);
     const count = runs[0].count;
     
     // Find description for this query
@@ -229,6 +269,7 @@ async function main() {
       avgDuration,
       minDuration,
       maxDuration,
+      p95Duration,
       runs: runs.length
     });
   }
@@ -237,7 +278,8 @@ async function main() {
     totalQueries: results.length,
     avgDuration: overallAvg,
     minDuration: overallMin,
-    maxDuration: overallMax
+    maxDuration: overallMax,
+    p95Duration: overallP95
   };
   
   const markdownReport = generateMarkdownReport(fullTableName, tableMetadata, queryStats, overallStats, timestamp);
