@@ -5,7 +5,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { TrinoClient } from "../TrinoClient";
-import { TABLE_CONFIGS } from "../config/tableConfig";
+import { TABLE_CONFIGS } from "../config/tableConfigs";
 import { createTrinoConfig } from "../config/trinoConfig";
 import {
   createTableQueryConfigs,

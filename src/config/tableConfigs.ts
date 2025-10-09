@@ -2,7 +2,7 @@ import { TableConfig } from "../types";
 import { generateRandomStrings } from "../utils";
 
 // Base configuration shared across all tables
-const BASE_CONFIG = {
+export const BASE_CONFIG = {
   catalog: process.env.TRINO_CATALOG ?? "iceberg",
   schema: process.env.TRINO_SCHEMA ?? "lab",
   format: "PARQUET" as const,

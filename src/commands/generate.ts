@@ -15,7 +15,7 @@ import {
 } from "../sqlHelpers";
 import { ensureDir, humanNumber, humanSize, makeBatches } from "../utils";
 import { Limiter } from "../Limiter";
-import { TABLE_CONFIGS } from "../config/tableConfig";
+import { TABLE_CONFIGS } from "../config/tableConfigs";
 import { LOAD } from "../config/load";
 import { createTrinoConfig } from "../config/trinoConfig";
 // Fixed codec setup: always use zstd with level 6
