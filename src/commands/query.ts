@@ -6,7 +6,6 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { TrinoClient } from "../TrinoClient";
 import { TABLE_CONFIGS } from "../config/tableConfig";
-import { LOAD } from "../config/load";
 import { createTrinoConfig } from "../config/trinoConfig";
 import {
   createTableQueryConfigs,
@@ -474,10 +473,9 @@ async function main() {
 
   // Get table query configurations
   const tableQueryConfigs = createTableQueryConfigs();
-  const rowCountSuffix = humanNumber(LOAD.totalRows).replace(/,/g, "");
 
   console.log(
-    `🚀 Running query performance tests on all tables with ${humanNumber(LOAD.totalRows)} rows each`
+    `🚀 Running query performance tests on all tables with per-table row counts`
   );
 
   // Process each table
@@ -485,16 +483,21 @@ async function main() {
     const tableConfig = TABLE_CONFIGS[i];
     const queryConfig = tableQueryConfigs[i];
 
-    const tableName = `${tableConfig.tableBase}_${rowCountSuffix}`;
-    const fullTableName = `${tableConfig.catalog}.${tableConfig.schema}.${tableName}`;
+    // Process each row count for this table
+    for (const totalRows of tableConfig.totalRows) {
+      const rowCountSuffix = humanNumber(totalRows).replace(/,/g, "");
 
-    await processTable(
-      client,
-      tableConfig,
-      queryConfig,
-      tableName,
-      fullTableName
-    );
+      const tableName = `${tableConfig.tableBase}_${rowCountSuffix}`;
+      const fullTableName = `${tableConfig.catalog}.${tableConfig.schema}.${tableName}`;
+
+      await processTable(
+        client,
+        tableConfig,
+        queryConfig,
+        tableName,
+        fullTableName
+      );
+    }
   }
 
   console.log(

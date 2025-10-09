@@ -37,6 +37,8 @@ export type TableConfig = {
   tableProperties?: Record<string, string | number | boolean>;
   columns: Record<string, FieldSpec>;
   idColumn?: string;
+  totalRows: number[]; // array of row counts to generate for this table
+  batchRows: number; // batch size for inserts
 };
 
 export type TrinoConfig = {

@@ -188,63 +188,74 @@ async function main() {
 
   // Process each table configuration
   for (const tableConfig of TABLE_CONFIGS) {
-    // Generate dynamic table name with row count
-    const rowCountSuffix = humanNumber(LOAD.totalRows).replace(/,/g, "");
-    const name = `${tableConfig.tableBase}_${rowCountSuffix}`;
+    // Process each row count for this table
+    for (const totalRows of tableConfig.totalRows) {
+      const batchRows = tableConfig.batchRows;
 
-    console.log(
-      `\n🚀 Processing table: ${name} (${humanNumber(LOAD.totalRows)} rows)`
-    );
+      // Generate dynamic table name with row count
+      const rowCountSuffix = humanNumber(totalRows).replace(/,/g, "");
+      const name = `${tableConfig.tableBase}_${rowCountSuffix}`;
 
-    // 1) Base schema + base table
-    if (LOAD.createBaseSchema) {
-      console.log(`Ensuring schema + base table exist for ${name}…`);
-      await client.execute(createSchemaSQL(tableConfig));
-      await client.execute(createBaseTableSQL(tableConfig));
-    }
-    console.log(`Creating table ${name} (codec=${codec}, level=${level})…`);
-    const variantTableSQLs = createVariantTableSQLs(
-      tableConfig,
-      name,
-      codec,
-      level
-    );
-    for (const sql of variantTableSQLs) {
-      await client.execute(sql);
-    }
-
-    const cpFile = path.join(LOAD.checkpointDir, `.cp_${name}.json`);
-    const t0 = Date.now();
-    await loadTable(
-      client,
-      limiter,
-      tableConfig,
-      name,
-      LOAD.startId,
-      LOAD.totalRows,
-      LOAD.batchRows,
-      cpFile
-    );
-    const durationMs = Date.now() - t0;
-    const durationMinutes = (durationMs / 60000).toFixed(1);
-    console.log(`Load finished for ${name} in ${durationMinutes}min`);
-
-    if (LOAD.compactAfterLoad) {
-      await optimizeTable(
-        client,
-        `${tableConfig.catalog}.${tableConfig.schema}.${name}`
+      console.log(
+        `\n🚀 Processing table: ${name} (${humanNumber(totalRows)} rows, batch size: ${humanNumber(batchRows)})`
       );
+
+      // 1) Base schema + base table
+      if (LOAD.createBaseSchema) {
+        console.log(`Ensuring schema + base table exist for ${name}…`);
+        await client.execute(createSchemaSQL(tableConfig));
+        await client.execute(createBaseTableSQL(tableConfig));
+      }
+      console.log(`Creating table ${name} (codec=${codec}, level=${level})…`);
+      const variantTableSQLs = createVariantTableSQLs(
+        tableConfig,
+        name,
+        codec,
+        level
+      );
+      for (const sql of variantTableSQLs) {
+        await client.execute(sql);
+      }
+
+      const cpFile = path.join(LOAD.checkpointDir, `.cp_${name}.json`);
+      const t0 = Date.now();
+      await loadTable(
+        client,
+        limiter,
+        tableConfig,
+        name,
+        LOAD.startId,
+        totalRows,
+        batchRows,
+        cpFile
+      );
+      const durationMs = Date.now() - t0;
+      const durationMinutes = (durationMs / 60000).toFixed(1);
+      console.log(`Load finished for ${name} in ${durationMinutes}min`);
+
+      if (LOAD.compactAfterLoad) {
+        await optimizeTable(
+          client,
+          `${tableConfig.catalog}.${tableConfig.schema}.${name}`
+        );
+      }
+
+      const exampleRow = await client.query(
+        createSelectExamplesSQL(tableConfig, name)
+      );
+      console.log(`Example row for ${name}:`);
+      console.log(JSON.stringify(exampleRow, null, 1));
+
+      // Measure immediately and collect result
+      const result = await measureSizes(
+        client,
+        tableConfig,
+        name,
+        codec,
+        level
+      );
+      results.push(result);
     }
-
-    const exampleRow = await client.query(
-      createSelectExamplesSQL(tableConfig, name)
-    );
-    console.log(`Example row for ${name}:`);
-    console.log(JSON.stringify(exampleRow, null, 1));
-
-    // Measure immediately and collect result
-    const result = await measureSizes(client, tableConfig, name, codec, level);
-    results.push(result);
   }
 
   // 3) Print results & CSV
