@@ -1,49 +1,58 @@
-export interface QueryDefinition {
-  sql: string;
+export interface FilterCondition {
+  whereClause: string;
   description: string;
 }
 
-export function createQueryDefinitions(tableName: string): QueryDefinition[] {
+export interface AggregationColumn {
+  column: string;
+  description: string;
+}
+
+export interface PaginationColumn {
+  column: string;
+  description: string;
+}
+
+export function createFilterConditions(): FilterCondition[] {
   return [
+    { whereClause: "", description: "no filters" },
+    { whereClause: "WHERE status = 'paid'", description: "status = 'paid'" },
+    { whereClause: "WHERE country = 'US'", description: "country = 'US'" },
+    { whereClause: "WHERE age > 30", description: "age > 30" },
+    { whereClause: "WHERE amount > 1000", description: "amount > 1000" },
     {
-      sql: `SELECT COUNT(*) as count FROM ${tableName}`,
-      description: "Total count (no filters)"
+      whereClause: "WHERE created_at >= DATE '2024-06-01'",
+      description: "date >= 2024-06-01",
     },
     {
-      sql: `SELECT COUNT(*) as count FROM ${tableName} WHERE status = 'paid'`,
-      description: "Count by status = 'paid'"
+      whereClause: "WHERE status = 'paid' AND country = 'US'",
+      description: "status='paid' AND country='US'",
     },
     {
-      sql: `SELECT COUNT(*) as count FROM ${tableName} WHERE country = 'US'`,
-      description: "Count by country = 'US'"
+      whereClause: "WHERE age BETWEEN 25 AND 45",
+      description: "age BETWEEN 25 AND 45",
     },
     {
-      sql: `SELECT COUNT(*) as count FROM ${tableName} WHERE age > 30`,
-      description: "Count by age > 30"
+      whereClause: "WHERE contains(tags, 'alpha')",
+      description: "tags contains 'alpha'",
     },
-    {
-      sql: `SELECT COUNT(*) as count FROM ${tableName} WHERE amount > 1000`,
-      description: "Count by amount > 1000"
-    },
-    {
-      sql: `SELECT COUNT(*) as count FROM ${tableName} WHERE created_at >= DATE '2024-06-01'`,
-      description: "Count by date >= 2024-06-01"
-    },
-    {
-      sql: `SELECT COUNT(*) as count FROM ${tableName} WHERE status = 'paid' AND country = 'US'`,
-      description: "Count by status='paid' AND country='US'"
-    },
-    {
-      sql: `SELECT COUNT(*) as count FROM ${tableName} WHERE age BETWEEN 25 AND 45`,
-      description: "Count by age BETWEEN 25 AND 45"
-    },
-    {
-      sql: `SELECT COUNT(*) as count FROM ${tableName} WHERE contains(tags, 'alpha')`,
-      description: "Count by tags contains 'alpha'"
-    },
-    {
-      sql: `SELECT COUNT(*) as count FROM ${tableName} WHERE note IS NOT NULL`,
-      description: "Count by note IS NOT NULL"
-    }
+    { whereClause: "WHERE note IS NOT NULL", description: "note IS NOT NULL" },
+  ];
+}
+
+export function createAggregationColumns(): AggregationColumn[] {
+  return [
+    { column: "status", description: "status GROUP BY" },
+    { column: "country", description: "country GROUP BY" },
+    { column: "age", description: "age GROUP BY" },
+  ];
+}
+
+export function createPaginationColumns(): PaginationColumn[] {
+  return [
+    { column: "id", description: "id" },
+    { column: "status", description: "status" },
+    { column: "country", description: "country" },
+    { column: "age", description: "age" },
   ];
 }
