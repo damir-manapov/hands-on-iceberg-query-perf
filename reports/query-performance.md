@@ -3,44 +3,36 @@
 **Table:** iceberg.lab.events  
 **Total Rows:** 100,000,000  
 **Table Size:** 2.9 GB (3,072,680,383 bytes)  
-**Generated:** 2025-10-09T19:50:14.974Z  
-**Total Queries Run:** 72
+**Generated:** 2025-10-09T19:56:08.184Z  
+**Total Queries Run:** 48
 
 ## Summary
 
-- **Average Duration:** 641ms
-- **Fastest Query:** 156ms
-- **Slowest Query:** 1473ms
-- **95th Percentile:** 954ms
+- **Average Duration:** 631ms
+- **Fastest Query:** 161ms
+- **Slowest Query:** 1035ms
+- **95th Percentile:** 989ms
 
 ## Query Results
 
 | Filter | Type | Pagination Type | Sorted | Aggregation | Count/Rows | Avg Duration (ms) | Min Duration (ms) | Max Duration (ms) | P95 Duration (ms) | Runs |
 |--------|------|-----------------|--------|-------------|------------|-------------------|-------------------|-------------------|-------------------|------|
-| no filters | COUNT | - | - | - | 100,000,000 | 780 | 778 | 781 | 781 | 3 |
-| no filters | PAGINATION | first page | No | - | 100 | 730 | 629 | 782 | 782 | 3 |
-| no filters | PAGINATION | first page | Yes | - | 100 | 1146 | 976 | 1473 | 1425 | 3 |
-| no filters | PAGINATION | 100th page | No | - | 0 | 164 | 159 | 172 | 171 | 3 |
-| no filters | PAGINATION | 100th page | Yes | - | 0 | 159 | 157 | 162 | 162 | 3 |
-| no filters | AGGREGATION | - | - | status | 4 | 778 | 772 | 783 | 783 | 3 |
-| no filters | AGGREGATION | - | - | country | 6 | 680 | 630 | 778 | 764 | 3 |
-| no filters | AGGREGATION | - | - | age | 62 | 976 | 920 | 1085 | 1069 | 3 |
-| status = 'paid' | COUNT | - | - | - | 25,006,161 | 735 | 626 | 795 | 794 | 3 |
-| status = 'paid' | PAGINATION | first page | No | - | 100 | 734 | 641 | 781 | 781 | 3 |
-| status = 'paid' | PAGINATION | first page | Yes | - | 100 | 893 | 851 | 935 | 931 | 3 |
-| status = 'paid' | PAGINATION | 100th page | No | - | 0 | 162 | 161 | 162 | 162 | 3 |
-| status = 'paid' | PAGINATION | 100th page | Yes | - | 0 | 161 | 160 | 161 | 161 | 3 |
-| status = 'paid' | AGGREGATION | - | - | status | 1 | 734 | 626 | 797 | 796 | 3 |
-| status = 'paid' | AGGREGATION | - | - | country | 6 | 732 | 630 | 785 | 785 | 3 |
-| status = 'paid' | AGGREGATION | - | - | age | 62 | 795 | 777 | 827 | 823 | 3 |
-| country = 'US' | COUNT | - | - | - | 19,591,116 | 777 | 775 | 779 | 779 | 3 |
-| country = 'US' | PAGINATION | first page | No | - | 100 | 792 | 781 | 809 | 807 | 3 |
-| country = 'US' | PAGINATION | first page | Yes | - | 100 | 863 | 855 | 874 | 873 | 3 |
-| country = 'US' | PAGINATION | 100th page | No | - | 0 | 159 | 156 | 161 | 161 | 3 |
-| country = 'US' | PAGINATION | 100th page | Yes | - | 0 | 159 | 158 | 160 | 160 | 3 |
-| country = 'US' | AGGREGATION | - | - | status | 4 | 678 | 623 | 786 | 770 | 3 |
-| country = 'US' | AGGREGATION | - | - | country | 1 | 785 | 782 | 790 | 790 | 3 |
-| country = 'US' | AGGREGATION | - | - | age | 62 | 803 | 780 | 820 | 819 | 3 |
+| no filters | COUNT | - | - | - | 100,000,000 | 780 | 772 | 784 | 784 | 3 |
+| no filters | PAGINATION | first page | No | - | 100 | 732 | 627 | 784 | 784 | 3 |
+| no filters | PAGINATION | first page | Yes | - | 100 | 997 | 953 | 1035 | 1032 | 3 |
+| no filters | PAGINATION | 100th page | No | - | 0 | 164 | 162 | 164 | 164 | 3 |
+| no filters | PAGINATION | 100th page | Yes | - | 0 | 163 | 161 | 163 | 163 | 3 |
+| no filters | AGGREGATION | - | - | status | 4 | 787 | 781 | 791 | 791 | 3 |
+| no filters | AGGREGATION | - | - | country | 6 | 785 | 782 | 787 | 787 | 3 |
+| no filters | AGGREGATION | - | - | age | 62 | 875 | 800 | 951 | 944 | 3 |
+| status = 'paid' | COUNT | - | - | - | 25,006,161 | 732 | 621 | 794 | 793 | 3 |
+| status = 'paid' | PAGINATION | first page | No | - | 100 | 736 | 631 | 793 | 793 | 3 |
+| status = 'paid' | PAGINATION | first page | Yes | - | 100 | 976 | 941 | 1022 | 1017 | 3 |
+| status = 'paid' | PAGINATION | 100th page | No | - | 0 | 163 | 162 | 164 | 164 | 3 |
+| status = 'paid' | PAGINATION | 100th page | Yes | - | 0 | 163 | 161 | 164 | 164 | 3 |
+| status = 'paid' | AGGREGATION | - | - | status | 1 | 681 | 630 | 781 | 766 | 3 |
+| status = 'paid' | AGGREGATION | - | - | country | 6 | 732 | 633 | 783 | 783 | 3 |
+| status = 'paid' | AGGREGATION | - | - | age | 62 | 629 | 628 | 629 | 629 | 3 |
 
 ## Query Details
 
@@ -52,9 +44,9 @@ SELECT COUNT(*) as count FROM iceberg.lab.events
 
 - **Count/Rows:** 100,000,000
 - **Average Duration:** 780ms
-- **Min Duration:** 778ms
-- **Max Duration:** 781ms
-- **95th Percentile:** 781ms
+- **Min Duration:** 772ms
+- **Max Duration:** 784ms
+- **95th Percentile:** 784ms
 - **Runs:** 3
 
 ---
@@ -66,10 +58,10 @@ SELECT id, status, country, age FROM iceberg.lab.events  LIMIT 100
 ```
 
 - **Count/Rows:** 100
-- **Average Duration:** 730ms
-- **Min Duration:** 629ms
-- **Max Duration:** 782ms
-- **95th Percentile:** 782ms
+- **Average Duration:** 732ms
+- **Min Duration:** 627ms
+- **Max Duration:** 784ms
+- **95th Percentile:** 784ms
 - **Runs:** 3
 
 ---
@@ -81,10 +73,10 @@ SELECT id, status, country, age FROM iceberg.lab.events  ORDER BY id LIMIT 100
 ```
 
 - **Count/Rows:** 100
-- **Average Duration:** 1146ms
-- **Min Duration:** 976ms
-- **Max Duration:** 1473ms
-- **95th Percentile:** 1425ms
+- **Average Duration:** 997ms
+- **Min Duration:** 953ms
+- **Max Duration:** 1035ms
+- **95th Percentile:** 1032ms
 - **Runs:** 3
 
 ---
@@ -97,9 +89,9 @@ SELECT id, status, country, age FROM iceberg.lab.events  LIMIT 100 OFFSET 9900
 
 - **Count/Rows:** 0
 - **Average Duration:** 164ms
-- **Min Duration:** 159ms
-- **Max Duration:** 172ms
-- **95th Percentile:** 171ms
+- **Min Duration:** 162ms
+- **Max Duration:** 164ms
+- **95th Percentile:** 164ms
 - **Runs:** 3
 
 ---
@@ -111,10 +103,10 @@ SELECT id, status, country, age FROM iceberg.lab.events  ORDER BY id LIMIT 100 O
 ```
 
 - **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 157ms
-- **Max Duration:** 162ms
-- **95th Percentile:** 162ms
+- **Average Duration:** 163ms
+- **Min Duration:** 161ms
+- **Max Duration:** 163ms
+- **95th Percentile:** 163ms
 - **Runs:** 3
 
 ---
@@ -126,10 +118,10 @@ SELECT status, COUNT(*) as count FROM iceberg.lab.events  GROUP BY status
 ```
 
 - **Count/Rows:** 4
-- **Average Duration:** 778ms
-- **Min Duration:** 772ms
-- **Max Duration:** 783ms
-- **95th Percentile:** 783ms
+- **Average Duration:** 787ms
+- **Min Duration:** 781ms
+- **Max Duration:** 791ms
+- **95th Percentile:** 791ms
 - **Runs:** 3
 
 ---
@@ -141,10 +133,10 @@ SELECT country, COUNT(*) as count FROM iceberg.lab.events  GROUP BY country
 ```
 
 - **Count/Rows:** 6
-- **Average Duration:** 680ms
-- **Min Duration:** 630ms
-- **Max Duration:** 778ms
-- **95th Percentile:** 764ms
+- **Average Duration:** 785ms
+- **Min Duration:** 782ms
+- **Max Duration:** 787ms
+- **95th Percentile:** 787ms
 - **Runs:** 3
 
 ---
@@ -156,10 +148,10 @@ SELECT age, COUNT(*) as count FROM iceberg.lab.events  GROUP BY age
 ```
 
 - **Count/Rows:** 62
-- **Average Duration:** 976ms
-- **Min Duration:** 920ms
-- **Max Duration:** 1085ms
-- **95th Percentile:** 1069ms
+- **Average Duration:** 875ms
+- **Min Duration:** 800ms
+- **Max Duration:** 951ms
+- **95th Percentile:** 944ms
 - **Runs:** 3
 
 ---
@@ -171,10 +163,10 @@ SELECT COUNT(*) as count FROM iceberg.lab.events WHERE status = 'paid'
 ```
 
 - **Count/Rows:** 25,006,161
-- **Average Duration:** 735ms
-- **Min Duration:** 626ms
-- **Max Duration:** 795ms
-- **95th Percentile:** 794ms
+- **Average Duration:** 732ms
+- **Min Duration:** 621ms
+- **Max Duration:** 794ms
+- **95th Percentile:** 793ms
 - **Runs:** 3
 
 ---
@@ -186,10 +178,10 @@ SELECT id, status, country, age FROM iceberg.lab.events WHERE status = 'paid' LI
 ```
 
 - **Count/Rows:** 100
-- **Average Duration:** 734ms
-- **Min Duration:** 641ms
-- **Max Duration:** 781ms
-- **95th Percentile:** 781ms
+- **Average Duration:** 736ms
+- **Min Duration:** 631ms
+- **Max Duration:** 793ms
+- **95th Percentile:** 793ms
 - **Runs:** 3
 
 ---
@@ -201,10 +193,10 @@ SELECT id, status, country, age FROM iceberg.lab.events WHERE status = 'paid' OR
 ```
 
 - **Count/Rows:** 100
-- **Average Duration:** 893ms
-- **Min Duration:** 851ms
-- **Max Duration:** 935ms
-- **95th Percentile:** 931ms
+- **Average Duration:** 976ms
+- **Min Duration:** 941ms
+- **Max Duration:** 1022ms
+- **95th Percentile:** 1017ms
 - **Runs:** 3
 
 ---
@@ -216,10 +208,10 @@ SELECT id, status, country, age FROM iceberg.lab.events WHERE status = 'paid' LI
 ```
 
 - **Count/Rows:** 0
-- **Average Duration:** 162ms
-- **Min Duration:** 161ms
-- **Max Duration:** 162ms
-- **95th Percentile:** 162ms
+- **Average Duration:** 163ms
+- **Min Duration:** 162ms
+- **Max Duration:** 164ms
+- **95th Percentile:** 164ms
 - **Runs:** 3
 
 ---
@@ -231,10 +223,10 @@ SELECT id, status, country, age FROM iceberg.lab.events WHERE status = 'paid' OR
 ```
 
 - **Count/Rows:** 0
-- **Average Duration:** 161ms
-- **Min Duration:** 160ms
-- **Max Duration:** 161ms
-- **95th Percentile:** 161ms
+- **Average Duration:** 163ms
+- **Min Duration:** 161ms
+- **Max Duration:** 164ms
+- **95th Percentile:** 164ms
 - **Runs:** 3
 
 ---
@@ -246,10 +238,10 @@ SELECT status, COUNT(*) as count FROM iceberg.lab.events WHERE status = 'paid' G
 ```
 
 - **Count/Rows:** 1
-- **Average Duration:** 734ms
-- **Min Duration:** 626ms
-- **Max Duration:** 797ms
-- **95th Percentile:** 796ms
+- **Average Duration:** 681ms
+- **Min Duration:** 630ms
+- **Max Duration:** 781ms
+- **95th Percentile:** 766ms
 - **Runs:** 3
 
 ---
@@ -262,9 +254,9 @@ SELECT country, COUNT(*) as count FROM iceberg.lab.events WHERE status = 'paid' 
 
 - **Count/Rows:** 6
 - **Average Duration:** 732ms
-- **Min Duration:** 630ms
-- **Max Duration:** 785ms
-- **95th Percentile:** 785ms
+- **Min Duration:** 633ms
+- **Max Duration:** 783ms
+- **95th Percentile:** 783ms
 - **Runs:** 3
 
 ---
@@ -276,130 +268,10 @@ SELECT age, COUNT(*) as count FROM iceberg.lab.events WHERE status = 'paid' GROU
 ```
 
 - **Count/Rows:** 62
-- **Average Duration:** 795ms
-- **Min Duration:** 777ms
-- **Max Duration:** 827ms
-- **95th Percentile:** 823ms
-- **Runs:** 3
-
----
-
-### country = 'US'
-
-```sql
-SELECT COUNT(*) as count FROM iceberg.lab.events WHERE country = 'US'
-```
-
-- **Count/Rows:** 19,591,116
-- **Average Duration:** 777ms
-- **Min Duration:** 775ms
-- **Max Duration:** 779ms
-- **95th Percentile:** 779ms
-- **Runs:** 3
-
----
-
-### country = 'US'
-
-```sql
-SELECT id, status, country, age FROM iceberg.lab.events WHERE country = 'US' LIMIT 100
-```
-
-- **Count/Rows:** 100
-- **Average Duration:** 792ms
-- **Min Duration:** 781ms
-- **Max Duration:** 809ms
-- **95th Percentile:** 807ms
-- **Runs:** 3
-
----
-
-### country = 'US'
-
-```sql
-SELECT id, status, country, age FROM iceberg.lab.events WHERE country = 'US' ORDER BY id LIMIT 100
-```
-
-- **Count/Rows:** 100
-- **Average Duration:** 863ms
-- **Min Duration:** 855ms
-- **Max Duration:** 874ms
-- **95th Percentile:** 873ms
-- **Runs:** 3
-
----
-
-### country = 'US'
-
-```sql
-SELECT id, status, country, age FROM iceberg.lab.events WHERE country = 'US' LIMIT 100 OFFSET 9900
-```
-
-- **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 156ms
-- **Max Duration:** 161ms
-- **95th Percentile:** 161ms
-- **Runs:** 3
-
----
-
-### country = 'US'
-
-```sql
-SELECT id, status, country, age FROM iceberg.lab.events WHERE country = 'US' ORDER BY id LIMIT 100 OFFSET 9900
-```
-
-- **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 158ms
-- **Max Duration:** 160ms
-- **95th Percentile:** 160ms
-- **Runs:** 3
-
----
-
-### country = 'US'
-
-```sql
-SELECT status, COUNT(*) as count FROM iceberg.lab.events WHERE country = 'US' GROUP BY status
-```
-
-- **Count/Rows:** 4
-- **Average Duration:** 678ms
-- **Min Duration:** 623ms
-- **Max Duration:** 786ms
-- **95th Percentile:** 770ms
-- **Runs:** 3
-
----
-
-### country = 'US'
-
-```sql
-SELECT country, COUNT(*) as count FROM iceberg.lab.events WHERE country = 'US' GROUP BY country
-```
-
-- **Count/Rows:** 1
-- **Average Duration:** 785ms
-- **Min Duration:** 782ms
-- **Max Duration:** 790ms
-- **95th Percentile:** 790ms
-- **Runs:** 3
-
----
-
-### country = 'US'
-
-```sql
-SELECT age, COUNT(*) as count FROM iceberg.lab.events WHERE country = 'US' GROUP BY age
-```
-
-- **Count/Rows:** 62
-- **Average Duration:** 803ms
-- **Min Duration:** 780ms
-- **Max Duration:** 820ms
-- **95th Percentile:** 819ms
+- **Average Duration:** 629ms
+- **Min Duration:** 628ms
+- **Max Duration:** 629ms
+- **95th Percentile:** 629ms
 - **Runs:** 3
 
 ---

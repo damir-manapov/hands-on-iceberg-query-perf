@@ -203,56 +203,32 @@ async function runQuery(
   console.log(`SQL: ${sql}`);
 
   const startTime = Date.now();
+  const result = await client.query(sql);
+  const duration = Date.now() - startTime;
 
-  if (queryType === "COUNT") {
-    // COUNT queries
-    const result = await client.query<{ count: number }>(sql);
-    const duration = Date.now() - startTime;
-    const count = result[0]?.count ?? 0;
-    console.log(`✅ Count: ${count.toLocaleString()}, Duration: ${duration}ms`);
-    return {
-      query: sql,
-      duration,
-      count,
-      filter: metadata.filter,
-      queryType,
-      paginationType: metadata.paginationType,
-      sorted: metadata.sorted,
-      aggregationInfo: metadata.aggregationInfo,
-    };
-  } else if (queryType === "PAGINATION") {
-    // Pagination queries - return actual number of rows
-    const result = await client.query(sql);
-    const duration = Date.now() - startTime;
-    const rowCount = result.length;
-    console.log(`✅ Rows returned: ${rowCount}, Duration: ${duration}ms`);
-    return {
-      query: sql,
-      duration,
-      count: rowCount,
-      filter: metadata.filter,
-      queryType,
-      paginationType: metadata.paginationType,
-      sorted: metadata.sorted,
-      aggregationInfo: metadata.aggregationInfo,
-    };
-  } else {
-    // Aggregation queries - return number of result rows
-    const result = await client.query(sql);
-    const duration = Date.now() - startTime;
-    const rowCount = result.length;
-    console.log(`✅ Result rows: ${rowCount}, Duration: ${duration}ms`);
-    return {
-      query: sql,
-      duration,
-      count: rowCount,
-      filter: metadata.filter,
-      queryType,
-      paginationType: metadata.paginationType,
-      sorted: metadata.sorted,
-      aggregationInfo: metadata.aggregationInfo,
-    };
-  }
+  // Extract count based on query type
+  const count = queryType === "COUNT" 
+    ? (result[0] as { count: number })?.count ?? 0
+    : result.length;
+  
+  const labels = {
+    COUNT: "Count",
+    PAGINATION: "Rows returned", 
+    AGGREGATION: "Result rows"
+  };
+  
+  console.log(`✅ ${labels[queryType]}: ${count.toLocaleString()}, Duration: ${duration}ms`);
+
+  return {
+    query: sql,
+    duration,
+    count,
+    filter: metadata.filter,
+    queryType,
+    paginationType: metadata.paginationType,
+    sorted: metadata.sorted,
+    aggregationInfo: metadata.aggregationInfo,
+  };
 }
 
 async function main() {
