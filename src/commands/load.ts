@@ -15,7 +15,7 @@ import {
 } from "../sqlHelpers";
 import { ensureDir, humanNumber, humanSize, makeBatches } from "../utils";
 import { Limiter } from "../Limiter";
-import { TABLE_CONFIG } from "../config/tableConfig";
+import { TABLE_CONFIGS } from "../config/tableConfig";
 import { LOAD } from "../config/load";
 import { createTrinoConfig } from "../config/trinoConfig";
 // Fixed codec setup: always use zstd with level 6
@@ -180,64 +180,76 @@ async function main() {
   const client = new TrinoClient(trino);
   const limiter = new Limiter(LOAD.concurrency);
 
-  // 1) Base schema + base table
-  if (LOAD.createBaseSchema) {
-    console.log("Ensuring schema + base table exist…");
-    await client.execute(createSchemaSQL(TABLE_CONFIG));
-    await client.execute(createBaseTableSQL(TABLE_CONFIG));
-  }
-
   ensureDir(LOAD.checkpointDir);
 
-  // 2) Create a table for zstd level 6, load data, and collect results
   const codec = FIXED_CODEC;
   const level = FIXED_LEVEL;
-  const name = TABLE_CONFIG.tableBase;
-  console.log(`Creating table ${name} (codec=${codec}, level=${level})…`);
-  const variantTableSQLs = createVariantTableSQLs(
-    TABLE_CONFIG,
-    name,
-    codec,
-    level
-  );
-  for (const sql of variantTableSQLs) {
-    await client.execute(sql);
-  }
-  const cpFile = path.join(LOAD.checkpointDir, `.cp_${name}.json`);
-  const t0 = Date.now();
-  await loadTable(
-    client,
-    limiter,
-    TABLE_CONFIG,
-    name,
-    LOAD.startId,
-    LOAD.totalRows,
-    LOAD.batchRows,
-    cpFile
-  );
-  const durationMs = Date.now() - t0;
-  const durationMinutes = (durationMs / 60000).toFixed(1);
-  console.log(`Load finished for ${name} in ${durationMinutes}min`);
+  const results: SizeRow[] = [];
 
-  if (LOAD.compactAfterLoad) {
-    await optimizeTable(
-      client,
-      `${TABLE_CONFIG.catalog}.${TABLE_CONFIG.schema}.${name}`
+  // Process each table configuration
+  for (const tableConfig of TABLE_CONFIGS) {
+    // Generate dynamic table name with row count
+    const rowCountSuffix = humanNumber(LOAD.totalRows).replace(/,/g, "");
+    const name = `${tableConfig.tableBase}_${rowCountSuffix}`;
+
+    console.log(
+      `\n🚀 Processing table: ${name} (${humanNumber(LOAD.totalRows)} rows)`
     );
+
+    // 1) Base schema + base table
+    if (LOAD.createBaseSchema) {
+      console.log(`Ensuring schema + base table exist for ${name}…`);
+      await client.execute(createSchemaSQL(tableConfig));
+      await client.execute(createBaseTableSQL(tableConfig));
+    }
+    console.log(`Creating table ${name} (codec=${codec}, level=${level})…`);
+    const variantTableSQLs = createVariantTableSQLs(
+      tableConfig,
+      name,
+      codec,
+      level
+    );
+    for (const sql of variantTableSQLs) {
+      await client.execute(sql);
+    }
+
+    const cpFile = path.join(LOAD.checkpointDir, `.cp_${name}.json`);
+    const t0 = Date.now();
+    await loadTable(
+      client,
+      limiter,
+      tableConfig,
+      name,
+      LOAD.startId,
+      LOAD.totalRows,
+      LOAD.batchRows,
+      cpFile
+    );
+    const durationMs = Date.now() - t0;
+    const durationMinutes = (durationMs / 60000).toFixed(1);
+    console.log(`Load finished for ${name} in ${durationMinutes}min`);
+
+    if (LOAD.compactAfterLoad) {
+      await optimizeTable(
+        client,
+        `${tableConfig.catalog}.${tableConfig.schema}.${name}`
+      );
+    }
+
+    const exampleRow = await client.query(
+      createSelectExamplesSQL(tableConfig, name)
+    );
+    console.log(`Example row for ${name}:`);
+    console.log(JSON.stringify(exampleRow, null, 1));
+
+    // Measure immediately and collect result
+    const result = await measureSizes(client, tableConfig, name, codec, level);
+    results.push(result);
   }
-
-  const exampleRow = await client.query(
-    createSelectExamplesSQL(TABLE_CONFIG, name)
-  );
-  console.log("exampleRow");
-  console.log(JSON.stringify(exampleRow, null, 1));
-
-  // Measure immediately and collect result
-  const result = await measureSizes(client, TABLE_CONFIG, name, codec, level);
 
   // 3) Print results & CSV
-  console.log("\nRESULTS (bytes rounded):");
-  const pretty = {
+  console.log("\n📊 RESULTS (bytes rounded):");
+  const prettyResults = results.map(result => ({
     table: result.table_name,
     codec: result.codec,
     level: result.level,
@@ -253,9 +265,10 @@ async function main() {
           total_human: humanSize(result.total_bytes || result.data_bytes),
         }
       : {}),
-  };
-  console.table([pretty]);
+  }));
+  console.table(prettyResults);
 
+  // Write CSV with all results
   const headers = [
     "table_name",
     "codec",
@@ -268,26 +281,32 @@ async function main() {
       ? ["manifest_bytes", "manifest_human", "total_bytes", "total_human"]
       : []),
   ];
-  const row = [
-    result.table_name,
-    result.codec,
-    String(result.level),
-    humanNumber(result.rows),
-    String(result.data_bytes),
-    humanSize(result.data_bytes),
-    String(result.bytes_per_row),
-    ...(LOAD.includeManifestBytes
-      ? [
-          String(result.manifest_bytes ?? 0),
-          humanSize(result.manifest_bytes ?? 0),
-          String(result.total_bytes ?? result.data_bytes),
-          humanSize(result.total_bytes ?? result.data_bytes),
-        ]
-      : []),
-  ].join(",");
-  const lines = [headers.join(","), row];
+
+  const csvRows = results.map(result =>
+    [
+      result.table_name,
+      result.codec,
+      String(result.level),
+      humanNumber(result.rows),
+      String(result.data_bytes),
+      humanSize(result.data_bytes),
+      String(result.bytes_per_row),
+      ...(LOAD.includeManifestBytes
+        ? [
+            String(result.manifest_bytes ?? 0),
+            humanSize(result.manifest_bytes ?? 0),
+            String(result.total_bytes ?? result.data_bytes),
+            humanSize(result.total_bytes ?? result.data_bytes),
+          ]
+        : []),
+    ].join(",")
+  );
+
+  const lines = [headers.join(","), ...csvRows];
   fs.writeFileSync(LOAD.resultsCsv, lines.join("\n"), "utf-8");
-  console.log(`\nSaved CSV: ${LOAD.resultsCsv}`);
+  console.log(
+    `\n💾 Saved CSV with ${results.length} tables: ${LOAD.resultsCsv}`
+  );
 }
 
 main().catch(e => {

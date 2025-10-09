@@ -5,13 +5,15 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { TrinoClient } from "../TrinoClient";
-import { TABLE_CONFIG } from "../config/tableConfig";
+import { TABLE_CONFIGS } from "../config/tableConfig";
+import { LOAD } from "../config/load";
 import { createTrinoConfig } from "../config/trinoConfig";
 import {
   createFilterConditions,
   createAggregationColumns,
   createPaginationColumns,
 } from "../config/queries";
+import { humanNumber } from "../utils";
 
 interface QueryResult {
   query: string;
@@ -207,17 +209,20 @@ async function runQuery(
   const duration = Date.now() - startTime;
 
   // Extract count based on query type
-  const count = queryType === "COUNT" 
-    ? (result[0] as { count: number })?.count ?? 0
-    : result.length;
-  
+  const count =
+    queryType === "COUNT"
+      ? ((result[0] as { count: number })?.count ?? 0)
+      : result.length;
+
   const labels = {
     COUNT: "Count",
-    PAGINATION: "Rows returned", 
-    AGGREGATION: "Result rows"
+    PAGINATION: "Rows returned",
+    AGGREGATION: "Result rows",
   };
-  
-  console.log(`✅ ${labels[queryType]}: ${count.toLocaleString()}, Duration: ${duration}ms`);
+
+  console.log(
+    `✅ ${labels[queryType]}: ${count.toLocaleString()}, Duration: ${duration}ms`
+  );
 
   return {
     query: sql,
@@ -236,8 +241,11 @@ async function main() {
   const trino = createTrinoConfig("query");
   const client = new TrinoClient(trino);
 
-  const tableName = TABLE_CONFIG.tableBase;
-  const fullTableName = `${TABLE_CONFIG.catalog}.${TABLE_CONFIG.schema}.${tableName}`;
+  // Use the first table config and generate dynamic table name
+  const tableConfig = TABLE_CONFIGS[0];
+  const rowCountSuffix = humanNumber(LOAD.totalRows).replace(/,/g, "");
+  const tableName = `${tableConfig.tableBase}_${rowCountSuffix}`;
+  const fullTableName = `${tableConfig.catalog}.${tableConfig.schema}.${tableName}`;
 
   console.log(`🚀 Running query performance tests on ${fullTableName}`);
 

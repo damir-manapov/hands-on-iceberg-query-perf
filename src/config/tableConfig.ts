@@ -1,4 +1,5 @@
 import { TableConfig } from "../types";
+import { generateRandomStrings } from "../utils";
 
 // Base configuration shared across all tables
 const BASE_CONFIG = {
@@ -99,7 +100,7 @@ export const TABLE_CONFIGS: TableConfig[] = [
       row_28: {
         kind: "enum",
         base: "string",
-        values: ["value1", "value2", "value3", "value4", "value5"],
+        values: generateRandomStrings(5, 1),
         nullable: 0,
       },
       row_29: { kind: "string", length: 8, nullable: 0 },
@@ -154,7 +155,7 @@ export const TABLE_CONFIGS: TableConfig[] = [
       row_48: {
         kind: "enum",
         base: "string",
-        values: ["enum1", "enum2", "enum3", "enum4", "enum5", "enum6", "enum7", "enum8"],
+        values: generateRandomStrings(8, 1),
         nullable: 0,
       },
       row_49: { kind: "string", length: 2, nullable: 0 },
@@ -165,7 +166,7 @@ export const TABLE_CONFIGS: TableConfig[] = [
       row_54: {
         kind: "enum",
         base: "string",
-        values: ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8"],
+        values: generateRandomStrings(8, 1),
         nullable: 0,
       },
       row_55: { kind: "string", length: 2, nullable: 0 },
@@ -182,19 +183,19 @@ export const TABLE_CONFIGS: TableConfig[] = [
       row_61: {
         kind: "enum",
         base: "string",
-        values: ["category1", "category2", "category3", "category4", "category5"],
+        values: generateRandomStrings(500, 8),
         nullable: 0,
       },
       row_62: {
         kind: "enum",
         base: "string",
-        values: ["type1", "type2", "type3", "type4", "type5"],
+        values: generateRandomStrings(500, 8),
         nullable: 0,
       },
       row_63: {
         kind: "enum",
         base: "string",
-        values: ["status1", "status2", "status3", "status4", "status5"],
+        values: generateRandomStrings(500, 8),
         nullable: 0,
       },
       row_64: { kind: "string", length: 3, nullable: 0 },
@@ -203,7 +204,7 @@ export const TABLE_CONFIGS: TableConfig[] = [
       row_67: {
         kind: "enum",
         base: "string",
-        values: ["flag1", "flag2", "flag3"],
+        values: generateRandomStrings(3, 1),
         nullable: 0,
       },
       row_68: { kind: "string", length: 12, nullable: 0 },
@@ -213,7 +214,7 @@ export const TABLE_CONFIGS: TableConfig[] = [
       row_72: {
         kind: "enum",
         base: "string",
-        values: ["mode1", "mode2", "mode3"],
+        values: generateRandomStrings(3, 1),
         nullable: 0,
       },
       row_73: { kind: "string", length: 32, nullable: 0 },
@@ -236,6 +237,3 @@ export const TABLE_CONFIGS: TableConfig[] = [
     },
   },
 ];
-
-// For backward compatibility, export the first table config as TABLE_CONFIG
-export const TABLE_CONFIG = TABLE_CONFIGS[0];
