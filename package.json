@@ -6,8 +6,8 @@
   "license": "MIT",
   "scripts": {
     "rmcheckpoints": "rm -rf .checkpoints",
-    "load": "tsx src/commands/load.ts",
-    "reload": "yarn rmcheckpoints & yarn load",
+    "generate": "tsx src/commands/generate.ts",
+    "regenerate": "yarn rmcheckpoints & yarn generate",
     "query": "tsx src/commands/query.ts",
     "build": "tsc -p tsconfig.json",
     "lint": "tsc --noEmit",

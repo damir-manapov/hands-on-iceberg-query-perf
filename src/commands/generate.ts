@@ -1,5 +1,5 @@
 /**
- * load.ts — Generate, load & measure Iceberg/Parquet table
+ * generate.ts — Generate, load & measure Iceberg/Parquet table
  */
 
 import * as fs from "node:fs";
