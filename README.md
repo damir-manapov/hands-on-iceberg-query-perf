@@ -7,6 +7,7 @@ It cotains docker compose to get all up and runnig, generates charts and gives y
 * Start environment `yarn compose:up`
 * Define your schema: `src/config/tableConfig.ts`
 * Load data: `yarn load` or `yarn reload` if you would like to start from scratch deleting checkpoints
+* Test query performance: `yarn query`
 * Lint code: `yarn lint` (TypeScript type checking) or `yarn lint:fix` (ESLint with auto-fix)
 * Stop environment with volumes deletion: `yarn compose:clean`
 * Clear `.checkpoints` if you want to rerun generation: `yarn rmcheckpoints`
@@ -93,6 +94,7 @@ WITH (sorted_by = ARRAY['order_date']);
 # Generate data
 
 * Run: `yarn load`
+* Test query performance: `yarn query`
 
 ## Algorithms
 You need [Mermaid Preview](https://marketplace.visualstudio.com/items?itemName=vstirbu.vscode-mermaid-preview) extension to see gparhs in [vsc](https://code.visualstudio.com/)

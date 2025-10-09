@@ -4,7 +4,7 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { SizeRow, TableConfig, TrinoConfig } from "../types";
+import { SizeRow, TableConfig } from "../types";
 import { TrinoClient } from "../TrinoClient";
 import {
   buildInsertSQL,
@@ -17,6 +17,7 @@ import { ensureDir, humanNumber, humanSize, makeBatches } from "../utils";
 import { Limiter } from "../Limiter";
 import { TABLE_CONFIG } from "../config/tableConfig";
 import { LOAD } from "../config/load";
+import { createTrinoConfig } from "../config/trinoConfig";
 // Fixed codec setup: always use zstd with level 6
 const FIXED_CODEC = "zstd" as const;
 const FIXED_LEVEL = 6 as const;
@@ -175,22 +176,7 @@ async function measureSizes(
 
 async function main() {
   // Trino connection
-  const trino: TrinoConfig = {
-    host: process.env.TRINO_HOST ?? "http://localhost",
-    port: Number(process.env.TRINO_PORT ?? "8080"),
-    catalog: TABLE_CONFIG.catalog,
-    schema: TABLE_CONFIG.schema,
-    user: process.env.TRINO_USER ?? "bench",
-    source: "ts-bench",
-    ...(process.env.TRINO_USERNAME && process.env.TRINO_PASSWORD
-      ? {
-          basicAuth: {
-            username: process.env.TRINO_USERNAME,
-            password: process.env.TRINO_PASSWORD,
-          },
-        }
-      : {}),
-  };
+  const trino = createTrinoConfig("load");
   const client = new TrinoClient(trino);
   const limiter = new Limiter(LOAD.concurrency);
 
