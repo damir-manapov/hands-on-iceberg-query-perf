@@ -39,6 +39,7 @@ export type TableConfig = {
   idColumn?: string;
   totalRows: number[]; // array of row counts to generate for this table
   batchRows: number; // batch size for inserts
+  enabled: boolean; // if false, this table is skipped
 };
 
 export type TrinoConfig = {

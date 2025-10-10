@@ -188,6 +188,10 @@ async function main() {
 
   // Process each table configuration
   for (const tableConfig of TABLE_CONFIGS) {
+    if (tableConfig.enabled === false) {
+      console.log(`⏭️  Skipping disabled table: ${tableConfig.tableBase}`);
+      continue;
+    }
     // Process each row count for this table
     for (const totalRows of tableConfig.totalRows) {
       const batchRows = tableConfig.batchRows;

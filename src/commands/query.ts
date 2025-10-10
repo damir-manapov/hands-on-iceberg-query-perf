@@ -480,6 +480,10 @@ async function main() {
 
   // Process each table
   for (let i = 0; i < TABLE_CONFIGS.length; i++) {
+    if (TABLE_CONFIGS[i].enabled === false) {
+      console.log(`⏭️  Skipping disabled table: ${TABLE_CONFIGS[i].tableBase}`);
+      continue;
+    }
     const tableConfig = TABLE_CONFIGS[i];
     const queryConfig = tableQueryConfigs[i];
 
