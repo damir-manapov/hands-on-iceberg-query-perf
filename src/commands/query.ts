@@ -7,10 +7,7 @@ import * as path from "node:path";
 import { TrinoClient } from "../TrinoClient";
 import { TABLE_CONFIGS } from "../config/tableConfigs";
 import { createTrinoConfig } from "../config/trinoConfig";
-import {
-  createTableQueryConfigs,
-  TableQueryConfig,
-} from "../config/tableQueries";
+import { createQuerySets, TableQueryConfig } from "../config/tableQueries";
 import { humanNumber } from "../utils";
 import { TableConfig } from "../types";
 import { PaginationColumn } from "../config/tableQueries";
@@ -237,7 +234,9 @@ async function processTable(
   tableConfig: TableConfig,
   queryConfig: TableQueryConfig,
   tableName: string,
-  fullTableName: string
+  fullTableName: string,
+  querySetName: string,
+  iterations: number
 ): Promise<void> {
   console.log(`\n🚀 Running query performance tests on ${fullTableName}`);
 
@@ -256,8 +255,7 @@ async function processTable(
     return;
   }
 
-  // const iterations = 1;
-  const iterations = 3;
+  // Use iterations from query set
   const results: QueryResult[] = [];
 
   // Get query configurations for this table
@@ -466,7 +464,7 @@ async function processTable(
   );
 
   // Write report to file
-  const reportDir = "reports";
+  const reportDir = path.join("reports", querySetName);
   if (!fs.existsSync(reportDir)) {
     fs.mkdirSync(reportDir, { recursive: true });
   }
@@ -482,42 +480,64 @@ async function main() {
   const trino = createTrinoConfig("query");
   const client = new TrinoClient(trino);
 
-  // Get table query configurations
-  const tableQueryConfigs = createTableQueryConfigs();
+  // Get query sets
+  const querySets = createQuerySets();
 
   console.log(
-    `🚀 Running query performance tests on all tables with per-table row counts`
+    `🚀 Running query performance tests on ${querySets.length} query sets`
   );
 
-  // Process each table
-  for (let i = 0; i < TABLE_CONFIGS.length; i++) {
-    if (TABLE_CONFIGS[i].enabled === false) {
-      console.log(`⏭️  Skipping disabled table: ${TABLE_CONFIGS[i].tableBase}`);
+  // Process each query set
+  for (const querySet of querySets) {
+    if (!querySet.enabled) {
+      console.log(`⏭️  Skipping disabled query set: ${querySet.name}`);
       continue;
     }
-    const tableConfig = TABLE_CONFIGS[i];
-    const queryConfig = tableQueryConfigs[i];
 
-    // Process each row count for this table
-    for (const totalRows of tableConfig.totalRows) {
-      const rowCountSuffix = humanNumber(totalRows).replace(/,/g, "");
+    console.log(`\n📋 Processing query set: ${querySet.name}`);
 
-      const tableName = `${tableConfig.tableBase}_${rowCountSuffix}`;
-      const fullTableName = `${tableConfig.catalog}.${tableConfig.schema}.${tableName}`;
+    // Process each table in this query set
+    for (let i = 0; i < TABLE_CONFIGS.length; i++) {
+      if (TABLE_CONFIGS[i].enabled === false) {
+        console.log(
+          `⏭️  Skipping disabled table: ${TABLE_CONFIGS[i].tableBase}`
+        );
+        continue;
+      }
 
-      await processTable(
-        client,
-        tableConfig,
-        queryConfig,
-        tableName,
-        fullTableName
+      const tableConfig = TABLE_CONFIGS[i];
+      const queryConfig = querySet.tableConfigs.find(
+        config => config.tableBase === tableConfig.tableBase
       );
+
+      if (!queryConfig) {
+        console.log(
+          `⏭️  No query config found for table: ${tableConfig.tableBase} in set: ${querySet.name}`
+        );
+        continue;
+      }
+
+      // Process each row count for this table
+      for (const totalRows of tableConfig.totalRows) {
+        const rowCountSuffix = humanNumber(totalRows).replace(/,/g, "");
+
+        const tableName = `${tableConfig.tableBase}_${rowCountSuffix}`;
+        const fullTableName = `${tableConfig.catalog}.${tableConfig.schema}.${tableName}`;
+
+        await processTable(
+          client,
+          tableConfig,
+          queryConfig,
+          tableName,
+          fullTableName,
+          querySet.name,
+          querySet.iterations
+        );
+      }
     }
   }
 
-  console.log(
-    `\n✅ Completed performance tests for all ${TABLE_CONFIGS.length} tables!`
-  );
+  console.log(`\n✅ Completed performance tests for all query sets!`);
 }
 
 main().catch(e => {

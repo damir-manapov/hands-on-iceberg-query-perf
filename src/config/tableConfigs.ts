@@ -20,9 +20,9 @@ export const TABLE_CONFIGS: TableConfig[] = [
     tableBase: "narrow",
     totalRows: [
       1_000_000,
-      10_000_000,
-      100_000_000,
-      1_000_000_000,
+      // 10_000_000,
+      // 100_000_000,
+      // 1_000_000_000,
     ],
     batchRows: 1_000_000,
     enabled: true,
