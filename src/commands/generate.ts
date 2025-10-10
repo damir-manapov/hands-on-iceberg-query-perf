@@ -282,46 +282,6 @@ async function main() {
       : {}),
   }));
   console.table(prettyResults);
-
-  // Write CSV with all results
-  const headers = [
-    "table_name",
-    "codec",
-    "level",
-    "rows",
-    "data_bytes",
-    "data_human",
-    "bytes_per_row",
-    ...(LOAD.includeManifestBytes
-      ? ["manifest_bytes", "manifest_human", "total_bytes", "total_human"]
-      : []),
-  ];
-
-  const csvRows = results.map(result =>
-    [
-      result.table_name,
-      result.codec,
-      String(result.level),
-      humanNumber(result.rows),
-      String(result.data_bytes),
-      humanSize(result.data_bytes),
-      String(result.bytes_per_row),
-      ...(LOAD.includeManifestBytes
-        ? [
-            String(result.manifest_bytes ?? 0),
-            humanSize(result.manifest_bytes ?? 0),
-            String(result.total_bytes ?? result.data_bytes),
-            humanSize(result.total_bytes ?? result.data_bytes),
-          ]
-        : []),
-    ].join(",")
-  );
-
-  const lines = [headers.join(","), ...csvRows];
-  fs.writeFileSync(LOAD.resultsCsv, lines.join("\n"), "utf-8");
-  console.log(
-    `\n💾 Saved CSV with ${results.length} tables: ${LOAD.resultsCsv}`
-  );
 }
 
 main().catch(e => {

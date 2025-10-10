@@ -7,7 +7,6 @@ export const LOAD = {
   checkpointDir: process.env.CHECKPOINT_DIR ?? ".checkpoints",
   includeManifestBytes:
     (process.env.MEASURE_INCLUDE_MANIFESTS ?? "true") === "true",
-  resultsCsv: process.env.RESULTS_CSV ?? "results_sizes.csv",
 };
 
 // wide table:
