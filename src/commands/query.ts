@@ -13,7 +13,7 @@ import {
 } from "../config/tableQueries";
 import { humanNumber } from "../utils";
 import { TableConfig } from "../types";
-import { PaginationColumn } from "../config/queries";
+import { PaginationColumn } from "../config/tableQueries";
 
 interface QueryResult {
   query: string;

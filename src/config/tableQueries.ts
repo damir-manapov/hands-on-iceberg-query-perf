@@ -1,8 +1,17 @@
-import {
-  FilterCondition,
-  AggregationColumn,
-  PaginationColumn,
-} from "./queries";
+export interface FilterCondition {
+  whereClause: string;
+  description: string;
+}
+
+export interface AggregationColumn {
+  column: string;
+  description: string;
+}
+
+export interface PaginationColumn {
+  column: string;
+  description: string;
+}
 
 export interface TableQueryConfig {
   tableBase: string;
