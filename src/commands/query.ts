@@ -62,7 +62,7 @@ function formatBytes(bytes: number): string {
 }
 
 function formatMs(value: number): string {
-  return Math.ceil(value).toLocaleString();
+  return Math.ceil(value).toLocaleString().replaceAll(',', '_');
 }
 
 function calculatePercentile(values: number[], percentile: number): number {
