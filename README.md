@@ -6,11 +6,11 @@ It cotains docker compose to get all up and runnig, generates charts and gives y
 
 * Start environment `yarn compose:up`
 * Define your schema: `src/config/tableConfig.ts`
-* Generate data: `yarn generate` or `yarn regenerate` if you would like to start from scratch
+* Generate data: `yarn generate`
 * Test query performance: `yarn query`
 * Lint code: `yarn lint` (TypeScript type checking) or `yarn lint:fix` (ESLint with auto-fix)
 * Stop environment with volumes deletion: `yarn compose:clean`
-* Del environments and restart from scratch: `yarn compose:clean && yarn compose:up && sleep 5 && yarn regenerate`
+* Del environments and restart from scratch: `yarn compose:clean && yarn compose:up && sleep 5 && yarn generate`
 
 ## Docker Compose via yarn scripts
 
