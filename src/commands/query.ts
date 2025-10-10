@@ -269,7 +269,9 @@ async function processTable(
 
   // Run queries for each filter
   for (const filter of filters) {
-    console.log(`\n📋 Processing filter: ${filter.description}`);
+    console.log(
+      `\n📋 Processing filter: ${filter.description || filter.whereClause}`
+    );
 
     // COUNT queries
     const where = filter.whereClause ? `WHERE ${filter.whereClause}` : "";
@@ -278,10 +280,10 @@ async function processTable(
       const result = await runQuery(
         client,
         countSQL,
-        `Count query (${filter.description})`,
+        `Count query (${filter.description || filter.whereClause})`,
         "COUNT",
         {
-          filter: filter.description,
+          filter: filter.description || filter.whereClause,
         }
       );
       results.push(result);
@@ -302,10 +304,10 @@ async function processTable(
       const result = await runQuery(
         client,
         firstPageSQL,
-        `First page (${filter.description})`,
+        `First page (${filter.description || filter.whereClause})`,
         "PAGINATION",
         {
-          filter: filter.description,
+          filter: filter.description || filter.whereClause,
           paginationType: "first page",
           sorted: false,
         }
@@ -322,10 +324,10 @@ async function processTable(
       const result = await runQuery(
         client,
         firstPageSortedSQL,
-        `First page sorted (${filter.description})`,
+        `First page sorted (${filter.description || filter.whereClause})`,
         "PAGINATION",
         {
-          filter: filter.description,
+          filter: filter.description || filter.whereClause,
           paginationType: "first page",
           sorted: true,
         }
@@ -342,10 +344,10 @@ async function processTable(
       const result = await runQuery(
         client,
         hundredthPageSQL,
-        `100th page (${filter.description})`,
+        `100th page (${filter.description || filter.whereClause})`,
         "PAGINATION",
         {
-          filter: filter.description,
+          filter: filter.description || filter.whereClause,
           paginationType: "100th page",
           sorted: false,
         }
@@ -362,10 +364,10 @@ async function processTable(
       const result = await runQuery(
         client,
         hundredthPageSortedSQL,
-        `100th page sorted (${filter.description})`,
+        `100th page sorted (${filter.description || filter.whereClause})`,
         "PAGINATION",
         {
-          filter: filter.description,
+          filter: filter.description || filter.whereClause,
           paginationType: "100th page",
           sorted: true,
         }
@@ -383,10 +385,10 @@ async function processTable(
         const result = await runQuery(
           client,
           aggregationSQL,
-          `Aggregation (${filter.description}, ${aggCol.column})`,
+          `Aggregation (${filter.description || filter.whereClause}, ${aggCol.column})`,
           "AGGREGATION",
           {
-            filter: filter.description,
+            filter: filter.description || filter.whereClause,
             aggregationInfo: aggCol.column,
           }
         );
