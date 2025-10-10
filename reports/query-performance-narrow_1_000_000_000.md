@@ -1,822 +1,1062 @@
 # Query Performance Report
 
 **Table:** iceberg.lab.narrow_1_000_000_000  
-**Generated:** 2025-10-10T09:01:16.612Z  
+**Generated:** 2025-10-10T19:38:29.413Z  
 **Total Rows:** 991,000,000  
 **Table Size:** 28.4 GB
 
 ## Summary
 
 - **Total Queries:** 240
-- **Average Duration:** 5029ms
-- **Fastest Query:** 155ms
-- **Slowest Query:** 28718ms
-- **95th Percentile:** 21643ms
+- **Average Duration:** 7_152ms
+- **Fastest Query:** 636ms
+- **Slowest Query:** 31_627ms
+- **95th Percentile:** 20_998ms
 
 ## Query Results
 
 | Filter | Type | Pagination Type | Sorted | Aggregation | Count/Rows | Avg Duration (ms) | Min Duration (ms) | Max Duration (ms) | P95 Duration (ms) | Runs |
 |--------|------|-----------------|--------|-------------|------------|-------------------|-------------------|-------------------|-------------------|------|
-| no filters | COUNT | - | - | - | 991,000,000 | 775 | 774 | 777 | 777 | 3 |
-| no filters | PAGINATION | first page | No | - | 100 | 777 | 775 | 778 | 778 | 3 |
-| no filters | PAGINATION | first page | Yes | - | 100 | 8365 | 6972 | 9248 | 9211 | 3 |
-| no filters | PAGINATION | 100th page | No | - | 0 | 159 | 158 | 159 | 159 | 3 |
-| no filters | PAGINATION | 100th page | Yes | - | 0 | 158 | 155 | 159 | 159 | 3 |
-| no filters | AGGREGATION | - | - | status GROUP BY | 4 | 1341 | 1306 | 1365 | 1364 | 3 |
-| no filters | AGGREGATION | - | - | country GROUP BY | 6 | 2071 | 1933 | 2165 | 2160 | 3 |
-| no filters | AGGREGATION | - | - | age GROUP BY | 62 | 5398 | 5389 | 5403 | 5403 | 3 |
-| status = 'paid' | COUNT | - | - | - | 247,752,249 | 1052 | 1038 | 1078 | 1075 | 3 |
-| status = 'paid' | PAGINATION | first page | No | - | 100 | 726 | 625 | 777 | 777 | 3 |
-| status = 'paid' | PAGINATION | first page | Yes | - | 100 | 7234 | 6579 | 7748 | 7711 | 3 |
-| status = 'paid' | PAGINATION | 100th page | No | - | 0 | 159 | 158 | 160 | 160 | 3 |
-| status = 'paid' | PAGINATION | 100th page | Yes | - | 0 | 158 | 156 | 160 | 160 | 3 |
-| status = 'paid' | AGGREGATION | - | - | status GROUP BY | 1 | 1198 | 1154 | 1238 | 1235 | 3 |
-| status = 'paid' | AGGREGATION | - | - | country GROUP BY | 6 | 2271 | 2221 | 2353 | 2342 | 3 |
-| status = 'paid' | AGGREGATION | - | - | age GROUP BY | 62 | 3616 | 3589 | 3629 | 3629 | 3 |
-| country = 'US' | COUNT | - | - | - | 194,233,488 | 1554 | 1532 | 1575 | 1573 | 3 |
-| country = 'US' | PAGINATION | first page | No | - | 100 | 774 | 771 | 776 | 776 | 3 |
-| country = 'US' | PAGINATION | first page | Yes | - | 100 | 6962 | 6242 | 7489 | 7456 | 3 |
-| country = 'US' | PAGINATION | 100th page | No | - | 0 | 160 | 159 | 160 | 160 | 3 |
-| country = 'US' | PAGINATION | 100th page | Yes | - | 0 | 158 | 158 | 158 | 158 | 3 |
-| country = 'US' | AGGREGATION | - | - | status GROUP BY | 4 | 1994 | 1722 | 2197 | 2184 | 3 |
-| country = 'US' | AGGREGATION | - | - | country GROUP BY | 1 | 1882 | 1783 | 1931 | 1931 | 3 |
-| country = 'US' | AGGREGATION | - | - | age GROUP BY | 62 | 3814 | 3778 | 3857 | 3852 | 3 |
-| age > 30 | COUNT | - | - | - | 756,406,627 | 2117 | 2092 | 2135 | 2134 | 3 |
-| age > 30 | PAGINATION | first page | No | - | 100 | 779 | 775 | 781 | 781 | 3 |
-| age > 30 | PAGINATION | first page | Yes | - | 100 | 9574 | 8887 | 10106 | 10069 | 3 |
-| age > 30 | PAGINATION | 100th page | No | - | 0 | 159 | 158 | 160 | 160 | 3 |
-| age > 30 | PAGINATION | 100th page | Yes | - | 0 | 158 | 157 | 159 | 159 | 3 |
-| age > 30 | AGGREGATION | - | - | status GROUP BY | 4 | 3226 | 2776 | 3453 | 3453 | 3 |
-| age > 30 | AGGREGATION | - | - | country GROUP BY | 6 | 3889 | 3846 | 3925 | 3923 | 3 |
-| age > 30 | AGGREGATION | - | - | age GROUP BY | 48 | 5046 | 5003 | 5100 | 5094 | 3 |
-| amount > 1000 | COUNT | - | - | - | 847,288,776 | 7334 | 7252 | 7459 | 7443 | 3 |
-| amount > 1000 | PAGINATION | first page | No | - | 100 | 729 | 634 | 779 | 779 | 3 |
-| amount > 1000 | PAGINATION | first page | Yes | - | 100 | 16896 | 16330 | 17192 | 17190 | 3 |
-| amount > 1000 | PAGINATION | 100th page | No | - | 0 | 158 | 155 | 159 | 159 | 3 |
-| amount > 1000 | PAGINATION | 100th page | Yes | - | 0 | 159 | 158 | 159 | 159 | 3 |
-| amount > 1000 | AGGREGATION | - | - | status GROUP BY | 4 | 8575 | 8243 | 8760 | 8756 | 3 |
-| amount > 1000 | AGGREGATION | - | - | country GROUP BY | 6 | 9282 | 9245 | 9346 | 9337 | 3 |
-| amount > 1000 | AGGREGATION | - | - | age GROUP BY | 62 | 12408 | 12167 | 12701 | 12667 | 3 |
-| date >= 2024-06-01 | COUNT | - | - | - | 579,393,927 | 6087 | 6024 | 6179 | 6167 | 3 |
-| date >= 2024-06-01 | PAGINATION | first page | No | - | 100 | 784 | 773 | 793 | 793 | 3 |
-| date >= 2024-06-01 | PAGINATION | first page | Yes | - | 100 | 14503 | 14121 | 14694 | 14694 | 3 |
-| date >= 2024-06-01 | PAGINATION | 100th page | No | - | 0 | 159 | 158 | 160 | 160 | 3 |
-| date >= 2024-06-01 | PAGINATION | 100th page | Yes | - | 0 | 159 | 158 | 159 | 159 | 3 |
-| date >= 2024-06-01 | AGGREGATION | - | - | status GROUP BY | 4 | 7162 | 6563 | 7558 | 7539 | 3 |
-| date >= 2024-06-01 | AGGREGATION | - | - | country GROUP BY | 6 | 7875 | 7843 | 7914 | 7910 | 3 |
-| date >= 2024-06-01 | AGGREGATION | - | - | age GROUP BY | 62 | 10171 | 10051 | 10252 | 10248 | 3 |
-| status='paid' AND country='US' | COUNT | - | - | - | 48,556,404 | 2036 | 1943 | 2172 | 2154 | 3 |
-| status='paid' AND country='US' | PAGINATION | first page | No | - | 100 | 679 | 623 | 790 | 774 | 3 |
-| status='paid' AND country='US' | PAGINATION | first page | Yes | - | 100 | 6351 | 5851 | 6603 | 6603 | 3 |
-| status='paid' AND country='US' | PAGINATION | 100th page | No | - | 0 | 158 | 157 | 159 | 159 | 3 |
-| status='paid' AND country='US' | PAGINATION | 100th page | Yes | - | 0 | 159 | 157 | 160 | 160 | 3 |
-| status='paid' AND country='US' | AGGREGATION | - | - | status GROUP BY | 1 | 1876 | 1541 | 2112 | 2099 | 3 |
-| status='paid' AND country='US' | AGGREGATION | - | - | country GROUP BY | 1 | 2174 | 2092 | 2320 | 2299 | 3 |
-| status='paid' AND country='US' | AGGREGATION | - | - | age GROUP BY | 62 | 3664 | 3599 | 3737 | 3729 | 3 |
-| age BETWEEN 25 AND 45 | COUNT | - | - | - | 330,919,230 | 2330 | 2306 | 2346 | 2346 | 3 |
-| age BETWEEN 25 AND 45 | PAGINATION | first page | No | - | 100 | 725 | 626 | 778 | 778 | 3 |
-| age BETWEEN 25 AND 45 | PAGINATION | first page | Yes | - | 100 | 7840 | 7489 | 8067 | 8057 | 3 |
-| age BETWEEN 25 AND 45 | PAGINATION | 100th page | No | - | 0 | 159 | 158 | 159 | 159 | 3 |
-| age BETWEEN 25 AND 45 | PAGINATION | 100th page | Yes | - | 0 | 158 | 157 | 159 | 159 | 3 |
-| age BETWEEN 25 AND 45 | AGGREGATION | - | - | status GROUP BY | 4 | 2983 | 2581 | 3277 | 3259 | 3 |
-| age BETWEEN 25 AND 45 | AGGREGATION | - | - | country GROUP BY | 6 | 3629 | 3593 | 3667 | 3663 | 3 |
-| age BETWEEN 25 AND 45 | AGGREGATION | - | - | age GROUP BY | 21 | 3649 | 3615 | 3704 | 3697 | 3 |
-| tags contains 'alpha' | COUNT | - | - | - | 376,241,913 | 21805 | 21233 | 22603 | 22501 | 3 |
-| tags contains 'alpha' | PAGINATION | first page | No | - | 100 | 778 | 769 | 782 | 782 | 3 |
-| tags contains 'alpha' | PAGINATION | first page | Yes | - | 100 | 28302 | 27620 | 28718 | 28703 | 3 |
-| tags contains 'alpha' | PAGINATION | 100th page | No | - | 0 | 159 | 158 | 159 | 159 | 3 |
-| tags contains 'alpha' | PAGINATION | 100th page | Yes | - | 0 | 159 | 158 | 160 | 160 | 3 |
-| tags contains 'alpha' | AGGREGATION | - | - | status GROUP BY | 4 | 22207 | 21602 | 22607 | 22588 | 3 |
-| tags contains 'alpha' | AGGREGATION | - | - | country GROUP BY | 6 | 22810 | 22676 | 23048 | 23014 | 3 |
-| tags contains 'alpha' | AGGREGATION | - | - | age GROUP BY | 62 | 24381 | 24215 | 24584 | 24560 | 3 |
-| note IS NOT NULL | COUNT | - | - | - | 891,886,739 | 8682 | 8551 | 8898 | 8868 | 3 |
-| note IS NOT NULL | PAGINATION | first page | No | - | 100 | 777 | 773 | 779 | 779 | 3 |
-| note IS NOT NULL | PAGINATION | first page | Yes | - | 100 | 18421 | 17874 | 18875 | 18839 | 3 |
-| note IS NOT NULL | PAGINATION | 100th page | No | - | 0 | 158 | 157 | 158 | 158 | 3 |
-| note IS NOT NULL | PAGINATION | 100th page | Yes | - | 0 | 158 | 158 | 158 | 158 | 3 |
-| note IS NOT NULL | AGGREGATION | - | - | status GROUP BY | 4 | 9887 | 9578 | 10042 | 10042 | 3 |
-| note IS NOT NULL | AGGREGATION | - | - | country GROUP BY | 6 | 10817 | 10642 | 11131 | 11086 | 3 |
-| note IS NOT NULL | AGGREGATION | - | - | age GROUP BY | 62 | 14097 | 14011 | 14210 | 14196 | 3 |
+| no filters | COUNT | - | - | - | 991,000,000 | 774 | 772 | 776 | 776 | 3 |
+| no filters | PAGINATION | first page | No | - | 100 | 781 | 776 | 787 | 787 | 3 |
+| no filters | PAGINATION | first page | Yes | - | 100 | 9_834 | 9_351 | 10_451 | 10_376 | 3 |
+| no filters | PAGINATION | 100th page | No | - | 100 | 780 | 779 | 780 | 780 | 3 |
+| no filters | PAGINATION | 100th page | Yes | - | 100 | 11_946 | 11_790 | 12_170 | 12_141 | 3 |
+| no filters | AGGREGATION | - | - | status | 4 | 1_945 | 1_941 | 1_949 | 1_949 | 3 |
+| no filters | AGGREGATION | - | - | country | 6 | 2_420 | 2_391 | 2_456 | 2_452 | 3 |
+| no filters | AGGREGATION | - | - | age | 62 | 5_508 | 5_425 | 5_666 | 5_643 | 3 |
+| status = 'paid' | COUNT | - | - | - | 247,752,249 | 1_534 | 1_475 | 1_634 | 1_620 | 3 |
+| status = 'paid' | PAGINATION | first page | No | - | 100 | 755 | 679 | 796 | 796 | 3 |
+| status = 'paid' | PAGINATION | first page | Yes | - | 100 | 7_324 | 7_259 | 7_399 | 7_391 | 3 |
+| status = 'paid' | PAGINATION | 100th page | No | - | 100 | 785 | 783 | 788 | 788 | 3 |
+| status = 'paid' | PAGINATION | 100th page | Yes | - | 100 | 10_383 | 10_284 | 10_441 | 10_440 | 3 |
+| status = 'paid' | AGGREGATION | - | - | status | 1 | 1_942 | 1_935 | 1_947 | 1_947 | 3 |
+| status = 'paid' | AGGREGATION | - | - | country | 6 | 2_536 | 2_520 | 2_544 | 2_544 | 3 |
+| status = 'paid' | AGGREGATION | - | - | age | 62 | 4_140 | 4_116 | 4_176 | 4_172 | 3 |
+| country = 'US' | COUNT | - | - | - | 194,233,488 | 1_846 | 1_823 | 1_861 | 1_861 | 3 |
+| country = 'US' | PAGINATION | first page | No | - | 100 | 788 | 786 | 790 | 790 | 3 |
+| country = 'US' | PAGINATION | first page | Yes | - | 100 | 7_045 | 6_940 | 7_202 | 7_182 | 3 |
+| country = 'US' | PAGINATION | 100th page | No | - | 100 | 936 | 796 | 1_106 | 1_086 | 3 |
+| country = 'US' | PAGINATION | 100th page | Yes | - | 100 | 10_077 | 10_055 | 10_117 | 10_112 | 3 |
+| country = 'US' | AGGREGATION | - | - | status | 4 | 2_561 | 2_471 | 2_648 | 2_640 | 3 |
+| country = 'US' | AGGREGATION | - | - | country | 1 | 2_241 | 2_157 | 2_311 | 2_306 | 3 |
+| country = 'US' | AGGREGATION | - | - | age | 62 | 4_204 | 4_097 | 4_261 | 4_261 | 3 |
+| age > 30 | COUNT | - | - | - | 756,406,627 | 2_389 | 2_344 | 2_438 | 2_433 | 3 |
+| age > 30 | PAGINATION | first page | No | - | 100 | 787 | 784 | 790 | 790 | 3 |
+| age > 30 | PAGINATION | first page | Yes | - | 100 | 10_372 | 10_287 | 10_470 | 10_459 | 3 |
+| age > 30 | PAGINATION | 100th page | No | - | 100 | 831 | 764 | 932 | 919 | 3 |
+| age > 30 | PAGINATION | 100th page | Yes | - | 100 | 12_837 | 12_606 | 13_086 | 13_060 | 3 |
+| age > 30 | AGGREGATION | - | - | status | 4 | 3_655 | 3_630 | 3_674 | 3_673 | 3 |
+| age > 30 | AGGREGATION | - | - | country | 6 | 4_022 | 3_977 | 4_084 | 4_076 | 3 |
+| age > 30 | AGGREGATION | - | - | age | 48 | 5_332 | 5_299 | 5_392 | 5_384 | 3 |
+| amount > 1000 | COUNT | - | - | - | 847,288,776 | 7_076 | 6_684 | 7_505 | 7_459 | 3 |
+| amount > 1000 | PAGINATION | first page | No | - | 100 | 792 | 785 | 805 | 804 | 3 |
+| amount > 1000 | PAGINATION | first page | Yes | - | 100 | 18_700 | 17_362 | 20_987 | 20_664 | 3 |
+| amount > 1000 | PAGINATION | 100th page | No | - | 100 | 1_352 | 718 | 2_260 | 2_142 | 3 |
+| amount > 1000 | PAGINATION | 100th page | Yes | - | 100 | 19_698 | 19_215 | 20_208 | 20_155 | 3 |
+| amount > 1000 | AGGREGATION | - | - | status | 4 | 9_494 | 9_428 | 9_573 | 9_564 | 3 |
+| amount > 1000 | AGGREGATION | - | - | country | 6 | 10_209 | 9_919 | 10_392 | 10_385 | 3 |
+| amount > 1000 | AGGREGATION | - | - | age | 62 | 12_761 | 12_664 | 12_830 | 12_826 | 3 |
+| date >= 2024-06-01 | COUNT | - | - | - | 579,393,927 | 6_144 | 6_117 | 6_171 | 6_169 | 3 |
+| date >= 2024-06-01 | PAGINATION | first page | No | - | 100 | 729 | 690 | 799 | 789 | 3 |
+| date >= 2024-06-01 | PAGINATION | first page | Yes | - | 100 | 14_734 | 13_795 | 15_322 | 15_299 | 3 |
+| date >= 2024-06-01 | PAGINATION | 100th page | No | - | 100 | 1_040 | 881 | 1_232 | 1_210 | 3 |
+| date >= 2024-06-01 | PAGINATION | 100th page | Yes | - | 100 | 17_417 | 16_856 | 17_812 | 17_789 | 3 |
+| date >= 2024-06-01 | AGGREGATION | - | - | status | 4 | 7_320 | 7_286 | 7_339 | 7_339 | 3 |
+| date >= 2024-06-01 | AGGREGATION | - | - | country | 6 | 8_045 | 7_917 | 8_109 | 8_109 | 3 |
+| date >= 2024-06-01 | AGGREGATION | - | - | age | 62 | 10_560 | 10_355 | 10_735 | 10_721 | 3 |
+| status='paid' AND country='US' | COUNT | - | - | - | 48,556,404 | 2_300 | 2_244 | 2_372 | 2_364 | 3 |
+| status='paid' AND country='US' | PAGINATION | first page | No | - | 100 | 744 | 658 | 789 | 789 | 3 |
+| status='paid' AND country='US' | PAGINATION | first page | Yes | - | 100 | 6_441 | 6_395 | 6_473 | 6_471 | 3 |
+| status='paid' AND country='US' | PAGINATION | 100th page | No | - | 100 | 781 | 663 | 873 | 867 | 3 |
+| status='paid' AND country='US' | PAGINATION | 100th page | Yes | - | 100 | 9_430 | 8_994 | 10_097 | 10_007 | 3 |
+| status='paid' AND country='US' | AGGREGATION | - | - | status | 1 | 2_337 | 2_247 | 2_395 | 2_393 | 3 |
+| status='paid' AND country='US' | AGGREGATION | - | - | country | 1 | 2_336 | 2_320 | 2_346 | 2_346 | 3 |
+| status='paid' AND country='US' | AGGREGATION | - | - | age | 62 | 3_821 | 3_766 | 3_869 | 3_865 | 3 |
+| age BETWEEN 25 AND 45 | COUNT | - | - | - | 330,919,230 | 2_917 | 2_696 | 3_259 | 3_213 | 3 |
+| age BETWEEN 25 AND 45 | PAGINATION | first page | No | - | 100 | 742 | 648 | 790 | 790 | 3 |
+| age BETWEEN 25 AND 45 | PAGINATION | first page | Yes | - | 100 | 8_614 | 8_422 | 8_928 | 8_885 | 3 |
+| age BETWEEN 25 AND 45 | PAGINATION | 100th page | No | - | 100 | 925 | 738 | 1_215 | 1_176 | 3 |
+| age BETWEEN 25 AND 45 | PAGINATION | 100th page | Yes | - | 100 | 11_133 | 10_881 | 11_441 | 11_405 | 3 |
+| age BETWEEN 25 AND 45 | AGGREGATION | - | - | status | 4 | 3_527 | 3_397 | 3_629 | 3_622 | 3 |
+| age BETWEEN 25 AND 45 | AGGREGATION | - | - | country | 6 | 3_848 | 3_795 | 3_919 | 3_910 | 3 |
+| age BETWEEN 25 AND 45 | AGGREGATION | - | - | age | 21 | 3_962 | 3_947 | 3_978 | 3_977 | 3 |
+| tags contains 'alpha' | COUNT | - | - | - | 376,241,913 | 19_932 | 19_637 | 20_384 | 20_324 | 3 |
+| tags contains 'alpha' | PAGINATION | first page | No | - | 100 | 743 | 648 | 795 | 795 | 3 |
+| tags contains 'alpha' | PAGINATION | first page | Yes | - | 100 | 27_190 | 26_991 | 27_442 | 27_412 | 3 |
+| tags contains 'alpha' | PAGINATION | 100th page | No | - | 100 | 771 | 637 | 839 | 839 | 3 |
+| tags contains 'alpha' | PAGINATION | 100th page | Yes | - | 100 | 30_260 | 29_315 | 31_627 | 31_448 | 3 |
+| tags contains 'alpha' | AGGREGATION | - | - | status | 4 | 20_768 | 20_634 | 20_961 | 20_936 | 3 |
+| tags contains 'alpha' | AGGREGATION | - | - | country | 6 | 21_348 | 21_195 | 21_620 | 21_581 | 3 |
+| tags contains 'alpha' | AGGREGATION | - | - | age | 62 | 23_068 | 22_652 | 23_518 | 23_470 | 3 |
+| note IS NOT NULL | COUNT | - | - | - | 891,886,739 | 8_695 | 8_516 | 8_990 | 8_949 | 3 |
+| note IS NOT NULL | PAGINATION | first page | No | - | 100 | 701 | 636 | 797 | 785 | 3 |
+| note IS NOT NULL | PAGINATION | first page | Yes | - | 100 | 18_438 | 18_194 | 18_905 | 18_836 | 3 |
+| note IS NOT NULL | PAGINATION | 100th page | No | - | 100 | 1_147 | 742 | 1_869 | 1_765 | 3 |
+| note IS NOT NULL | PAGINATION | 100th page | Yes | - | 100 | 20_745 | 20_599 | 20_963 | 20_934 | 3 |
+| note IS NOT NULL | AGGREGATION | - | - | status | 4 | 10_128 | 10_054 | 10_256 | 10_238 | 3 |
+| note IS NOT NULL | AGGREGATION | - | - | country | 6 | 11_069 | 10_663 | 11_424 | 11_394 | 3 |
+| note IS NOT NULL | AGGREGATION | - | - | age | 62 | 13_926 | 13_652 | 14_147 | 14_130 | 3 |
 
 ## Query Details
 
 ### no filters - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 `
 - **Count/Rows:** 991,000,000
-- **Average Duration:** 775ms
-- **Min Duration:** 774ms
-- **Max Duration:** 777ms
-- **P95 Duration:** 777ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 774ms
+- **Min Duration:** 772ms
+- **Max Duration:** 776ms
+- **P95 Duration:** 776ms
 - **Runs:** 3
 
 ### no filters - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000  LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 777ms
-- **Min Duration:** 775ms
-- **Max Duration:** 778ms
-- **P95 Duration:** 778ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 781ms
+- **Min Duration:** 776ms
+- **Max Duration:** 787ms
+- **P95 Duration:** 787ms
 - **Runs:** 3
 
 ### no filters - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000  ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 8365ms
-- **Min Duration:** 6972ms
-- **Max Duration:** 9248ms
-- **P95 Duration:** 9211ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 9_834ms
+- **Min Duration:** 9_351ms
+- **Max Duration:** 10_451ms
+- **P95 Duration:** 10_376ms
 - **Runs:** 3
 
 ### no filters - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000  LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 158ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000  OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 780ms
+- **Min Duration:** 779ms
+- **Max Duration:** 780ms
+- **P95 Duration:** 780ms
 - **Runs:** 3
 
 ### no filters - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000  ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 155ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000  ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 11_946ms
+- **Min Duration:** 11_790ms
+- **Max Duration:** 12_170ms
+- **P95 Duration:** 12_141ms
 - **Runs:** 3
 
 ### no filters - AGGREGATION
 - **SQL:** `SELECT status, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000  GROUP BY status`
 - **Count/Rows:** 4
-- **Average Duration:** 1341ms
-- **Min Duration:** 1306ms
-- **Max Duration:** 1365ms
-- **P95 Duration:** 1364ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** status
+- **Average Duration:** 1_945ms
+- **Min Duration:** 1_941ms
+- **Max Duration:** 1_949ms
+- **P95 Duration:** 1_949ms
 - **Runs:** 3
 
 ### no filters - AGGREGATION
 - **SQL:** `SELECT country, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000  GROUP BY country`
 - **Count/Rows:** 6
-- **Average Duration:** 2071ms
-- **Min Duration:** 1933ms
-- **Max Duration:** 2165ms
-- **P95 Duration:** 2160ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** country
+- **Average Duration:** 2_420ms
+- **Min Duration:** 2_391ms
+- **Max Duration:** 2_456ms
+- **P95 Duration:** 2_452ms
 - **Runs:** 3
 
 ### no filters - AGGREGATION
 - **SQL:** `SELECT age, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000  GROUP BY age`
 - **Count/Rows:** 62
-- **Average Duration:** 5398ms
-- **Min Duration:** 5389ms
-- **Max Duration:** 5403ms
-- **P95 Duration:** 5403ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** age
+- **Average Duration:** 5_508ms
+- **Min Duration:** 5_425ms
+- **Max Duration:** 5_666ms
+- **P95 Duration:** 5_643ms
 - **Runs:** 3
 
 ### status = 'paid' - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid'`
 - **Count/Rows:** 247,752,249
-- **Average Duration:** 1052ms
-- **Min Duration:** 1038ms
-- **Max Duration:** 1078ms
-- **P95 Duration:** 1075ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 1_534ms
+- **Min Duration:** 1_475ms
+- **Max Duration:** 1_634ms
+- **P95 Duration:** 1_620ms
 - **Runs:** 3
 
 ### status = 'paid' - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 726ms
-- **Min Duration:** 625ms
-- **Max Duration:** 777ms
-- **P95 Duration:** 777ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 755ms
+- **Min Duration:** 679ms
+- **Max Duration:** 796ms
+- **P95 Duration:** 796ms
 - **Runs:** 3
 
 ### status = 'paid' - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 7234ms
-- **Min Duration:** 6579ms
-- **Max Duration:** 7748ms
-- **P95 Duration:** 7711ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 7_324ms
+- **Min Duration:** 7_259ms
+- **Max Duration:** 7_399ms
+- **P95 Duration:** 7_391ms
 - **Runs:** 3
 
 ### status = 'paid' - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 158ms
-- **Max Duration:** 160ms
-- **P95 Duration:** 160ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 785ms
+- **Min Duration:** 783ms
+- **Max Duration:** 788ms
+- **P95 Duration:** 788ms
 - **Runs:** 3
 
 ### status = 'paid' - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 156ms
-- **Max Duration:** 160ms
-- **P95 Duration:** 160ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 10_383ms
+- **Min Duration:** 10_284ms
+- **Max Duration:** 10_441ms
+- **P95 Duration:** 10_440ms
 - **Runs:** 3
 
 ### status = 'paid' - AGGREGATION
 - **SQL:** `SELECT status, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' GROUP BY status`
 - **Count/Rows:** 1
-- **Average Duration:** 1198ms
-- **Min Duration:** 1154ms
-- **Max Duration:** 1238ms
-- **P95 Duration:** 1235ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** status
+- **Average Duration:** 1_942ms
+- **Min Duration:** 1_935ms
+- **Max Duration:** 1_947ms
+- **P95 Duration:** 1_947ms
 - **Runs:** 3
 
 ### status = 'paid' - AGGREGATION
 - **SQL:** `SELECT country, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' GROUP BY country`
 - **Count/Rows:** 6
-- **Average Duration:** 2271ms
-- **Min Duration:** 2221ms
-- **Max Duration:** 2353ms
-- **P95 Duration:** 2342ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** country
+- **Average Duration:** 2_536ms
+- **Min Duration:** 2_520ms
+- **Max Duration:** 2_544ms
+- **P95 Duration:** 2_544ms
 - **Runs:** 3
 
 ### status = 'paid' - AGGREGATION
 - **SQL:** `SELECT age, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' GROUP BY age`
 - **Count/Rows:** 62
-- **Average Duration:** 3616ms
-- **Min Duration:** 3589ms
-- **Max Duration:** 3629ms
-- **P95 Duration:** 3629ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** age
+- **Average Duration:** 4_140ms
+- **Min Duration:** 4_116ms
+- **Max Duration:** 4_176ms
+- **P95 Duration:** 4_172ms
 - **Runs:** 3
 
 ### country = 'US' - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE country = 'US'`
 - **Count/Rows:** 194,233,488
-- **Average Duration:** 1554ms
-- **Min Duration:** 1532ms
-- **Max Duration:** 1575ms
-- **P95 Duration:** 1573ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 1_846ms
+- **Min Duration:** 1_823ms
+- **Max Duration:** 1_861ms
+- **P95 Duration:** 1_861ms
 - **Runs:** 3
 
 ### country = 'US' - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE country = 'US' LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 774ms
-- **Min Duration:** 771ms
-- **Max Duration:** 776ms
-- **P95 Duration:** 776ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 788ms
+- **Min Duration:** 786ms
+- **Max Duration:** 790ms
+- **P95 Duration:** 790ms
 - **Runs:** 3
 
 ### country = 'US' - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE country = 'US' ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 6962ms
-- **Min Duration:** 6242ms
-- **Max Duration:** 7489ms
-- **P95 Duration:** 7456ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 7_045ms
+- **Min Duration:** 6_940ms
+- **Max Duration:** 7_202ms
+- **P95 Duration:** 7_182ms
 - **Runs:** 3
 
 ### country = 'US' - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE country = 'US' LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 160ms
-- **Min Duration:** 159ms
-- **Max Duration:** 160ms
-- **P95 Duration:** 160ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE country = 'US' OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 936ms
+- **Min Duration:** 796ms
+- **Max Duration:** 1_106ms
+- **P95 Duration:** 1_086ms
 - **Runs:** 3
 
 ### country = 'US' - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE country = 'US' ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 158ms
-- **Max Duration:** 158ms
-- **P95 Duration:** 158ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE country = 'US' ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 10_077ms
+- **Min Duration:** 10_055ms
+- **Max Duration:** 10_117ms
+- **P95 Duration:** 10_112ms
 - **Runs:** 3
 
 ### country = 'US' - AGGREGATION
 - **SQL:** `SELECT status, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE country = 'US' GROUP BY status`
 - **Count/Rows:** 4
-- **Average Duration:** 1994ms
-- **Min Duration:** 1722ms
-- **Max Duration:** 2197ms
-- **P95 Duration:** 2184ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** status
+- **Average Duration:** 2_561ms
+- **Min Duration:** 2_471ms
+- **Max Duration:** 2_648ms
+- **P95 Duration:** 2_640ms
 - **Runs:** 3
 
 ### country = 'US' - AGGREGATION
 - **SQL:** `SELECT country, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE country = 'US' GROUP BY country`
 - **Count/Rows:** 1
-- **Average Duration:** 1882ms
-- **Min Duration:** 1783ms
-- **Max Duration:** 1931ms
-- **P95 Duration:** 1931ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** country
+- **Average Duration:** 2_241ms
+- **Min Duration:** 2_157ms
+- **Max Duration:** 2_311ms
+- **P95 Duration:** 2_306ms
 - **Runs:** 3
 
 ### country = 'US' - AGGREGATION
 - **SQL:** `SELECT age, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE country = 'US' GROUP BY age`
 - **Count/Rows:** 62
-- **Average Duration:** 3814ms
-- **Min Duration:** 3778ms
-- **Max Duration:** 3857ms
-- **P95 Duration:** 3852ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** age
+- **Average Duration:** 4_204ms
+- **Min Duration:** 4_097ms
+- **Max Duration:** 4_261ms
+- **P95 Duration:** 4_261ms
 - **Runs:** 3
 
 ### age > 30 - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE age > 30`
 - **Count/Rows:** 756,406,627
-- **Average Duration:** 2117ms
-- **Min Duration:** 2092ms
-- **Max Duration:** 2135ms
-- **P95 Duration:** 2134ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 2_389ms
+- **Min Duration:** 2_344ms
+- **Max Duration:** 2_438ms
+- **P95 Duration:** 2_433ms
 - **Runs:** 3
 
 ### age > 30 - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE age > 30 LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 779ms
-- **Min Duration:** 775ms
-- **Max Duration:** 781ms
-- **P95 Duration:** 781ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 787ms
+- **Min Duration:** 784ms
+- **Max Duration:** 790ms
+- **P95 Duration:** 790ms
 - **Runs:** 3
 
 ### age > 30 - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE age > 30 ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 9574ms
-- **Min Duration:** 8887ms
-- **Max Duration:** 10106ms
-- **P95 Duration:** 10069ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 10_372ms
+- **Min Duration:** 10_287ms
+- **Max Duration:** 10_470ms
+- **P95 Duration:** 10_459ms
 - **Runs:** 3
 
 ### age > 30 - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE age > 30 LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 158ms
-- **Max Duration:** 160ms
-- **P95 Duration:** 160ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE age > 30 OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 831ms
+- **Min Duration:** 764ms
+- **Max Duration:** 932ms
+- **P95 Duration:** 919ms
 - **Runs:** 3
 
 ### age > 30 - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE age > 30 ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 157ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE age > 30 ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 12_837ms
+- **Min Duration:** 12_606ms
+- **Max Duration:** 13_086ms
+- **P95 Duration:** 13_060ms
 - **Runs:** 3
 
 ### age > 30 - AGGREGATION
 - **SQL:** `SELECT status, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE age > 30 GROUP BY status`
 - **Count/Rows:** 4
-- **Average Duration:** 3226ms
-- **Min Duration:** 2776ms
-- **Max Duration:** 3453ms
-- **P95 Duration:** 3453ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** status
+- **Average Duration:** 3_655ms
+- **Min Duration:** 3_630ms
+- **Max Duration:** 3_674ms
+- **P95 Duration:** 3_673ms
 - **Runs:** 3
 
 ### age > 30 - AGGREGATION
 - **SQL:** `SELECT country, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE age > 30 GROUP BY country`
 - **Count/Rows:** 6
-- **Average Duration:** 3889ms
-- **Min Duration:** 3846ms
-- **Max Duration:** 3925ms
-- **P95 Duration:** 3923ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** country
+- **Average Duration:** 4_022ms
+- **Min Duration:** 3_977ms
+- **Max Duration:** 4_084ms
+- **P95 Duration:** 4_076ms
 - **Runs:** 3
 
 ### age > 30 - AGGREGATION
 - **SQL:** `SELECT age, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE age > 30 GROUP BY age`
 - **Count/Rows:** 48
-- **Average Duration:** 5046ms
-- **Min Duration:** 5003ms
-- **Max Duration:** 5100ms
-- **P95 Duration:** 5094ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** age
+- **Average Duration:** 5_332ms
+- **Min Duration:** 5_299ms
+- **Max Duration:** 5_392ms
+- **P95 Duration:** 5_384ms
 - **Runs:** 3
 
 ### amount > 1000 - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE amount > 1000`
 - **Count/Rows:** 847,288,776
-- **Average Duration:** 7334ms
-- **Min Duration:** 7252ms
-- **Max Duration:** 7459ms
-- **P95 Duration:** 7443ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 7_076ms
+- **Min Duration:** 6_684ms
+- **Max Duration:** 7_505ms
+- **P95 Duration:** 7_459ms
 - **Runs:** 3
 
 ### amount > 1000 - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE amount > 1000 LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 729ms
-- **Min Duration:** 634ms
-- **Max Duration:** 779ms
-- **P95 Duration:** 779ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 792ms
+- **Min Duration:** 785ms
+- **Max Duration:** 805ms
+- **P95 Duration:** 804ms
 - **Runs:** 3
 
 ### amount > 1000 - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE amount > 1000 ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 16896ms
-- **Min Duration:** 16330ms
-- **Max Duration:** 17192ms
-- **P95 Duration:** 17190ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 18_700ms
+- **Min Duration:** 17_362ms
+- **Max Duration:** 20_987ms
+- **P95 Duration:** 20_664ms
 - **Runs:** 3
 
 ### amount > 1000 - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE amount > 1000 LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 155ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE amount > 1000 OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 1_352ms
+- **Min Duration:** 718ms
+- **Max Duration:** 2_260ms
+- **P95 Duration:** 2_142ms
 - **Runs:** 3
 
 ### amount > 1000 - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE amount > 1000 ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 158ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE amount > 1000 ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 19_698ms
+- **Min Duration:** 19_215ms
+- **Max Duration:** 20_208ms
+- **P95 Duration:** 20_155ms
 - **Runs:** 3
 
 ### amount > 1000 - AGGREGATION
 - **SQL:** `SELECT status, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE amount > 1000 GROUP BY status`
 - **Count/Rows:** 4
-- **Average Duration:** 8575ms
-- **Min Duration:** 8243ms
-- **Max Duration:** 8760ms
-- **P95 Duration:** 8756ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** status
+- **Average Duration:** 9_494ms
+- **Min Duration:** 9_428ms
+- **Max Duration:** 9_573ms
+- **P95 Duration:** 9_564ms
 - **Runs:** 3
 
 ### amount > 1000 - AGGREGATION
 - **SQL:** `SELECT country, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE amount > 1000 GROUP BY country`
 - **Count/Rows:** 6
-- **Average Duration:** 9282ms
-- **Min Duration:** 9245ms
-- **Max Duration:** 9346ms
-- **P95 Duration:** 9337ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** country
+- **Average Duration:** 10_209ms
+- **Min Duration:** 9_919ms
+- **Max Duration:** 10_392ms
+- **P95 Duration:** 10_385ms
 - **Runs:** 3
 
 ### amount > 1000 - AGGREGATION
 - **SQL:** `SELECT age, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE amount > 1000 GROUP BY age`
 - **Count/Rows:** 62
-- **Average Duration:** 12408ms
-- **Min Duration:** 12167ms
-- **Max Duration:** 12701ms
-- **P95 Duration:** 12667ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** age
+- **Average Duration:** 12_761ms
+- **Min Duration:** 12_664ms
+- **Max Duration:** 12_830ms
+- **P95 Duration:** 12_826ms
 - **Runs:** 3
 
 ### date >= 2024-06-01 - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE created_at >= DATE '2024-06-01'`
 - **Count/Rows:** 579,393,927
-- **Average Duration:** 6087ms
-- **Min Duration:** 6024ms
-- **Max Duration:** 6179ms
-- **P95 Duration:** 6167ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 6_144ms
+- **Min Duration:** 6_117ms
+- **Max Duration:** 6_171ms
+- **P95 Duration:** 6_169ms
 - **Runs:** 3
 
 ### date >= 2024-06-01 - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE created_at >= DATE '2024-06-01' LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 784ms
-- **Min Duration:** 773ms
-- **Max Duration:** 793ms
-- **P95 Duration:** 793ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 729ms
+- **Min Duration:** 690ms
+- **Max Duration:** 799ms
+- **P95 Duration:** 789ms
 - **Runs:** 3
 
 ### date >= 2024-06-01 - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE created_at >= DATE '2024-06-01' ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 14503ms
-- **Min Duration:** 14121ms
-- **Max Duration:** 14694ms
-- **P95 Duration:** 14694ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 14_734ms
+- **Min Duration:** 13_795ms
+- **Max Duration:** 15_322ms
+- **P95 Duration:** 15_299ms
 - **Runs:** 3
 
 ### date >= 2024-06-01 - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE created_at >= DATE '2024-06-01' LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 158ms
-- **Max Duration:** 160ms
-- **P95 Duration:** 160ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE created_at >= DATE '2024-06-01' OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 1_040ms
+- **Min Duration:** 881ms
+- **Max Duration:** 1_232ms
+- **P95 Duration:** 1_210ms
 - **Runs:** 3
 
 ### date >= 2024-06-01 - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE created_at >= DATE '2024-06-01' ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 158ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE created_at >= DATE '2024-06-01' ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 17_417ms
+- **Min Duration:** 16_856ms
+- **Max Duration:** 17_812ms
+- **P95 Duration:** 17_789ms
 - **Runs:** 3
 
 ### date >= 2024-06-01 - AGGREGATION
 - **SQL:** `SELECT status, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE created_at >= DATE '2024-06-01' GROUP BY status`
 - **Count/Rows:** 4
-- **Average Duration:** 7162ms
-- **Min Duration:** 6563ms
-- **Max Duration:** 7558ms
-- **P95 Duration:** 7539ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** status
+- **Average Duration:** 7_320ms
+- **Min Duration:** 7_286ms
+- **Max Duration:** 7_339ms
+- **P95 Duration:** 7_339ms
 - **Runs:** 3
 
 ### date >= 2024-06-01 - AGGREGATION
 - **SQL:** `SELECT country, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE created_at >= DATE '2024-06-01' GROUP BY country`
 - **Count/Rows:** 6
-- **Average Duration:** 7875ms
-- **Min Duration:** 7843ms
-- **Max Duration:** 7914ms
-- **P95 Duration:** 7910ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** country
+- **Average Duration:** 8_045ms
+- **Min Duration:** 7_917ms
+- **Max Duration:** 8_109ms
+- **P95 Duration:** 8_109ms
 - **Runs:** 3
 
 ### date >= 2024-06-01 - AGGREGATION
 - **SQL:** `SELECT age, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE created_at >= DATE '2024-06-01' GROUP BY age`
 - **Count/Rows:** 62
-- **Average Duration:** 10171ms
-- **Min Duration:** 10051ms
-- **Max Duration:** 10252ms
-- **P95 Duration:** 10248ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** age
+- **Average Duration:** 10_560ms
+- **Min Duration:** 10_355ms
+- **Max Duration:** 10_735ms
+- **P95 Duration:** 10_721ms
 - **Runs:** 3
 
 ### status='paid' AND country='US' - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' AND country = 'US'`
 - **Count/Rows:** 48,556,404
-- **Average Duration:** 2036ms
-- **Min Duration:** 1943ms
-- **Max Duration:** 2172ms
-- **P95 Duration:** 2154ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 2_300ms
+- **Min Duration:** 2_244ms
+- **Max Duration:** 2_372ms
+- **P95 Duration:** 2_364ms
 - **Runs:** 3
 
 ### status='paid' AND country='US' - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' AND country = 'US' LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 679ms
-- **Min Duration:** 623ms
-- **Max Duration:** 790ms
-- **P95 Duration:** 774ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 744ms
+- **Min Duration:** 658ms
+- **Max Duration:** 789ms
+- **P95 Duration:** 789ms
 - **Runs:** 3
 
 ### status='paid' AND country='US' - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' AND country = 'US' ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 6351ms
-- **Min Duration:** 5851ms
-- **Max Duration:** 6603ms
-- **P95 Duration:** 6603ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 6_441ms
+- **Min Duration:** 6_395ms
+- **Max Duration:** 6_473ms
+- **P95 Duration:** 6_471ms
 - **Runs:** 3
 
 ### status='paid' AND country='US' - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' AND country = 'US' LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 157ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' AND country = 'US' OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 781ms
+- **Min Duration:** 663ms
+- **Max Duration:** 873ms
+- **P95 Duration:** 867ms
 - **Runs:** 3
 
 ### status='paid' AND country='US' - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' AND country = 'US' ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 157ms
-- **Max Duration:** 160ms
-- **P95 Duration:** 160ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' AND country = 'US' ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 9_430ms
+- **Min Duration:** 8_994ms
+- **Max Duration:** 10_097ms
+- **P95 Duration:** 10_007ms
 - **Runs:** 3
 
 ### status='paid' AND country='US' - AGGREGATION
 - **SQL:** `SELECT status, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' AND country = 'US' GROUP BY status`
 - **Count/Rows:** 1
-- **Average Duration:** 1876ms
-- **Min Duration:** 1541ms
-- **Max Duration:** 2112ms
-- **P95 Duration:** 2099ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** status
+- **Average Duration:** 2_337ms
+- **Min Duration:** 2_247ms
+- **Max Duration:** 2_395ms
+- **P95 Duration:** 2_393ms
 - **Runs:** 3
 
 ### status='paid' AND country='US' - AGGREGATION
 - **SQL:** `SELECT country, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' AND country = 'US' GROUP BY country`
 - **Count/Rows:** 1
-- **Average Duration:** 2174ms
-- **Min Duration:** 2092ms
-- **Max Duration:** 2320ms
-- **P95 Duration:** 2299ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** country
+- **Average Duration:** 2_336ms
+- **Min Duration:** 2_320ms
+- **Max Duration:** 2_346ms
+- **P95 Duration:** 2_346ms
 - **Runs:** 3
 
 ### status='paid' AND country='US' - AGGREGATION
 - **SQL:** `SELECT age, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE status = 'paid' AND country = 'US' GROUP BY age`
 - **Count/Rows:** 62
-- **Average Duration:** 3664ms
-- **Min Duration:** 3599ms
-- **Max Duration:** 3737ms
-- **P95 Duration:** 3729ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** age
+- **Average Duration:** 3_821ms
+- **Min Duration:** 3_766ms
+- **Max Duration:** 3_869ms
+- **P95 Duration:** 3_865ms
 - **Runs:** 3
 
 ### age BETWEEN 25 AND 45 - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE age BETWEEN 25 AND 45`
 - **Count/Rows:** 330,919,230
-- **Average Duration:** 2330ms
-- **Min Duration:** 2306ms
-- **Max Duration:** 2346ms
-- **P95 Duration:** 2346ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 2_917ms
+- **Min Duration:** 2_696ms
+- **Max Duration:** 3_259ms
+- **P95 Duration:** 3_213ms
 - **Runs:** 3
 
 ### age BETWEEN 25 AND 45 - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE age BETWEEN 25 AND 45 LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 725ms
-- **Min Duration:** 626ms
-- **Max Duration:** 778ms
-- **P95 Duration:** 778ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 742ms
+- **Min Duration:** 648ms
+- **Max Duration:** 790ms
+- **P95 Duration:** 790ms
 - **Runs:** 3
 
 ### age BETWEEN 25 AND 45 - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE age BETWEEN 25 AND 45 ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 7840ms
-- **Min Duration:** 7489ms
-- **Max Duration:** 8067ms
-- **P95 Duration:** 8057ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 8_614ms
+- **Min Duration:** 8_422ms
+- **Max Duration:** 8_928ms
+- **P95 Duration:** 8_885ms
 - **Runs:** 3
 
 ### age BETWEEN 25 AND 45 - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE age BETWEEN 25 AND 45 LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 158ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE age BETWEEN 25 AND 45 OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 925ms
+- **Min Duration:** 738ms
+- **Max Duration:** 1_215ms
+- **P95 Duration:** 1_176ms
 - **Runs:** 3
 
 ### age BETWEEN 25 AND 45 - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE age BETWEEN 25 AND 45 ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 157ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE age BETWEEN 25 AND 45 ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 11_133ms
+- **Min Duration:** 10_881ms
+- **Max Duration:** 11_441ms
+- **P95 Duration:** 11_405ms
 - **Runs:** 3
 
 ### age BETWEEN 25 AND 45 - AGGREGATION
 - **SQL:** `SELECT status, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE age BETWEEN 25 AND 45 GROUP BY status`
 - **Count/Rows:** 4
-- **Average Duration:** 2983ms
-- **Min Duration:** 2581ms
-- **Max Duration:** 3277ms
-- **P95 Duration:** 3259ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** status
+- **Average Duration:** 3_527ms
+- **Min Duration:** 3_397ms
+- **Max Duration:** 3_629ms
+- **P95 Duration:** 3_622ms
 - **Runs:** 3
 
 ### age BETWEEN 25 AND 45 - AGGREGATION
 - **SQL:** `SELECT country, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE age BETWEEN 25 AND 45 GROUP BY country`
 - **Count/Rows:** 6
-- **Average Duration:** 3629ms
-- **Min Duration:** 3593ms
-- **Max Duration:** 3667ms
-- **P95 Duration:** 3663ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** country
+- **Average Duration:** 3_848ms
+- **Min Duration:** 3_795ms
+- **Max Duration:** 3_919ms
+- **P95 Duration:** 3_910ms
 - **Runs:** 3
 
 ### age BETWEEN 25 AND 45 - AGGREGATION
 - **SQL:** `SELECT age, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE age BETWEEN 25 AND 45 GROUP BY age`
 - **Count/Rows:** 21
-- **Average Duration:** 3649ms
-- **Min Duration:** 3615ms
-- **Max Duration:** 3704ms
-- **P95 Duration:** 3697ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** age
+- **Average Duration:** 3_962ms
+- **Min Duration:** 3_947ms
+- **Max Duration:** 3_978ms
+- **P95 Duration:** 3_977ms
 - **Runs:** 3
 
 ### tags contains 'alpha' - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE contains(tags, 'alpha')`
 - **Count/Rows:** 376,241,913
-- **Average Duration:** 21805ms
-- **Min Duration:** 21233ms
-- **Max Duration:** 22603ms
-- **P95 Duration:** 22501ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 19_932ms
+- **Min Duration:** 19_637ms
+- **Max Duration:** 20_384ms
+- **P95 Duration:** 20_324ms
 - **Runs:** 3
 
 ### tags contains 'alpha' - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE contains(tags, 'alpha') LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 778ms
-- **Min Duration:** 769ms
-- **Max Duration:** 782ms
-- **P95 Duration:** 782ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 743ms
+- **Min Duration:** 648ms
+- **Max Duration:** 795ms
+- **P95 Duration:** 795ms
 - **Runs:** 3
 
 ### tags contains 'alpha' - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE contains(tags, 'alpha') ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 28302ms
-- **Min Duration:** 27620ms
-- **Max Duration:** 28718ms
-- **P95 Duration:** 28703ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 27_190ms
+- **Min Duration:** 26_991ms
+- **Max Duration:** 27_442ms
+- **P95 Duration:** 27_412ms
 - **Runs:** 3
 
 ### tags contains 'alpha' - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE contains(tags, 'alpha') LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 158ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE contains(tags, 'alpha') OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 771ms
+- **Min Duration:** 637ms
+- **Max Duration:** 839ms
+- **P95 Duration:** 839ms
 - **Runs:** 3
 
 ### tags contains 'alpha' - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE contains(tags, 'alpha') ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 158ms
-- **Max Duration:** 160ms
-- **P95 Duration:** 160ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE contains(tags, 'alpha') ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 30_260ms
+- **Min Duration:** 29_315ms
+- **Max Duration:** 31_627ms
+- **P95 Duration:** 31_448ms
 - **Runs:** 3
 
 ### tags contains 'alpha' - AGGREGATION
 - **SQL:** `SELECT status, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE contains(tags, 'alpha') GROUP BY status`
 - **Count/Rows:** 4
-- **Average Duration:** 22207ms
-- **Min Duration:** 21602ms
-- **Max Duration:** 22607ms
-- **P95 Duration:** 22588ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** status
+- **Average Duration:** 20_768ms
+- **Min Duration:** 20_634ms
+- **Max Duration:** 20_961ms
+- **P95 Duration:** 20_936ms
 - **Runs:** 3
 
 ### tags contains 'alpha' - AGGREGATION
 - **SQL:** `SELECT country, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE contains(tags, 'alpha') GROUP BY country`
 - **Count/Rows:** 6
-- **Average Duration:** 22810ms
-- **Min Duration:** 22676ms
-- **Max Duration:** 23048ms
-- **P95 Duration:** 23014ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** country
+- **Average Duration:** 21_348ms
+- **Min Duration:** 21_195ms
+- **Max Duration:** 21_620ms
+- **P95 Duration:** 21_581ms
 - **Runs:** 3
 
 ### tags contains 'alpha' - AGGREGATION
 - **SQL:** `SELECT age, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE contains(tags, 'alpha') GROUP BY age`
 - **Count/Rows:** 62
-- **Average Duration:** 24381ms
-- **Min Duration:** 24215ms
-- **Max Duration:** 24584ms
-- **P95 Duration:** 24560ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** age
+- **Average Duration:** 23_068ms
+- **Min Duration:** 22_652ms
+- **Max Duration:** 23_518ms
+- **P95 Duration:** 23_470ms
 - **Runs:** 3
 
 ### note IS NOT NULL - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE note IS NOT NULL`
 - **Count/Rows:** 891,886,739
-- **Average Duration:** 8682ms
-- **Min Duration:** 8551ms
-- **Max Duration:** 8898ms
-- **P95 Duration:** 8868ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 8_695ms
+- **Min Duration:** 8_516ms
+- **Max Duration:** 8_990ms
+- **P95 Duration:** 8_949ms
 - **Runs:** 3
 
 ### note IS NOT NULL - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE note IS NOT NULL LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 777ms
-- **Min Duration:** 773ms
-- **Max Duration:** 779ms
-- **P95 Duration:** 779ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 701ms
+- **Min Duration:** 636ms
+- **Max Duration:** 797ms
+- **P95 Duration:** 785ms
 - **Runs:** 3
 
 ### note IS NOT NULL - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE note IS NOT NULL ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 18421ms
-- **Min Duration:** 17874ms
-- **Max Duration:** 18875ms
-- **P95 Duration:** 18839ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 18_438ms
+- **Min Duration:** 18_194ms
+- **Max Duration:** 18_905ms
+- **P95 Duration:** 18_836ms
 - **Runs:** 3
 
 ### note IS NOT NULL - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE note IS NOT NULL LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 157ms
-- **Max Duration:** 158ms
-- **P95 Duration:** 158ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE note IS NOT NULL OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 1_147ms
+- **Min Duration:** 742ms
+- **Max Duration:** 1_869ms
+- **P95 Duration:** 1_765ms
 - **Runs:** 3
 
 ### note IS NOT NULL - PAGINATION
-- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE note IS NOT NULL ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 158ms
-- **Max Duration:** 158ms
-- **P95 Duration:** 158ms
+- **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000_000 WHERE note IS NOT NULL ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 20_745ms
+- **Min Duration:** 20_599ms
+- **Max Duration:** 20_963ms
+- **P95 Duration:** 20_934ms
 - **Runs:** 3
 
 ### note IS NOT NULL - AGGREGATION
 - **SQL:** `SELECT status, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE note IS NOT NULL GROUP BY status`
 - **Count/Rows:** 4
-- **Average Duration:** 9887ms
-- **Min Duration:** 9578ms
-- **Max Duration:** 10042ms
-- **P95 Duration:** 10042ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** status
+- **Average Duration:** 10_128ms
+- **Min Duration:** 10_054ms
+- **Max Duration:** 10_256ms
+- **P95 Duration:** 10_238ms
 - **Runs:** 3
 
 ### note IS NOT NULL - AGGREGATION
 - **SQL:** `SELECT country, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE note IS NOT NULL GROUP BY country`
 - **Count/Rows:** 6
-- **Average Duration:** 10817ms
-- **Min Duration:** 10642ms
-- **Max Duration:** 11131ms
-- **P95 Duration:** 11086ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** country
+- **Average Duration:** 11_069ms
+- **Min Duration:** 10_663ms
+- **Max Duration:** 11_424ms
+- **P95 Duration:** 11_394ms
 - **Runs:** 3
 
 ### note IS NOT NULL - AGGREGATION
 - **SQL:** `SELECT age, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000_000 WHERE note IS NOT NULL GROUP BY age`
 - **Count/Rows:** 62
-- **Average Duration:** 14097ms
-- **Min Duration:** 14011ms
-- **Max Duration:** 14210ms
-- **P95 Duration:** 14196ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** age
+- **Average Duration:** 13_926ms
+- **Min Duration:** 13_652ms
+- **Max Duration:** 14_147ms
+- **P95 Duration:** 14_130ms
 - **Runs:** 3
 
