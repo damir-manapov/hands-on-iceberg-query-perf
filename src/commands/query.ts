@@ -161,7 +161,8 @@ function generateMarkdownReport(
     maxDuration: number;
     p95Duration: number;
   },
-  timestamp: string
+  timestamp: string,
+  iterations: number
 ): string {
   const report = `# Query Performance Report
 
@@ -173,6 +174,7 @@ function generateMarkdownReport(
 ## Summary
 
 - **Total Queries:** ${overallStats.totalQueries}
+- **Iterations:** ${iterations}
 - **Average Duration:** ${formatMs(overallStats.avgDuration)}ms
 - **Fastest Query:** ${formatMs(overallStats.minDuration)}ms
 - **Slowest Query:** ${formatMs(overallStats.maxDuration)}ms
@@ -180,8 +182,8 @@ function generateMarkdownReport(
 
 ## Query Results
 
-| Filter | Type | Pagination Type | Sorted | Aggregation | Count/Rows | Avg Duration (ms) | Min Duration (ms) | Max Duration (ms) | P95 Duration (ms) | Runs |
-|--------|------|-----------------|--------|-------------|------------|-------------------|-------------------|-------------------|-------------------|------|
+| Filter | Type | Pagination Type | Sorted | Aggregation | Count/Rows | Avg Duration (ms) | Min Duration (ms) | Max Duration (ms) | P95 Duration (ms) |
+|--------|------|-----------------|--------|-------------|------------|-------------------|-------------------|-------------------|-------------------|
 ${queryStats
   .map(stats => {
     const paginationType = stats.paginationType || "-";
@@ -196,7 +198,7 @@ ${queryStats
     const maxDuration = Math.max(...durations);
     const p95Duration = calculatePercentile(durations, 95);
 
-    return `| ${stats.filter} | ${stats.queryType} | ${paginationType} | ${sorted} | ${aggregationInfo} | ${stats.count.toLocaleString()} | ${formatMs(avgDuration)} | ${formatMs(minDuration)} | ${formatMs(maxDuration)} | ${formatMs(p95Duration)} | ${stats.runs.length} |`;
+    return `| ${stats.filter} | ${stats.queryType} | ${paginationType} | ${sorted} | ${aggregationInfo} | ${stats.count.toLocaleString()} | ${formatMs(avgDuration)} | ${formatMs(minDuration)} | ${formatMs(maxDuration)} | ${formatMs(p95Duration)} |`;
   })
   .join("\n")}
 
@@ -220,7 +222,6 @@ ${queryStats
 - **Min Duration:** ${formatMs(minDuration)}ms
 - **Max Duration:** ${formatMs(maxDuration)}ms
 - **P95 Duration:** ${formatMs(p95Duration)}ms
-- **Runs:** ${stats.runs.length}
 `;
   })
   .join("\n")}
@@ -460,7 +461,8 @@ async function processTable(
     tableMetadata,
     queryStats,
     overallStats,
-    timestamp
+    timestamp,
+    iterations
   );
 
   // Write report to file
