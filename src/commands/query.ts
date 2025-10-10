@@ -256,7 +256,8 @@ async function processTable(
     return;
   }
 
-  const iterations = 3;
+  const iterations = 1;
+  // const iterations = 3;
   const results: QueryResult[] = [];
 
   // Get query configurations for this table

@@ -53,7 +53,7 @@ export function createTableQueryConfigs(): TableQueryConfig[] {
         // },
       ],
       aggregationColumns: [
-        { column: "status" },
+        // { column: "status" },
         // { column: "country" },
         // { column: "age" },
       ],
