@@ -1,119 +1,125 @@
 # Query Performance Report
 
 **Table:** iceberg.lab.wide_100_000_000  
-**Generated:** 2025-10-10T09:09:44.597Z  
+**Generated:** 2025-10-10T19:51:06.311Z  
 **Total Rows:** 100,000,000  
 **Table Size:** 29.0 GB
 
 ## Summary
 
 - **Total Queries:** 240
-- **Average Duration:** 752ms
-- **Fastest Query:** 154ms
-- **Slowest Query:** 2617ms
-- **95th Percentile:** 1588ms
+- **Average Duration:** 1_315ms
+- **Fastest Query:** 616ms
+- **Slowest Query:** 4_866ms
+- **95th Percentile:** 3_727ms
 
 ## Query Results
 
 | Filter | Type | Pagination Type | Sorted | Aggregation | Count/Rows | Avg Duration (ms) | Min Duration (ms) | Max Duration (ms) | P95 Duration (ms) | Runs |
 |--------|------|-----------------|--------|-------------|------------|-------------------|-------------------|-------------------|-------------------|------|
-| no filters | COUNT | - | - | - | 100,000,000 | 773 | 770 | 775 | 775 | 3 |
-| no filters | PAGINATION | first page | No | - | 100 | 775 | 772 | 778 | 778 | 3 |
-| no filters | PAGINATION | first page | Yes | - | 100 | 1536 | 1500 | 1582 | 1577 | 3 |
-| no filters | PAGINATION | 100th page | No | - | 0 | 157 | 154 | 159 | 159 | 3 |
-| no filters | PAGINATION | 100th page | Yes | - | 0 | 158 | 157 | 159 | 159 | 3 |
-| no filters | AGGREGATION | - | - | row_28 GROUP BY | 5 | 773 | 771 | 775 | 775 | 3 |
-| no filters | AGGREGATION | - | - | row_48 GROUP BY | 7 | 829 | 770 | 860 | 860 | 3 |
-| no filters | AGGREGATION | - | - | row_54 GROUP BY | 7 | 831 | 773 | 865 | 864 | 3 |
-| row_9 > 5000 | COUNT | - | - | - | 52,774,709 | 912 | 896 | 928 | 927 | 3 |
-| row_9 > 5000 | PAGINATION | first page | No | - | 100 | 672 | 620 | 774 | 759 | 3 |
-| row_9 > 5000 | PAGINATION | first page | Yes | - | 100 | 1580 | 1566 | 1587 | 1587 | 3 |
-| row_9 > 5000 | PAGINATION | 100th page | No | - | 0 | 159 | 158 | 159 | 159 | 3 |
-| row_9 > 5000 | PAGINATION | 100th page | Yes | - | 0 | 157 | 155 | 158 | 158 | 3 |
-| row_9 > 5000 | AGGREGATION | - | - | row_28 GROUP BY | 5 | 1201 | 1153 | 1227 | 1227 | 3 |
-| row_9 > 5000 | AGGREGATION | - | - | row_48 GROUP BY | 7 | 1193 | 1171 | 1208 | 1208 | 3 |
-| row_9 > 5000 | AGGREGATION | - | - | row_54 GROUP BY | 7 | 1215 | 1161 | 1277 | 1270 | 3 |
-| row_28 = 'value1' | COUNT | - | - | - | 0 | 774 | 769 | 777 | 777 | 3 |
-| row_28 = 'value1' | PAGINATION | first page | No | - | 0 | 620 | 620 | 620 | 620 | 3 |
+| no filters | COUNT | - | - | - | 100,000,000 | 776 | 772 | 779 | 779 | 3 |
+| no filters | PAGINATION | first page | No | - | 100 | 776 | 773 | 778 | 778 | 3 |
+| no filters | PAGINATION | first page | Yes | - | 100 | 2_306 | 2_194 | 2_515 | 2_485 | 3 |
+| no filters | PAGINATION | 100th page | No | - | 100 | 775 | 772 | 776 | 776 | 3 |
+| no filters | PAGINATION | 100th page | Yes | - | 100 | 3_574 | 3_531 | 3_623 | 3_618 | 3 |
+| no filters | AGGREGATION | - | - | row_28 | 5 | 1_109 | 1_082 | 1_135 | 1_133 | 3 |
+| no filters | AGGREGATION | - | - | row_48 | 7 | 1_111 | 1_097 | 1_122 | 1_122 | 3 |
+| no filters | AGGREGATION | - | - | row_54 | 7 | 1_141 | 1_102 | 1_164 | 1_164 | 3 |
+| row_9 > 5000 | COUNT | - | - | - | 52,774,709 | 1_234 | 1_196 | 1_253 | 1_253 | 3 |
+| row_9 > 5000 | PAGINATION | first page | No | - | 100 | 769 | 739 | 784 | 784 | 3 |
+| row_9 > 5000 | PAGINATION | first page | Yes | - | 100 | 2_226 | 2_140 | 2_352 | 2_336 | 3 |
+| row_9 > 5000 | PAGINATION | 100th page | No | - | 100 | 725 | 670 | 784 | 778 | 3 |
+| row_9 > 5000 | PAGINATION | 100th page | Yes | - | 100 | 3_726 | 3_631 | 3_788 | 3_786 | 3 |
+| row_9 > 5000 | AGGREGATION | - | - | row_28 | 5 | 1_566 | 1_545 | 1_603 | 1_598 | 3 |
+| row_9 > 5000 | AGGREGATION | - | - | row_48 | 7 | 1_580 | 1_569 | 1_600 | 1_597 | 3 |
+| row_9 > 5000 | AGGREGATION | - | - | row_54 | 7 | 1_594 | 1_572 | 1_624 | 1_621 | 3 |
+| row_28 = 'value1' | COUNT | - | - | - | 0 | 776 | 772 | 778 | 778 | 3 |
+| row_28 = 'value1' | PAGINATION | first page | No | - | 0 | 623 | 620 | 624 | 624 | 3 |
 | row_28 = 'value1' | PAGINATION | first page | Yes | - | 0 | 621 | 619 | 621 | 621 | 3 |
-| row_28 = 'value1' | PAGINATION | 100th page | No | - | 0 | 158 | 157 | 159 | 159 | 3 |
-| row_28 = 'value1' | PAGINATION | 100th page | Yes | - | 0 | 158 | 158 | 158 | 158 | 3 |
-| row_28 = 'value1' | AGGREGATION | - | - | row_28 GROUP BY | 0 | 621 | 618 | 622 | 622 | 3 |
-| row_28 = 'value1' | AGGREGATION | - | - | row_48 GROUP BY | 0 | 619 | 617 | 621 | 621 | 3 |
-| row_28 = 'value1' | AGGREGATION | - | - | row_54 GROUP BY | 0 | 618 | 615 | 620 | 620 | 3 |
-| row_48 = 'enum1' | COUNT | - | - | - | 0 | 692 | 649 | 772 | 761 | 3 |
-| row_48 = 'enum1' | PAGINATION | first page | No | - | 0 | 619 | 617 | 621 | 621 | 3 |
-| row_48 = 'enum1' | PAGINATION | first page | Yes | - | 0 | 618 | 616 | 621 | 621 | 3 |
-| row_48 = 'enum1' | PAGINATION | 100th page | No | - | 0 | 159 | 158 | 159 | 159 | 3 |
-| row_48 = 'enum1' | PAGINATION | 100th page | Yes | - | 0 | 157 | 157 | 157 | 157 | 3 |
-| row_48 = 'enum1' | AGGREGATION | - | - | row_28 GROUP BY | 0 | 621 | 615 | 632 | 631 | 3 |
-| row_48 = 'enum1' | AGGREGATION | - | - | row_48 GROUP BY | 0 | 624 | 615 | 637 | 636 | 3 |
-| row_48 = 'enum1' | AGGREGATION | - | - | row_54 GROUP BY | 0 | 617 | 615 | 619 | 619 | 3 |
-| row_10 > 2000 | COUNT | - | - | - | 32,315,005 | 862 | 851 | 877 | 876 | 3 |
-| row_10 > 2000 | PAGINATION | first page | No | - | 100 | 723 | 620 | 774 | 774 | 3 |
-| row_10 > 2000 | PAGINATION | first page | Yes | - | 100 | 1687 | 1637 | 1771 | 1759 | 3 |
-| row_10 > 2000 | PAGINATION | 100th page | No | - | 0 | 158 | 156 | 159 | 159 | 3 |
-| row_10 > 2000 | PAGINATION | 100th page | Yes | - | 0 | 158 | 156 | 159 | 159 | 3 |
-| row_10 > 2000 | AGGREGATION | - | - | row_28 GROUP BY | 5 | 1156 | 1151 | 1159 | 1159 | 3 |
-| row_10 > 2000 | AGGREGATION | - | - | row_48 GROUP BY | 7 | 1123 | 1106 | 1144 | 1142 | 3 |
-| row_10 > 2000 | AGGREGATION | - | - | row_54 GROUP BY | 7 | 1161 | 1141 | 1172 | 1172 | 3 |
-| row_1 >= 2024-06-01 | COUNT | - | - | - | 58,465,692 | 967 | 927 | 987 | 987 | 3 |
-| row_1 >= 2024-06-01 | PAGINATION | first page | No | - | 100 | 723 | 623 | 774 | 774 | 3 |
-| row_1 >= 2024-06-01 | PAGINATION | first page | Yes | - | 100 | 2238 | 1776 | 2617 | 2588 | 3 |
-| row_1 >= 2024-06-01 | PAGINATION | 100th page | No | - | 0 | 158 | 155 | 159 | 159 | 3 |
-| row_1 >= 2024-06-01 | PAGINATION | 100th page | Yes | - | 0 | 158 | 157 | 158 | 158 | 3 |
-| row_1 >= 2024-06-01 | AGGREGATION | - | - | row_28 GROUP BY | 5 | 1287 | 1268 | 1298 | 1298 | 3 |
-| row_1 >= 2024-06-01 | AGGREGATION | - | - | row_48 GROUP BY | 7 | 1431 | 1423 | 1439 | 1438 | 3 |
-| row_1 >= 2024-06-01 | AGGREGATION | - | - | row_54 GROUP BY | 7 | 1465 | 1441 | 1511 | 1504 | 3 |
-| row_28='value1' AND row_48='enum1' | COUNT | - | - | - | 0 | 670 | 616 | 775 | 760 | 3 |
-| row_28='value1' AND row_48='enum1' | PAGINATION | first page | No | - | 0 | 619 | 619 | 619 | 619 | 3 |
-| row_28='value1' AND row_48='enum1' | PAGINATION | first page | Yes | - | 0 | 620 | 618 | 623 | 623 | 3 |
-| row_28='value1' AND row_48='enum1' | PAGINATION | 100th page | No | - | 0 | 158 | 158 | 158 | 158 | 3 |
-| row_28='value1' AND row_48='enum1' | PAGINATION | 100th page | Yes | - | 0 | 158 | 158 | 158 | 158 | 3 |
-| row_28='value1' AND row_48='enum1' | AGGREGATION | - | - | row_28 GROUP BY | 0 | 620 | 619 | 621 | 621 | 3 |
-| row_28='value1' AND row_48='enum1' | AGGREGATION | - | - | row_48 GROUP BY | 0 | 621 | 620 | 621 | 621 | 3 |
-| row_28='value1' AND row_48='enum1' | AGGREGATION | - | - | row_54 GROUP BY | 0 | 618 | 617 | 619 | 619 | 3 |
-| row_9 BETWEEN 2000 AND 8000 | COUNT | - | - | - | 63,341,035 | 914 | 883 | 937 | 936 | 3 |
-| row_9 BETWEEN 2000 AND 8000 | PAGINATION | first page | No | - | 100 | 775 | 772 | 776 | 776 | 3 |
-| row_9 BETWEEN 2000 AND 8000 | PAGINATION | first page | Yes | - | 100 | 1658 | 1593 | 1775 | 1758 | 3 |
-| row_9 BETWEEN 2000 AND 8000 | PAGINATION | 100th page | No | - | 0 | 155 | 154 | 156 | 156 | 3 |
-| row_9 BETWEEN 2000 AND 8000 | PAGINATION | 100th page | Yes | - | 0 | 158 | 156 | 159 | 159 | 3 |
-| row_9 BETWEEN 2000 AND 8000 | AGGREGATION | - | - | row_28 GROUP BY | 5 | 1247 | 1210 | 1302 | 1295 | 3 |
-| row_9 BETWEEN 2000 AND 8000 | AGGREGATION | - | - | row_48 GROUP BY | 7 | 1245 | 1159 | 1390 | 1370 | 3 |
-| row_9 BETWEEN 2000 AND 8000 | AGGREGATION | - | - | row_54 GROUP BY | 7 | 1115 | 1103 | 1137 | 1134 | 3 |
-| row_54 = 'tag1' | COUNT | - | - | - | 0 | 773 | 771 | 774 | 774 | 3 |
-| row_54 = 'tag1' | PAGINATION | first page | No | - | 0 | 617 | 614 | 619 | 619 | 3 |
-| row_54 = 'tag1' | PAGINATION | first page | Yes | - | 0 | 621 | 621 | 621 | 621 | 3 |
-| row_54 = 'tag1' | PAGINATION | 100th page | No | - | 0 | 158 | 157 | 158 | 158 | 3 |
-| row_54 = 'tag1' | PAGINATION | 100th page | Yes | - | 0 | 157 | 155 | 160 | 160 | 3 |
-| row_54 = 'tag1' | AGGREGATION | - | - | row_28 GROUP BY | 0 | 623 | 622 | 623 | 623 | 3 |
-| row_54 = 'tag1' | AGGREGATION | - | - | row_48 GROUP BY | 0 | 621 | 620 | 621 | 621 | 3 |
-| row_54 = 'tag1' | AGGREGATION | - | - | row_54 GROUP BY | 0 | 621 | 619 | 621 | 621 | 3 |
-| row_29 IS NOT NULL | COUNT | - | - | - | 100,000,000 | 1066 | 989 | 1163 | 1152 | 3 |
-| row_29 IS NOT NULL | PAGINATION | first page | No | - | 100 | 722 | 620 | 776 | 776 | 3 |
-| row_29 IS NOT NULL | PAGINATION | first page | Yes | - | 100 | 1772 | 1763 | 1777 | 1777 | 3 |
-| row_29 IS NOT NULL | PAGINATION | 100th page | No | - | 0 | 158 | 157 | 158 | 158 | 3 |
-| row_29 IS NOT NULL | PAGINATION | 100th page | Yes | - | 0 | 158 | 158 | 158 | 158 | 3 |
-| row_29 IS NOT NULL | AGGREGATION | - | - | row_28 GROUP BY | 5 | 1212 | 1196 | 1226 | 1225 | 3 |
-| row_29 IS NOT NULL | AGGREGATION | - | - | row_48 GROUP BY | 7 | 1300 | 1264 | 1345 | 1340 | 3 |
-| row_29 IS NOT NULL | AGGREGATION | - | - | row_54 GROUP BY | 7 | 1551 | 1541 | 1566 | 1564 | 3 |
+| row_28 = 'value1' | PAGINATION | 100th page | No | - | 0 | 621 | 620 | 622 | 622 | 3 |
+| row_28 = 'value1' | PAGINATION | 100th page | Yes | - | 0 | 621 | 621 | 621 | 621 | 3 |
+| row_28 = 'value1' | AGGREGATION | - | - | row_28 | 0 | 622 | 619 | 625 | 625 | 3 |
+| row_28 = 'value1' | AGGREGATION | - | - | row_48 | 0 | 622 | 621 | 623 | 623 | 3 |
+| row_28 = 'value1' | AGGREGATION | - | - | row_54 | 0 | 619 | 616 | 621 | 621 | 3 |
+| row_48 = 'enum1' | COUNT | - | - | - | 0 | 843 | 838 | 850 | 849 | 3 |
+| row_48 = 'enum1' | PAGINATION | first page | No | - | 0 | 840 | 816 | 863 | 861 | 3 |
+| row_48 = 'enum1' | PAGINATION | first page | Yes | - | 0 | 841 | 826 | 867 | 864 | 3 |
+| row_48 = 'enum1' | PAGINATION | 100th page | No | - | 0 | 844 | 832 | 851 | 851 | 3 |
+| row_48 = 'enum1' | PAGINATION | 100th page | Yes | - | 0 | 841 | 826 | 861 | 859 | 3 |
+| row_48 = 'enum1' | AGGREGATION | - | - | row_28 | 0 | 840 | 811 | 872 | 869 | 3 |
+| row_48 = 'enum1' | AGGREGATION | - | - | row_48 | 0 | 831 | 800 | 868 | 864 | 3 |
+| row_48 = 'enum1' | AGGREGATION | - | - | row_54 | 0 | 879 | 855 | 917 | 912 | 3 |
+| row_10 > 2000 | COUNT | - | - | - | 32,315,005 | 1_194 | 1_186 | 1_205 | 1_204 | 3 |
+| row_10 > 2000 | PAGINATION | first page | No | - | 100 | 793 | 787 | 800 | 800 | 3 |
+| row_10 > 2000 | PAGINATION | first page | Yes | - | 100 | 2_234 | 2_226 | 2_239 | 2_239 | 3 |
+| row_10 > 2000 | PAGINATION | 100th page | No | - | 100 | 809 | 783 | 849 | 844 | 3 |
+| row_10 > 2000 | PAGINATION | 100th page | Yes | - | 100 | 4_218 | 3_795 | 4_500 | 4_486 | 3 |
+| row_10 > 2000 | AGGREGATION | - | - | row_28 | 5 | 1_571 | 1_526 | 1_627 | 1_621 | 3 |
+| row_10 > 2000 | AGGREGATION | - | - | row_48 | 7 | 1_603 | 1_600 | 1_605 | 1_605 | 3 |
+| row_10 > 2000 | AGGREGATION | - | - | row_54 | 7 | 1_572 | 1_537 | 1_605 | 1_602 | 3 |
+| row_1 >= 2024-06-01 | COUNT | - | - | - | 58,465,692 | 1_372 | 1_315 | 1_459 | 1_448 | 3 |
+| row_1 >= 2024-06-01 | PAGINATION | first page | No | - | 100 | 746 | 644 | 803 | 802 | 3 |
+| row_1 >= 2024-06-01 | PAGINATION | first page | Yes | - | 100 | 2_653 | 2_444 | 2_958 | 2_918 | 3 |
+| row_1 >= 2024-06-01 | PAGINATION | 100th page | No | - | 100 | 776 | 725 | 803 | 803 | 3 |
+| row_1 >= 2024-06-01 | PAGINATION | 100th page | Yes | - | 100 | 4_224 | 4_013 | 4_556 | 4_511 | 3 |
+| row_1 >= 2024-06-01 | AGGREGATION | - | - | row_28 | 5 | 1_702 | 1_646 | 1_782 | 1_772 | 3 |
+| row_1 >= 2024-06-01 | AGGREGATION | - | - | row_48 | 7 | 1_631 | 1_612 | 1_648 | 1_647 | 3 |
+| row_1 >= 2024-06-01 | AGGREGATION | - | - | row_54 | 7 | 1_648 | 1_637 | 1_658 | 1_657 | 3 |
+| row_28='value1' AND row_48='enum1' | COUNT | - | - | - | 0 | 775 | 773 | 777 | 777 | 3 |
+| row_28='value1' AND row_48='enum1' | PAGINATION | first page | No | - | 0 | 623 | 620 | 625 | 625 | 3 |
+| row_28='value1' AND row_48='enum1' | PAGINATION | first page | Yes | - | 0 | 622 | 621 | 622 | 622 | 3 |
+| row_28='value1' AND row_48='enum1' | PAGINATION | 100th page | No | - | 0 | 623 | 621 | 624 | 624 | 3 |
+| row_28='value1' AND row_48='enum1' | PAGINATION | 100th page | Yes | - | 0 | 623 | 622 | 624 | 624 | 3 |
+| row_28='value1' AND row_48='enum1' | AGGREGATION | - | - | row_28 | 0 | 623 | 619 | 628 | 628 | 3 |
+| row_28='value1' AND row_48='enum1' | AGGREGATION | - | - | row_48 | 0 | 621 | 619 | 622 | 622 | 3 |
+| row_28='value1' AND row_48='enum1' | AGGREGATION | - | - | row_54 | 0 | 618 | 617 | 619 | 619 | 3 |
+| row_9 BETWEEN 2000 AND 8000 | COUNT | - | - | - | 63,341,035 | 1_351 | 1_230 | 1_522 | 1_500 | 3 |
+| row_9 BETWEEN 2000 AND 8000 | PAGINATION | first page | No | - | 100 | 631 | 624 | 634 | 634 | 3 |
+| row_9 BETWEEN 2000 AND 8000 | PAGINATION | first page | Yes | - | 100 | 2_357 | 2_283 | 2_453 | 2_442 | 3 |
+| row_9 BETWEEN 2000 AND 8000 | PAGINATION | 100th page | No | - | 100 | 711 | 640 | 841 | 822 | 3 |
+| row_9 BETWEEN 2000 AND 8000 | PAGINATION | 100th page | Yes | - | 100 | 3_714 | 3_678 | 3_737 | 3_736 | 3 |
+| row_9 BETWEEN 2000 AND 8000 | AGGREGATION | - | - | row_28 | 5 | 1_719 | 1_629 | 1_789 | 1_784 | 3 |
+| row_9 BETWEEN 2000 AND 8000 | AGGREGATION | - | - | row_48 | 7 | 1_550 | 1_546 | 1_555 | 1_555 | 3 |
+| row_9 BETWEEN 2000 AND 8000 | AGGREGATION | - | - | row_54 | 7 | 1_624 | 1_542 | 1_744 | 1_729 | 3 |
+| row_54 = 'tag1' | COUNT | - | - | - | 0 | 776 | 774 | 777 | 777 | 3 |
+| row_54 = 'tag1' | PAGINATION | first page | No | - | 0 | 622 | 619 | 624 | 624 | 3 |
+| row_54 = 'tag1' | PAGINATION | first page | Yes | - | 0 | 623 | 622 | 624 | 624 | 3 |
+| row_54 = 'tag1' | PAGINATION | 100th page | No | - | 0 | 623 | 621 | 623 | 623 | 3 |
+| row_54 = 'tag1' | PAGINATION | 100th page | Yes | - | 0 | 620 | 617 | 621 | 621 | 3 |
+| row_54 = 'tag1' | AGGREGATION | - | - | row_28 | 0 | 622 | 621 | 623 | 623 | 3 |
+| row_54 = 'tag1' | AGGREGATION | - | - | row_48 | 0 | 622 | 620 | 622 | 622 | 3 |
+| row_54 = 'tag1' | AGGREGATION | - | - | row_54 | 0 | 621 | 620 | 623 | 623 | 3 |
+| row_29 IS NOT NULL | COUNT | - | - | - | 100,000,000 | 1_563 | 1_469 | 1_698 | 1_681 | 3 |
+| row_29 IS NOT NULL | PAGINATION | first page | No | - | 100 | 690 | 634 | 783 | 770 | 3 |
+| row_29 IS NOT NULL | PAGINATION | first page | Yes | - | 100 | 2_770 | 2_737 | 2_811 | 2_806 | 3 |
+| row_29 IS NOT NULL | PAGINATION | 100th page | No | - | 100 | 742 | 643 | 793 | 793 | 3 |
+| row_29 IS NOT NULL | PAGINATION | 100th page | Yes | - | 100 | 4_507 | 4_324 | 4_866 | 4_813 | 3 |
+| row_29 IS NOT NULL | AGGREGATION | - | - | row_28 | 5 | 1_737 | 1_730 | 1_747 | 1_746 | 3 |
+| row_29 IS NOT NULL | AGGREGATION | - | - | row_48 | 7 | 1_804 | 1_794 | 1_814 | 1_813 | 3 |
+| row_29 IS NOT NULL | AGGREGATION | - | - | row_54 | 7 | 1_815 | 1_788 | 1_838 | 1_837 | 3 |
 
 ## Query Details
 
 ### no filters - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.wide_100_000_000 `
 - **Count/Rows:** 100,000,000
-- **Average Duration:** 773ms
-- **Min Duration:** 770ms
-- **Max Duration:** 775ms
-- **P95 Duration:** 775ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 776ms
+- **Min Duration:** 772ms
+- **Max Duration:** 779ms
+- **P95 Duration:** 779ms
 - **Runs:** 3
 
 ### no filters - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000  LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 775ms
-- **Min Duration:** 772ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 776ms
+- **Min Duration:** 773ms
 - **Max Duration:** 778ms
 - **P95 Duration:** 778ms
 - **Runs:** 3
@@ -121,150 +127,201 @@
 ### no filters - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000  ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 1536ms
-- **Min Duration:** 1500ms
-- **Max Duration:** 1582ms
-- **P95 Duration:** 1577ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 2_306ms
+- **Min Duration:** 2_194ms
+- **Max Duration:** 2_515ms
+- **P95 Duration:** 2_485ms
 - **Runs:** 3
 
 ### no filters - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000  LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 157ms
-- **Min Duration:** 154ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000  OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 775ms
+- **Min Duration:** 772ms
+- **Max Duration:** 776ms
+- **P95 Duration:** 776ms
 - **Runs:** 3
 
 ### no filters - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000  ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 157ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000  ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 3_574ms
+- **Min Duration:** 3_531ms
+- **Max Duration:** 3_623ms
+- **P95 Duration:** 3_618ms
 - **Runs:** 3
 
 ### no filters - AGGREGATION
 - **SQL:** `SELECT row_28, COUNT(*) as count FROM iceberg.lab.wide_100_000_000  GROUP BY row_28`
 - **Count/Rows:** 5
-- **Average Duration:** 773ms
-- **Min Duration:** 771ms
-- **Max Duration:** 775ms
-- **P95 Duration:** 775ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_28
+- **Average Duration:** 1_109ms
+- **Min Duration:** 1_082ms
+- **Max Duration:** 1_135ms
+- **P95 Duration:** 1_133ms
 - **Runs:** 3
 
 ### no filters - AGGREGATION
 - **SQL:** `SELECT row_48, COUNT(*) as count FROM iceberg.lab.wide_100_000_000  GROUP BY row_48`
 - **Count/Rows:** 7
-- **Average Duration:** 829ms
-- **Min Duration:** 770ms
-- **Max Duration:** 860ms
-- **P95 Duration:** 860ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_48
+- **Average Duration:** 1_111ms
+- **Min Duration:** 1_097ms
+- **Max Duration:** 1_122ms
+- **P95 Duration:** 1_122ms
 - **Runs:** 3
 
 ### no filters - AGGREGATION
 - **SQL:** `SELECT row_54, COUNT(*) as count FROM iceberg.lab.wide_100_000_000  GROUP BY row_54`
 - **Count/Rows:** 7
-- **Average Duration:** 831ms
-- **Min Duration:** 773ms
-- **Max Duration:** 865ms
-- **P95 Duration:** 864ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_54
+- **Average Duration:** 1_141ms
+- **Min Duration:** 1_102ms
+- **Max Duration:** 1_164ms
+- **P95 Duration:** 1_164ms
 - **Runs:** 3
 
 ### row_9 > 5000 - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_9 > 5000`
 - **Count/Rows:** 52,774,709
-- **Average Duration:** 912ms
-- **Min Duration:** 896ms
-- **Max Duration:** 928ms
-- **P95 Duration:** 927ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 1_234ms
+- **Min Duration:** 1_196ms
+- **Max Duration:** 1_253ms
+- **P95 Duration:** 1_253ms
 - **Runs:** 3
 
 ### row_9 > 5000 - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_9 > 5000 LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 672ms
-- **Min Duration:** 620ms
-- **Max Duration:** 774ms
-- **P95 Duration:** 759ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 769ms
+- **Min Duration:** 739ms
+- **Max Duration:** 784ms
+- **P95 Duration:** 784ms
 - **Runs:** 3
 
 ### row_9 > 5000 - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_9 > 5000 ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 1580ms
-- **Min Duration:** 1566ms
-- **Max Duration:** 1587ms
-- **P95 Duration:** 1587ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 2_226ms
+- **Min Duration:** 2_140ms
+- **Max Duration:** 2_352ms
+- **P95 Duration:** 2_336ms
 - **Runs:** 3
 
 ### row_9 > 5000 - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_9 > 5000 LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 158ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_9 > 5000 OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 725ms
+- **Min Duration:** 670ms
+- **Max Duration:** 784ms
+- **P95 Duration:** 778ms
 - **Runs:** 3
 
 ### row_9 > 5000 - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_9 > 5000 ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 157ms
-- **Min Duration:** 155ms
-- **Max Duration:** 158ms
-- **P95 Duration:** 158ms
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_9 > 5000 ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 3_726ms
+- **Min Duration:** 3_631ms
+- **Max Duration:** 3_788ms
+- **P95 Duration:** 3_786ms
 - **Runs:** 3
 
 ### row_9 > 5000 - AGGREGATION
 - **SQL:** `SELECT row_28, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_9 > 5000 GROUP BY row_28`
 - **Count/Rows:** 5
-- **Average Duration:** 1201ms
-- **Min Duration:** 1153ms
-- **Max Duration:** 1227ms
-- **P95 Duration:** 1227ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_28
+- **Average Duration:** 1_566ms
+- **Min Duration:** 1_545ms
+- **Max Duration:** 1_603ms
+- **P95 Duration:** 1_598ms
 - **Runs:** 3
 
 ### row_9 > 5000 - AGGREGATION
 - **SQL:** `SELECT row_48, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_9 > 5000 GROUP BY row_48`
 - **Count/Rows:** 7
-- **Average Duration:** 1193ms
-- **Min Duration:** 1171ms
-- **Max Duration:** 1208ms
-- **P95 Duration:** 1208ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_48
+- **Average Duration:** 1_580ms
+- **Min Duration:** 1_569ms
+- **Max Duration:** 1_600ms
+- **P95 Duration:** 1_597ms
 - **Runs:** 3
 
 ### row_9 > 5000 - AGGREGATION
 - **SQL:** `SELECT row_54, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_9 > 5000 GROUP BY row_54`
 - **Count/Rows:** 7
-- **Average Duration:** 1215ms
-- **Min Duration:** 1161ms
-- **Max Duration:** 1277ms
-- **P95 Duration:** 1270ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_54
+- **Average Duration:** 1_594ms
+- **Min Duration:** 1_572ms
+- **Max Duration:** 1_624ms
+- **P95 Duration:** 1_621ms
 - **Runs:** 3
 
 ### row_28 = 'value1' - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1'`
 - **Count/Rows:** 0
-- **Average Duration:** 774ms
-- **Min Duration:** 769ms
-- **Max Duration:** 777ms
-- **P95 Duration:** 777ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 776ms
+- **Min Duration:** 772ms
+- **Max Duration:** 778ms
+- **P95 Duration:** 778ms
 - **Runs:** 3
 
 ### row_28 = 'value1' - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' LIMIT 100`
 - **Count/Rows:** 0
-- **Average Duration:** 620ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 623ms
 - **Min Duration:** 620ms
-- **Max Duration:** 620ms
-- **P95 Duration:** 620ms
+- **Max Duration:** 624ms
+- **P95 Duration:** 624ms
 - **Runs:** 3
 
 ### row_28 = 'value1' - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' ORDER BY id LIMIT 100`
 - **Count/Rows:** 0
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
 - **Average Duration:** 621ms
 - **Min Duration:** 619ms
 - **Max Duration:** 621ms
@@ -272,332 +329,443 @@
 - **Runs:** 3
 
 ### row_28 = 'value1' - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' LIMIT 100 OFFSET 9900`
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' OFFSET 9900 LIMIT 100`
 - **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 157ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 621ms
+- **Min Duration:** 620ms
+- **Max Duration:** 622ms
+- **P95 Duration:** 622ms
 - **Runs:** 3
 
 ### row_28 = 'value1' - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' ORDER BY id LIMIT 100 OFFSET 9900`
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' ORDER BY id OFFSET 9900 LIMIT 100`
 - **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 158ms
-- **Max Duration:** 158ms
-- **P95 Duration:** 158ms
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 621ms
+- **Min Duration:** 621ms
+- **Max Duration:** 621ms
+- **P95 Duration:** 621ms
 - **Runs:** 3
 
 ### row_28 = 'value1' - AGGREGATION
 - **SQL:** `SELECT row_28, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' GROUP BY row_28`
 - **Count/Rows:** 0
-- **Average Duration:** 621ms
-- **Min Duration:** 618ms
-- **Max Duration:** 622ms
-- **P95 Duration:** 622ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_28
+- **Average Duration:** 622ms
+- **Min Duration:** 619ms
+- **Max Duration:** 625ms
+- **P95 Duration:** 625ms
 - **Runs:** 3
 
 ### row_28 = 'value1' - AGGREGATION
 - **SQL:** `SELECT row_48, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' GROUP BY row_48`
 - **Count/Rows:** 0
-- **Average Duration:** 619ms
-- **Min Duration:** 617ms
-- **Max Duration:** 621ms
-- **P95 Duration:** 621ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_48
+- **Average Duration:** 622ms
+- **Min Duration:** 621ms
+- **Max Duration:** 623ms
+- **P95 Duration:** 623ms
 - **Runs:** 3
 
 ### row_28 = 'value1' - AGGREGATION
 - **SQL:** `SELECT row_54, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' GROUP BY row_54`
 - **Count/Rows:** 0
-- **Average Duration:** 618ms
-- **Min Duration:** 615ms
-- **Max Duration:** 620ms
-- **P95 Duration:** 620ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_54
+- **Average Duration:** 619ms
+- **Min Duration:** 616ms
+- **Max Duration:** 621ms
+- **P95 Duration:** 621ms
 - **Runs:** 3
 
 ### row_48 = 'enum1' - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_48 = 'enum1'`
 - **Count/Rows:** 0
-- **Average Duration:** 692ms
-- **Min Duration:** 649ms
-- **Max Duration:** 772ms
-- **P95 Duration:** 761ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 843ms
+- **Min Duration:** 838ms
+- **Max Duration:** 850ms
+- **P95 Duration:** 849ms
 - **Runs:** 3
 
 ### row_48 = 'enum1' - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_48 = 'enum1' LIMIT 100`
 - **Count/Rows:** 0
-- **Average Duration:** 619ms
-- **Min Duration:** 617ms
-- **Max Duration:** 621ms
-- **P95 Duration:** 621ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 840ms
+- **Min Duration:** 816ms
+- **Max Duration:** 863ms
+- **P95 Duration:** 861ms
 - **Runs:** 3
 
 ### row_48 = 'enum1' - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_48 = 'enum1' ORDER BY id LIMIT 100`
 - **Count/Rows:** 0
-- **Average Duration:** 618ms
-- **Min Duration:** 616ms
-- **Max Duration:** 621ms
-- **P95 Duration:** 621ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 841ms
+- **Min Duration:** 826ms
+- **Max Duration:** 867ms
+- **P95 Duration:** 864ms
 - **Runs:** 3
 
 ### row_48 = 'enum1' - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_48 = 'enum1' LIMIT 100 OFFSET 9900`
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_48 = 'enum1' OFFSET 9900 LIMIT 100`
 - **Count/Rows:** 0
-- **Average Duration:** 159ms
-- **Min Duration:** 158ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 844ms
+- **Min Duration:** 832ms
+- **Max Duration:** 851ms
+- **P95 Duration:** 851ms
 - **Runs:** 3
 
 ### row_48 = 'enum1' - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_48 = 'enum1' ORDER BY id LIMIT 100 OFFSET 9900`
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_48 = 'enum1' ORDER BY id OFFSET 9900 LIMIT 100`
 - **Count/Rows:** 0
-- **Average Duration:** 157ms
-- **Min Duration:** 157ms
-- **Max Duration:** 157ms
-- **P95 Duration:** 157ms
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 841ms
+- **Min Duration:** 826ms
+- **Max Duration:** 861ms
+- **P95 Duration:** 859ms
 - **Runs:** 3
 
 ### row_48 = 'enum1' - AGGREGATION
 - **SQL:** `SELECT row_28, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_48 = 'enum1' GROUP BY row_28`
 - **Count/Rows:** 0
-- **Average Duration:** 621ms
-- **Min Duration:** 615ms
-- **Max Duration:** 632ms
-- **P95 Duration:** 631ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_28
+- **Average Duration:** 840ms
+- **Min Duration:** 811ms
+- **Max Duration:** 872ms
+- **P95 Duration:** 869ms
 - **Runs:** 3
 
 ### row_48 = 'enum1' - AGGREGATION
 - **SQL:** `SELECT row_48, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_48 = 'enum1' GROUP BY row_48`
 - **Count/Rows:** 0
-- **Average Duration:** 624ms
-- **Min Duration:** 615ms
-- **Max Duration:** 637ms
-- **P95 Duration:** 636ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_48
+- **Average Duration:** 831ms
+- **Min Duration:** 800ms
+- **Max Duration:** 868ms
+- **P95 Duration:** 864ms
 - **Runs:** 3
 
 ### row_48 = 'enum1' - AGGREGATION
 - **SQL:** `SELECT row_54, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_48 = 'enum1' GROUP BY row_54`
 - **Count/Rows:** 0
-- **Average Duration:** 617ms
-- **Min Duration:** 615ms
-- **Max Duration:** 619ms
-- **P95 Duration:** 619ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_54
+- **Average Duration:** 879ms
+- **Min Duration:** 855ms
+- **Max Duration:** 917ms
+- **P95 Duration:** 912ms
 - **Runs:** 3
 
 ### row_10 > 2000 - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_10 > 2000`
 - **Count/Rows:** 32,315,005
-- **Average Duration:** 862ms
-- **Min Duration:** 851ms
-- **Max Duration:** 877ms
-- **P95 Duration:** 876ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 1_194ms
+- **Min Duration:** 1_186ms
+- **Max Duration:** 1_205ms
+- **P95 Duration:** 1_204ms
 - **Runs:** 3
 
 ### row_10 > 2000 - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_10 > 2000 LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 723ms
-- **Min Duration:** 620ms
-- **Max Duration:** 774ms
-- **P95 Duration:** 774ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 793ms
+- **Min Duration:** 787ms
+- **Max Duration:** 800ms
+- **P95 Duration:** 800ms
 - **Runs:** 3
 
 ### row_10 > 2000 - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_10 > 2000 ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 1687ms
-- **Min Duration:** 1637ms
-- **Max Duration:** 1771ms
-- **P95 Duration:** 1759ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 2_234ms
+- **Min Duration:** 2_226ms
+- **Max Duration:** 2_239ms
+- **P95 Duration:** 2_239ms
 - **Runs:** 3
 
 ### row_10 > 2000 - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_10 > 2000 LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 156ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_10 > 2000 OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 809ms
+- **Min Duration:** 783ms
+- **Max Duration:** 849ms
+- **P95 Duration:** 844ms
 - **Runs:** 3
 
 ### row_10 > 2000 - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_10 > 2000 ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 156ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_10 > 2000 ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 4_218ms
+- **Min Duration:** 3_795ms
+- **Max Duration:** 4_500ms
+- **P95 Duration:** 4_486ms
 - **Runs:** 3
 
 ### row_10 > 2000 - AGGREGATION
 - **SQL:** `SELECT row_28, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_10 > 2000 GROUP BY row_28`
 - **Count/Rows:** 5
-- **Average Duration:** 1156ms
-- **Min Duration:** 1151ms
-- **Max Duration:** 1159ms
-- **P95 Duration:** 1159ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_28
+- **Average Duration:** 1_571ms
+- **Min Duration:** 1_526ms
+- **Max Duration:** 1_627ms
+- **P95 Duration:** 1_621ms
 - **Runs:** 3
 
 ### row_10 > 2000 - AGGREGATION
 - **SQL:** `SELECT row_48, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_10 > 2000 GROUP BY row_48`
 - **Count/Rows:** 7
-- **Average Duration:** 1123ms
-- **Min Duration:** 1106ms
-- **Max Duration:** 1144ms
-- **P95 Duration:** 1142ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_48
+- **Average Duration:** 1_603ms
+- **Min Duration:** 1_600ms
+- **Max Duration:** 1_605ms
+- **P95 Duration:** 1_605ms
 - **Runs:** 3
 
 ### row_10 > 2000 - AGGREGATION
 - **SQL:** `SELECT row_54, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_10 > 2000 GROUP BY row_54`
 - **Count/Rows:** 7
-- **Average Duration:** 1161ms
-- **Min Duration:** 1141ms
-- **Max Duration:** 1172ms
-- **P95 Duration:** 1172ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_54
+- **Average Duration:** 1_572ms
+- **Min Duration:** 1_537ms
+- **Max Duration:** 1_605ms
+- **P95 Duration:** 1_602ms
 - **Runs:** 3
 
 ### row_1 >= 2024-06-01 - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_1 >= TIMESTAMP '2024-06-01 00:00:00'`
 - **Count/Rows:** 58,465,692
-- **Average Duration:** 967ms
-- **Min Duration:** 927ms
-- **Max Duration:** 987ms
-- **P95 Duration:** 987ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 1_372ms
+- **Min Duration:** 1_315ms
+- **Max Duration:** 1_459ms
+- **P95 Duration:** 1_448ms
 - **Runs:** 3
 
 ### row_1 >= 2024-06-01 - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_1 >= TIMESTAMP '2024-06-01 00:00:00' LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 723ms
-- **Min Duration:** 623ms
-- **Max Duration:** 774ms
-- **P95 Duration:** 774ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 746ms
+- **Min Duration:** 644ms
+- **Max Duration:** 803ms
+- **P95 Duration:** 802ms
 - **Runs:** 3
 
 ### row_1 >= 2024-06-01 - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_1 >= TIMESTAMP '2024-06-01 00:00:00' ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 2238ms
-- **Min Duration:** 1776ms
-- **Max Duration:** 2617ms
-- **P95 Duration:** 2588ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 2_653ms
+- **Min Duration:** 2_444ms
+- **Max Duration:** 2_958ms
+- **P95 Duration:** 2_918ms
 - **Runs:** 3
 
 ### row_1 >= 2024-06-01 - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_1 >= TIMESTAMP '2024-06-01 00:00:00' LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 155ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_1 >= TIMESTAMP '2024-06-01 00:00:00' OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 776ms
+- **Min Duration:** 725ms
+- **Max Duration:** 803ms
+- **P95 Duration:** 803ms
 - **Runs:** 3
 
 ### row_1 >= 2024-06-01 - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_1 >= TIMESTAMP '2024-06-01 00:00:00' ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 157ms
-- **Max Duration:** 158ms
-- **P95 Duration:** 158ms
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_1 >= TIMESTAMP '2024-06-01 00:00:00' ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 4_224ms
+- **Min Duration:** 4_013ms
+- **Max Duration:** 4_556ms
+- **P95 Duration:** 4_511ms
 - **Runs:** 3
 
 ### row_1 >= 2024-06-01 - AGGREGATION
 - **SQL:** `SELECT row_28, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_1 >= TIMESTAMP '2024-06-01 00:00:00' GROUP BY row_28`
 - **Count/Rows:** 5
-- **Average Duration:** 1287ms
-- **Min Duration:** 1268ms
-- **Max Duration:** 1298ms
-- **P95 Duration:** 1298ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_28
+- **Average Duration:** 1_702ms
+- **Min Duration:** 1_646ms
+- **Max Duration:** 1_782ms
+- **P95 Duration:** 1_772ms
 - **Runs:** 3
 
 ### row_1 >= 2024-06-01 - AGGREGATION
 - **SQL:** `SELECT row_48, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_1 >= TIMESTAMP '2024-06-01 00:00:00' GROUP BY row_48`
 - **Count/Rows:** 7
-- **Average Duration:** 1431ms
-- **Min Duration:** 1423ms
-- **Max Duration:** 1439ms
-- **P95 Duration:** 1438ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_48
+- **Average Duration:** 1_631ms
+- **Min Duration:** 1_612ms
+- **Max Duration:** 1_648ms
+- **P95 Duration:** 1_647ms
 - **Runs:** 3
 
 ### row_1 >= 2024-06-01 - AGGREGATION
 - **SQL:** `SELECT row_54, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_1 >= TIMESTAMP '2024-06-01 00:00:00' GROUP BY row_54`
 - **Count/Rows:** 7
-- **Average Duration:** 1465ms
-- **Min Duration:** 1441ms
-- **Max Duration:** 1511ms
-- **P95 Duration:** 1504ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_54
+- **Average Duration:** 1_648ms
+- **Min Duration:** 1_637ms
+- **Max Duration:** 1_658ms
+- **P95 Duration:** 1_657ms
 - **Runs:** 3
 
 ### row_28='value1' AND row_48='enum1' - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' AND row_48 = 'enum1'`
 - **Count/Rows:** 0
-- **Average Duration:** 670ms
-- **Min Duration:** 616ms
-- **Max Duration:** 775ms
-- **P95 Duration:** 760ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 775ms
+- **Min Duration:** 773ms
+- **Max Duration:** 777ms
+- **P95 Duration:** 777ms
 - **Runs:** 3
 
 ### row_28='value1' AND row_48='enum1' - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' AND row_48 = 'enum1' LIMIT 100`
 - **Count/Rows:** 0
-- **Average Duration:** 619ms
-- **Min Duration:** 619ms
-- **Max Duration:** 619ms
-- **P95 Duration:** 619ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 623ms
+- **Min Duration:** 620ms
+- **Max Duration:** 625ms
+- **P95 Duration:** 625ms
 - **Runs:** 3
 
 ### row_28='value1' AND row_48='enum1' - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' AND row_48 = 'enum1' ORDER BY id LIMIT 100`
 - **Count/Rows:** 0
-- **Average Duration:** 620ms
-- **Min Duration:** 618ms
-- **Max Duration:** 623ms
-- **P95 Duration:** 623ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 622ms
+- **Min Duration:** 621ms
+- **Max Duration:** 622ms
+- **P95 Duration:** 622ms
 - **Runs:** 3
 
 ### row_28='value1' AND row_48='enum1' - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' AND row_48 = 'enum1' LIMIT 100 OFFSET 9900`
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' AND row_48 = 'enum1' OFFSET 9900 LIMIT 100`
 - **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 158ms
-- **Max Duration:** 158ms
-- **P95 Duration:** 158ms
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 623ms
+- **Min Duration:** 621ms
+- **Max Duration:** 624ms
+- **P95 Duration:** 624ms
 - **Runs:** 3
 
 ### row_28='value1' AND row_48='enum1' - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' AND row_48 = 'enum1' ORDER BY id LIMIT 100 OFFSET 9900`
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' AND row_48 = 'enum1' ORDER BY id OFFSET 9900 LIMIT 100`
 - **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 158ms
-- **Max Duration:** 158ms
-- **P95 Duration:** 158ms
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 623ms
+- **Min Duration:** 622ms
+- **Max Duration:** 624ms
+- **P95 Duration:** 624ms
 - **Runs:** 3
 
 ### row_28='value1' AND row_48='enum1' - AGGREGATION
 - **SQL:** `SELECT row_28, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' AND row_48 = 'enum1' GROUP BY row_28`
 - **Count/Rows:** 0
-- **Average Duration:** 620ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_28
+- **Average Duration:** 623ms
 - **Min Duration:** 619ms
-- **Max Duration:** 621ms
-- **P95 Duration:** 621ms
+- **Max Duration:** 628ms
+- **P95 Duration:** 628ms
 - **Runs:** 3
 
 ### row_28='value1' AND row_48='enum1' - AGGREGATION
 - **SQL:** `SELECT row_48, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' AND row_48 = 'enum1' GROUP BY row_48`
 - **Count/Rows:** 0
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_48
 - **Average Duration:** 621ms
-- **Min Duration:** 620ms
-- **Max Duration:** 621ms
-- **P95 Duration:** 621ms
+- **Min Duration:** 619ms
+- **Max Duration:** 622ms
+- **P95 Duration:** 622ms
 - **Runs:** 3
 
 ### row_28='value1' AND row_48='enum1' - AGGREGATION
 - **SQL:** `SELECT row_54, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_28 = 'value1' AND row_48 = 'enum1' GROUP BY row_54`
 - **Count/Rows:** 0
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_54
 - **Average Duration:** 618ms
 - **Min Duration:** 617ms
 - **Max Duration:** 619ms
@@ -607,125 +775,167 @@
 ### row_9 BETWEEN 2000 AND 8000 - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_9 BETWEEN 2000 AND 8000`
 - **Count/Rows:** 63,341,035
-- **Average Duration:** 914ms
-- **Min Duration:** 883ms
-- **Max Duration:** 937ms
-- **P95 Duration:** 936ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 1_351ms
+- **Min Duration:** 1_230ms
+- **Max Duration:** 1_522ms
+- **P95 Duration:** 1_500ms
 - **Runs:** 3
 
 ### row_9 BETWEEN 2000 AND 8000 - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_9 BETWEEN 2000 AND 8000 LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 775ms
-- **Min Duration:** 772ms
-- **Max Duration:** 776ms
-- **P95 Duration:** 776ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 631ms
+- **Min Duration:** 624ms
+- **Max Duration:** 634ms
+- **P95 Duration:** 634ms
 - **Runs:** 3
 
 ### row_9 BETWEEN 2000 AND 8000 - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_9 BETWEEN 2000 AND 8000 ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 1658ms
-- **Min Duration:** 1593ms
-- **Max Duration:** 1775ms
-- **P95 Duration:** 1758ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 2_357ms
+- **Min Duration:** 2_283ms
+- **Max Duration:** 2_453ms
+- **P95 Duration:** 2_442ms
 - **Runs:** 3
 
 ### row_9 BETWEEN 2000 AND 8000 - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_9 BETWEEN 2000 AND 8000 LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 155ms
-- **Min Duration:** 154ms
-- **Max Duration:** 156ms
-- **P95 Duration:** 156ms
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_9 BETWEEN 2000 AND 8000 OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 711ms
+- **Min Duration:** 640ms
+- **Max Duration:** 841ms
+- **P95 Duration:** 822ms
 - **Runs:** 3
 
 ### row_9 BETWEEN 2000 AND 8000 - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_9 BETWEEN 2000 AND 8000 ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 156ms
-- **Max Duration:** 159ms
-- **P95 Duration:** 159ms
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_9 BETWEEN 2000 AND 8000 ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 3_714ms
+- **Min Duration:** 3_678ms
+- **Max Duration:** 3_737ms
+- **P95 Duration:** 3_736ms
 - **Runs:** 3
 
 ### row_9 BETWEEN 2000 AND 8000 - AGGREGATION
 - **SQL:** `SELECT row_28, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_9 BETWEEN 2000 AND 8000 GROUP BY row_28`
 - **Count/Rows:** 5
-- **Average Duration:** 1247ms
-- **Min Duration:** 1210ms
-- **Max Duration:** 1302ms
-- **P95 Duration:** 1295ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_28
+- **Average Duration:** 1_719ms
+- **Min Duration:** 1_629ms
+- **Max Duration:** 1_789ms
+- **P95 Duration:** 1_784ms
 - **Runs:** 3
 
 ### row_9 BETWEEN 2000 AND 8000 - AGGREGATION
 - **SQL:** `SELECT row_48, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_9 BETWEEN 2000 AND 8000 GROUP BY row_48`
 - **Count/Rows:** 7
-- **Average Duration:** 1245ms
-- **Min Duration:** 1159ms
-- **Max Duration:** 1390ms
-- **P95 Duration:** 1370ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_48
+- **Average Duration:** 1_550ms
+- **Min Duration:** 1_546ms
+- **Max Duration:** 1_555ms
+- **P95 Duration:** 1_555ms
 - **Runs:** 3
 
 ### row_9 BETWEEN 2000 AND 8000 - AGGREGATION
 - **SQL:** `SELECT row_54, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_9 BETWEEN 2000 AND 8000 GROUP BY row_54`
 - **Count/Rows:** 7
-- **Average Duration:** 1115ms
-- **Min Duration:** 1103ms
-- **Max Duration:** 1137ms
-- **P95 Duration:** 1134ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_54
+- **Average Duration:** 1_624ms
+- **Min Duration:** 1_542ms
+- **Max Duration:** 1_744ms
+- **P95 Duration:** 1_729ms
 - **Runs:** 3
 
 ### row_54 = 'tag1' - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_54 = 'tag1'`
 - **Count/Rows:** 0
-- **Average Duration:** 773ms
-- **Min Duration:** 771ms
-- **Max Duration:** 774ms
-- **P95 Duration:** 774ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 776ms
+- **Min Duration:** 774ms
+- **Max Duration:** 777ms
+- **P95 Duration:** 777ms
 - **Runs:** 3
 
 ### row_54 = 'tag1' - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_54 = 'tag1' LIMIT 100`
 - **Count/Rows:** 0
-- **Average Duration:** 617ms
-- **Min Duration:** 614ms
-- **Max Duration:** 619ms
-- **P95 Duration:** 619ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 622ms
+- **Min Duration:** 619ms
+- **Max Duration:** 624ms
+- **P95 Duration:** 624ms
 - **Runs:** 3
 
 ### row_54 = 'tag1' - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_54 = 'tag1' ORDER BY id LIMIT 100`
 - **Count/Rows:** 0
-- **Average Duration:** 621ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 623ms
+- **Min Duration:** 622ms
+- **Max Duration:** 624ms
+- **P95 Duration:** 624ms
+- **Runs:** 3
+
+### row_54 = 'tag1' - PAGINATION
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_54 = 'tag1' OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 0
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 623ms
 - **Min Duration:** 621ms
+- **Max Duration:** 623ms
+- **P95 Duration:** 623ms
+- **Runs:** 3
+
+### row_54 = 'tag1' - PAGINATION
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_54 = 'tag1' ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 0
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 620ms
+- **Min Duration:** 617ms
 - **Max Duration:** 621ms
 - **P95 Duration:** 621ms
-- **Runs:** 3
-
-### row_54 = 'tag1' - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_54 = 'tag1' LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 157ms
-- **Max Duration:** 158ms
-- **P95 Duration:** 158ms
-- **Runs:** 3
-
-### row_54 = 'tag1' - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_54 = 'tag1' ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 157ms
-- **Min Duration:** 155ms
-- **Max Duration:** 160ms
-- **P95 Duration:** 160ms
 - **Runs:** 3
 
 ### row_54 = 'tag1' - AGGREGATION
 - **SQL:** `SELECT row_28, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_54 = 'tag1' GROUP BY row_28`
 - **Count/Rows:** 0
-- **Average Duration:** 623ms
-- **Min Duration:** 622ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_28
+- **Average Duration:** 622ms
+- **Min Duration:** 621ms
 - **Max Duration:** 623ms
 - **P95 Duration:** 623ms
 - **Runs:** 3
@@ -733,90 +943,120 @@
 ### row_54 = 'tag1' - AGGREGATION
 - **SQL:** `SELECT row_48, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_54 = 'tag1' GROUP BY row_48`
 - **Count/Rows:** 0
-- **Average Duration:** 621ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_48
+- **Average Duration:** 622ms
 - **Min Duration:** 620ms
-- **Max Duration:** 621ms
-- **P95 Duration:** 621ms
+- **Max Duration:** 622ms
+- **P95 Duration:** 622ms
 - **Runs:** 3
 
 ### row_54 = 'tag1' - AGGREGATION
 - **SQL:** `SELECT row_54, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_54 = 'tag1' GROUP BY row_54`
 - **Count/Rows:** 0
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_54
 - **Average Duration:** 621ms
-- **Min Duration:** 619ms
-- **Max Duration:** 621ms
-- **P95 Duration:** 621ms
+- **Min Duration:** 620ms
+- **Max Duration:** 623ms
+- **P95 Duration:** 623ms
 - **Runs:** 3
 
 ### row_29 IS NOT NULL - COUNT
 - **SQL:** `SELECT COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_29 IS NOT NULL`
 - **Count/Rows:** 100,000,000
-- **Average Duration:** 1066ms
-- **Min Duration:** 989ms
-- **Max Duration:** 1163ms
-- **P95 Duration:** 1152ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** -
+- **Average Duration:** 1_563ms
+- **Min Duration:** 1_469ms
+- **Max Duration:** 1_698ms
+- **P95 Duration:** 1_681ms
 - **Runs:** 3
 
 ### row_29 IS NOT NULL - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_29 IS NOT NULL LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 722ms
-- **Min Duration:** 620ms
-- **Max Duration:** 776ms
-- **P95 Duration:** 776ms
+- **Pagination Type:** first page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 690ms
+- **Min Duration:** 634ms
+- **Max Duration:** 783ms
+- **P95 Duration:** 770ms
 - **Runs:** 3
 
 ### row_29 IS NOT NULL - PAGINATION
 - **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_29 IS NOT NULL ORDER BY id LIMIT 100`
 - **Count/Rows:** 100
-- **Average Duration:** 1772ms
-- **Min Duration:** 1763ms
-- **Max Duration:** 1777ms
-- **P95 Duration:** 1777ms
+- **Pagination Type:** first page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 2_770ms
+- **Min Duration:** 2_737ms
+- **Max Duration:** 2_811ms
+- **P95 Duration:** 2_806ms
 - **Runs:** 3
 
 ### row_29 IS NOT NULL - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_29 IS NOT NULL LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 157ms
-- **Max Duration:** 158ms
-- **P95 Duration:** 158ms
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_29 IS NOT NULL OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** No
+- **Aggregation:** -
+- **Average Duration:** 742ms
+- **Min Duration:** 643ms
+- **Max Duration:** 793ms
+- **P95 Duration:** 793ms
 - **Runs:** 3
 
 ### row_29 IS NOT NULL - PAGINATION
-- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_29 IS NOT NULL ORDER BY id LIMIT 100 OFFSET 9900`
-- **Count/Rows:** 0
-- **Average Duration:** 158ms
-- **Min Duration:** 158ms
-- **Max Duration:** 158ms
-- **P95 Duration:** 158ms
+- **SQL:** `SELECT id, row_28, row_48, row_9 FROM iceberg.lab.wide_100_000_000 WHERE row_29 IS NOT NULL ORDER BY id OFFSET 9900 LIMIT 100`
+- **Count/Rows:** 100
+- **Pagination Type:** 100th page
+- **Sorted:** Yes
+- **Aggregation:** -
+- **Average Duration:** 4_507ms
+- **Min Duration:** 4_324ms
+- **Max Duration:** 4_866ms
+- **P95 Duration:** 4_813ms
 - **Runs:** 3
 
 ### row_29 IS NOT NULL - AGGREGATION
 - **SQL:** `SELECT row_28, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_29 IS NOT NULL GROUP BY row_28`
 - **Count/Rows:** 5
-- **Average Duration:** 1212ms
-- **Min Duration:** 1196ms
-- **Max Duration:** 1226ms
-- **P95 Duration:** 1225ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_28
+- **Average Duration:** 1_737ms
+- **Min Duration:** 1_730ms
+- **Max Duration:** 1_747ms
+- **P95 Duration:** 1_746ms
 - **Runs:** 3
 
 ### row_29 IS NOT NULL - AGGREGATION
 - **SQL:** `SELECT row_48, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_29 IS NOT NULL GROUP BY row_48`
 - **Count/Rows:** 7
-- **Average Duration:** 1300ms
-- **Min Duration:** 1264ms
-- **Max Duration:** 1345ms
-- **P95 Duration:** 1340ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_48
+- **Average Duration:** 1_804ms
+- **Min Duration:** 1_794ms
+- **Max Duration:** 1_814ms
+- **P95 Duration:** 1_813ms
 - **Runs:** 3
 
 ### row_29 IS NOT NULL - AGGREGATION
 - **SQL:** `SELECT row_54, COUNT(*) as count FROM iceberg.lab.wide_100_000_000 WHERE row_29 IS NOT NULL GROUP BY row_54`
 - **Count/Rows:** 7
-- **Average Duration:** 1551ms
-- **Min Duration:** 1541ms
-- **Max Duration:** 1566ms
-- **P95 Duration:** 1564ms
+- **Pagination Type:** -
+- **Sorted:** -
+- **Aggregation:** row_54
+- **Average Duration:** 1_815ms
+- **Min Duration:** 1_788ms
+- **Max Duration:** 1_838ms
+- **P95 Duration:** 1_837ms
 - **Runs:** 3
 
