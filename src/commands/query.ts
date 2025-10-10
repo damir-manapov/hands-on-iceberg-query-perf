@@ -469,7 +469,10 @@ async function processTable(
     fs.mkdirSync(reportDir, { recursive: true });
   }
 
-  const reportFile = path.join(reportDir, `query-performance-${tableName}.md`);
+  const reportFile = path.join(
+    reportDir,
+    `${querySetName}-query-performance-${tableName}.md`
+  );
   fs.writeFileSync(reportFile, markdownReport, "utf-8");
 
   console.log(`\n📄 Markdown report saved to: ${reportFile}`);
