@@ -24,38 +24,38 @@ export function createTableQueryConfigs(): TableQueryConfig[] {
       tableBase: "narrow",
       filters: [
         { whereClause: "", description: "no filters" },
-        // {
-        //   whereClause: "status = 'paid'",
-        //   description: "status = 'paid'",
-        // },
-        // { whereClause: "country = 'US'", description: "country = 'US'" },
-        // { whereClause: "age > 30", description: "age > 30" },
-        // { whereClause: "amount > 1000", description: "amount > 1000" },
-        // {
-        //   whereClause: "created_at >= DATE '2024-06-01'",
-        //   description: "date >= 2024-06-01",
-        // },
-        // {
-        //   whereClause: "status = 'paid' AND country = 'US'",
-        //   description: "status='paid' AND country='US'",
-        // },
-        // {
-        //   whereClause: "age BETWEEN 25 AND 45",
-        //   description: "age BETWEEN 25 AND 45",
-        // },
-        // {
-        //   whereClause: "contains(tags, 'alpha')",
-        //   description: "tags contains 'alpha'",
-        // },
-        // {
-        //   whereClause: "note IS NOT NULL",
-        //   description: "note IS NOT NULL",
-        // },
+        {
+          whereClause: "status = 'paid'",
+          description: "status = 'paid'",
+        },
+        { whereClause: "country = 'US'", description: "country = 'US'" },
+        { whereClause: "age > 30", description: "age > 30" },
+        { whereClause: "amount > 1000", description: "amount > 1000" },
+        {
+          whereClause: "created_at >= DATE '2024-06-01'",
+          description: "date >= 2024-06-01",
+        },
+        {
+          whereClause: "status = 'paid' AND country = 'US'",
+          description: "status='paid' AND country='US'",
+        },
+        {
+          whereClause: "age BETWEEN 25 AND 45",
+          description: "age BETWEEN 25 AND 45",
+        },
+        {
+          whereClause: "contains(tags, 'alpha')",
+          description: "tags contains 'alpha'",
+        },
+        {
+          whereClause: "note IS NOT NULL",
+          description: "note IS NOT NULL",
+        },
       ],
       aggregationColumns: [
-        // { column: "status" },
-        // { column: "country" },
-        // { column: "age" },
+        { column: "status" },
+        { column: "country" },
+        { column: "age" },
       ],
       paginationColumns: [
         { column: "id" },

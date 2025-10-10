@@ -316,8 +316,8 @@ async function processTable(
       }
     }
 
-    // First page (sorted by first pagination column)
-    const firstPageSortedSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} ORDER BY ${paginationColumns[0].column} LIMIT 100`;
+    // First page (sorted by idColumn)
+    const firstPageSortedSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} ORDER BY ${tableConfig.idColumn} LIMIT 100`;
     for (let i = 0; i < iterations; i++) {
       const result = await runQuery(
         client,
@@ -356,8 +356,8 @@ async function processTable(
       }
     }
 
-    // 100th page (sorted by first pagination column) - use OFFSET before LIMIT for Trino pagination
-    const hundredthPageSortedSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} ORDER BY ${paginationColumns[0].column} OFFSET 9900 LIMIT 100`;
+    // 100th page (sorted by idColumn)
+    const hundredthPageSortedSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} ORDER BY ${tableConfig.idColumn} OFFSET 9900 LIMIT 100`;
     for (let i = 0; i < iterations; i++) {
       const result = await runQuery(
         client,
