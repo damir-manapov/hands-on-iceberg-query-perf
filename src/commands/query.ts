@@ -61,6 +61,10 @@ function formatBytes(bytes: number): string {
   return `${b.toFixed(1)} ${units[u]}`;
 }
 
+function formatMs(value: number): string {
+  return Math.ceil(value).toLocaleString();
+}
+
 function calculatePercentile(values: number[], percentile: number): number {
   if (values.length === 0) return 0;
   if (values.length === 1) return values[0];
@@ -172,10 +176,10 @@ function generateMarkdownReport(
 ## Summary
 
 - **Total Queries:** ${overallStats.totalQueries}
-- **Average Duration:** ${Math.ceil(overallStats.avgDuration)}ms
-- **Fastest Query:** ${overallStats.minDuration}ms
-- **Slowest Query:** ${overallStats.maxDuration}ms
-- **95th Percentile:** ${Math.ceil(overallStats.p95Duration)}ms
+- **Average Duration:** ${formatMs(overallStats.avgDuration)}ms
+- **Fastest Query:** ${formatMs(overallStats.minDuration)}ms
+- **Slowest Query:** ${formatMs(overallStats.maxDuration)}ms
+- **95th Percentile:** ${formatMs(overallStats.p95Duration)}ms
 
 ## Query Results
 
@@ -195,7 +199,7 @@ ${queryStats
     const maxDuration = Math.max(...durations);
     const p95Duration = calculatePercentile(durations, 95);
 
-    return `| ${stats.filter} | ${stats.queryType} | ${paginationType} | ${sorted} | ${aggregationInfo} | ${stats.count.toLocaleString()} | ${Math.ceil(avgDuration)} | ${minDuration} | ${maxDuration} | ${Math.ceil(p95Duration)} | ${stats.runs.length} |`;
+    return `| ${stats.filter} | ${stats.queryType} | ${paginationType} | ${sorted} | ${aggregationInfo} | ${stats.count.toLocaleString()} | ${formatMs(avgDuration)} | ${formatMs(minDuration)} | ${formatMs(maxDuration)} | ${formatMs(p95Duration)} | ${stats.runs.length} |`;
   })
   .join("\n")}
 
@@ -215,10 +219,10 @@ ${queryStats
 - **Pagination Type:** ${stats.paginationType ?? "-"}
 - **Sorted:** ${stats.sorted !== undefined ? (stats.sorted ? "Yes" : "No") : "-"}
 - **Aggregation:** ${stats.aggregationInfo ?? "-"}
-- **Average Duration:** ${Math.ceil(avgDuration)}ms
-- **Min Duration:** ${minDuration}ms
-- **Max Duration:** ${maxDuration}ms
-- **P95 Duration:** ${Math.ceil(p95Duration)}ms
+- **Average Duration:** ${formatMs(avgDuration)}ms
+- **Min Duration:** ${formatMs(minDuration)}ms
+- **Max Duration:** ${formatMs(maxDuration)}ms
+- **P95 Duration:** ${formatMs(p95Duration)}ms
 - **Runs:** ${stats.runs.length}
 `;
   })
