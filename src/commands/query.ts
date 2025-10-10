@@ -62,7 +62,7 @@ function formatBytes(bytes: number): string {
 }
 
 function formatMs(value: number): string {
-  return Math.ceil(value).toLocaleString().replaceAll(',', '_');
+  return Math.ceil(value).toLocaleString().replaceAll(",", "_");
 }
 
 function calculatePercentile(values: number[], percentile: number): number {
@@ -256,8 +256,8 @@ async function processTable(
     return;
   }
 
-  const iterations = 1;
-  // const iterations = 3;
+  // const iterations = 1;
+  const iterations = 3;
   const results: QueryResult[] = [];
 
   // Get query configurations for this table
@@ -337,7 +337,7 @@ async function processTable(
     }
 
     // 100th page (no sort)
-    const hundredthPageSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} LIMIT 100 OFFSET 9900`;
+    const hundredthPageSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} OFFSET 9900 LIMIT 100`;
     for (let i = 0; i < iterations; i++) {
       const result = await runQuery(
         client,
@@ -356,8 +356,8 @@ async function processTable(
       }
     }
 
-    // 100th page (sorted by first pagination column)
-    const hundredthPageSortedSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} ORDER BY ${paginationColumns[0].column} LIMIT 100 OFFSET 9900`;
+    // 100th page (sorted by first pagination column) - use OFFSET before LIMIT for Trino pagination
+    const hundredthPageSortedSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} ORDER BY ${paginationColumns[0].column} OFFSET 9900 LIMIT 100`;
     for (let i = 0; i < iterations; i++) {
       const result = await runQuery(
         client,
