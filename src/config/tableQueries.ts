@@ -5,12 +5,10 @@ export interface FilterCondition {
 
 export interface AggregationColumn {
   column: string;
-  description: string;
 }
 
 export interface PaginationColumn {
   column: string;
-  description: string;
 }
 
 export interface TableQueryConfig {
@@ -55,15 +53,15 @@ export function createTableQueryConfigs(): TableQueryConfig[] {
         },
       ],
       aggregationColumns: [
-        { column: "status", description: "status GROUP BY" },
-        { column: "country", description: "country GROUP BY" },
-        { column: "age", description: "age GROUP BY" },
+        { column: "status" },
+        { column: "country" },
+        { column: "age" },
       ],
       paginationColumns: [
-        { column: "id", description: "id" },
-        { column: "status", description: "status" },
-        { column: "country", description: "country" },
-        { column: "age", description: "age" },
+        { column: "id" },
+        { column: "status" },
+        { column: "country" },
+        { column: "age" },
       ],
     },
     {
@@ -102,15 +100,15 @@ export function createTableQueryConfigs(): TableQueryConfig[] {
         },
       ],
       aggregationColumns: [
-        { column: "row_28", description: "row_28 GROUP BY" },
-        { column: "row_48", description: "row_48 GROUP BY" },
-        { column: "row_54", description: "row_54 GROUP BY" },
+        { column: "row_28" },
+        { column: "row_48" },
+        { column: "row_54" },
       ],
       paginationColumns: [
-        { column: "id", description: "id" },
-        { column: "row_28", description: "row_28" },
-        { column: "row_48", description: "row_48" },
-        { column: "row_9", description: "row_9" },
+        { column: "id" },
+        { column: "row_28" },
+        { column: "row_48" },
+        { column: "row_9" },
       ],
     },
   ];

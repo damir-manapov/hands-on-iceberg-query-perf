@@ -378,11 +378,11 @@ async function processTable(
         const result = await runQuery(
           client,
           aggregationSQL,
-          `Aggregation (${filter.description}, ${aggCol.description})`,
+          `Aggregation (${filter.description}, ${aggCol.column})`,
           "AGGREGATION",
           {
             filter: filter.description,
-            aggregationInfo: aggCol.description,
+            aggregationInfo: aggCol.column,
           }
         );
         results.push(result);
