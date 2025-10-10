@@ -2,8 +2,6 @@
  * generate.ts — Generate, load & measure Iceberg/Parquet table
  */
 
-import * as fs from "node:fs";
-import * as path from "node:path";
 import { SizeRow, TableConfig } from "../types";
 import { TrinoClient } from "../TrinoClient";
 import {
@@ -13,7 +11,7 @@ import {
   createSelectExamplesSQL,
   createVariantTableSQLs,
 } from "../sqlHelpers";
-import { ensureDir, humanNumber, humanSize, makeBatches } from "../utils";
+import { humanNumber, humanSize, makeBatches } from "../utils";
 import { Limiter } from "../Limiter";
 import { TABLE_CONFIGS } from "../config/tableConfigs";
 import { LOAD } from "../config/load";
@@ -52,32 +50,55 @@ async function loadTable(
   tableName: string,
   startId: number,
   totalRows: number,
-  batchRows: number,
-  cpFile: string
+  batchRows: number
 ) {
-  const batches = makeBatches(startId, totalRows, batchRows);
-  let cp: { completedBatches: number[] } = { completedBatches: [] };
-  try {
-    cp = JSON.parse(fs.readFileSync(cpFile, "utf-8"));
-  } catch {
-    // Checkpoint file doesn't exist or is invalid, start fresh
-  }
-  const pending = batches.filter(b => !cp.completedBatches.includes(b.index));
+  // Check current row count in the table
+  const fullTableName = `${cfg.catalog}.${cfg.schema}.${tableName}`;
+  const countSQL = `SELECT COUNT(*) as count FROM ${fullTableName}`;
 
-  if (pending.length === 0) {
-    console.log(`✓ All batches already completed for ${tableName}`);
+  let currentRowCount = 0;
+  try {
+    const countResult = await client.query(countSQL);
+    currentRowCount = (countResult[0] as { count: number })?.count ?? 0;
+    console.log(
+      `📊 Current row count in ${tableName}: ${currentRowCount.toLocaleString()}`
+    );
+  } catch {
+    console.log(
+      `📊 Table ${tableName} doesn't exist yet, starting from 0 rows`
+    );
+    currentRowCount = 0;
+  }
+
+  // Calculate how many more rows we need to generate
+  const remainingRows = totalRows - currentRowCount;
+
+  if (remainingRows <= 0) {
+    console.log(
+      `✓ Table ${tableName} already has ${currentRowCount.toLocaleString()} rows (target: ${totalRows.toLocaleString()})`
+    );
     return;
   }
+
+  console.log(
+    `📈 Need to generate ${remainingRows.toLocaleString()} more rows (${currentRowCount.toLocaleString()} + ${remainingRows.toLocaleString()} = ${totalRows.toLocaleString()})`
+  );
+
+  // Calculate the starting ID for new rows
+  const nextId = startId + currentRowCount;
+
+  // Create batches for the remaining rows
+  const batches = makeBatches(nextId, remainingRows, batchRows);
 
   const startTime = Date.now();
   const totalBatches = batches.length;
 
   console.log(
-    `\n📊 Loading ${tableName}: ${pending.length}/${totalBatches} batches remaining`
+    `\n📊 Loading ${tableName}: ${totalBatches} batches for remaining ${remainingRows.toLocaleString()} rows`
   );
 
   await Promise.all(
-    pending.map(b =>
+    batches.map(b =>
       limiter.run(async () => {
         const label = `${tableName} #${b.index}/${batches.length} [${humanNumber(b.start)}..${humanNumber(b.end)}]`;
         const sql = buildInsertSQL(b.start, b.end, cfg, tableName);
@@ -85,7 +106,7 @@ async function loadTable(
         try {
           // Calculate ETA before starting the batch
           const eta = calculateBatchETA(
-            cp.completedBatches.length,
+            b.index - 1,
             totalBatches,
             startTime,
             Date.now()
@@ -93,16 +114,8 @@ async function loadTable(
           console.log(`→ INSERT ${label} (ETA: ${eta})`);
           await client.execute(sql);
           const duration = ((Date.now() - t0) / 1000).toFixed(1);
-
-          // Update completed batches
-          cp.completedBatches.push(b.index);
-          cp.completedBatches.sort((a, z) => a - z);
-          const progress = (
-            (cp.completedBatches.length / totalBatches) *
-            100
-          ).toFixed(1);
+          const progress = ((b.index / totalBatches) * 100).toFixed(1);
           console.log(`✔ OK ${label} in ${duration}s (${progress}% complete)`);
-          fs.writeFileSync(cpFile, JSON.stringify(cp), "utf-8");
         } catch (e: unknown) {
           const err = e as { message?: string } | string;
           const message = `✖ FAIL ${label}: ${
@@ -180,8 +193,6 @@ async function main() {
   const client = new TrinoClient(trino);
   const limiter = new Limiter(LOAD.concurrency);
 
-  ensureDir(LOAD.checkpointDir);
-
   const codec = FIXED_CODEC;
   const level = FIXED_LEVEL;
   const results: SizeRow[] = [];
@@ -221,7 +232,6 @@ async function main() {
         await client.execute(sql);
       }
 
-      const cpFile = path.join(LOAD.checkpointDir, `.cp_${name}.json`);
       const t0 = Date.now();
       await loadTable(
         client,
@@ -230,8 +240,7 @@ async function main() {
         name,
         LOAD.startId,
         totalRows,
-        batchRows,
-        cpFile
+        batchRows
       );
       const durationMs = Date.now() - t0;
       const durationMinutes = (durationMs / 60000).toFixed(1);

@@ -5,9 +5,8 @@
   "author": "Damir Manapov",
   "license": "MIT",
   "scripts": {
-    "rmcheckpoints": "rm -rf .checkpoints",
     "generate": "tsx src/commands/generate.ts",
-    "regenerate": "yarn rmcheckpoints & yarn generate",
+    "regenerate": "yarn generate",
     "query": "tsx src/commands/query.ts",
     "build": "tsc -p tsconfig.json",
     "lint": "tsc --noEmit",

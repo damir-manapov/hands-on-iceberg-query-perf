@@ -4,7 +4,6 @@ export const LOAD = {
   concurrency: Number(process.env.CONCURRENCY ?? "4"),
   createBaseSchema: (process.env.CREATE_BASE_SCHEMA ?? "true") === "true",
   compactAfterLoad: (process.env.COMPACT_AFTER_LOAD ?? "true") === "true",
-  checkpointDir: process.env.CHECKPOINT_DIR ?? ".checkpoints",
   includeManifestBytes:
     (process.env.MEASURE_INCLUDE_MANIFESTS ?? "true") === "true",
 };
