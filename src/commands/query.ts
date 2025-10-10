@@ -267,7 +267,8 @@ async function processTable(
     console.log(`\n📋 Processing filter: ${filter.description}`);
 
     // COUNT queries
-    const countSQL = `SELECT COUNT(*) as count FROM ${fullTableName} ${filter.whereClause}`;
+    const where = filter.whereClause ? `WHERE ${filter.whereClause}` : "";
+    const countSQL = `SELECT COUNT(*) as count FROM ${fullTableName} ${where}`;
     for (let i = 0; i < iterations; i++) {
       const result = await runQuery(
         client,
@@ -291,7 +292,7 @@ async function processTable(
       .join(", ");
 
     // First page (no sort)
-    const firstPageSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${filter.whereClause} LIMIT 100`;
+    const firstPageSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} LIMIT 100`;
     for (let i = 0; i < iterations; i++) {
       const result = await runQuery(
         client,
@@ -311,7 +312,7 @@ async function processTable(
     }
 
     // First page (sorted by first pagination column)
-    const firstPageSortedSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${filter.whereClause} ORDER BY ${paginationColumns[0].column} LIMIT 100`;
+    const firstPageSortedSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} ORDER BY ${paginationColumns[0].column} LIMIT 100`;
     for (let i = 0; i < iterations; i++) {
       const result = await runQuery(
         client,
@@ -331,7 +332,7 @@ async function processTable(
     }
 
     // 100th page (no sort)
-    const hundredthPageSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${filter.whereClause} LIMIT 100 OFFSET 9900`;
+    const hundredthPageSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} LIMIT 100 OFFSET 9900`;
     for (let i = 0; i < iterations; i++) {
       const result = await runQuery(
         client,
@@ -351,7 +352,7 @@ async function processTable(
     }
 
     // 100th page (sorted by first pagination column)
-    const hundredthPageSortedSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${filter.whereClause} ORDER BY ${paginationColumns[0].column} LIMIT 100 OFFSET 9900`;
+    const hundredthPageSortedSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} ORDER BY ${paginationColumns[0].column} LIMIT 100 OFFSET 9900`;
     for (let i = 0; i < iterations; i++) {
       const result = await runQuery(
         client,
@@ -372,7 +373,7 @@ async function processTable(
 
     // AGGREGATION queries
     for (const aggCol of aggregationColumns) {
-      const aggregationSQL = `SELECT ${aggCol.column}, COUNT(*) as count FROM ${fullTableName} ${filter.whereClause} GROUP BY ${aggCol.column}`;
+      const aggregationSQL = `SELECT ${aggCol.column}, COUNT(*) as count FROM ${fullTableName} ${where} GROUP BY ${aggCol.column}`;
       for (let i = 0; i < iterations; i++) {
         const result = await runQuery(
           client,
