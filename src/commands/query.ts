@@ -212,6 +212,9 @@ ${queryStats
     return `### ${stats.filter} - ${stats.queryType}
 - **SQL:** \`${stats.query}\`
 - **Count/Rows:** ${stats.count.toLocaleString()}
+- **Pagination Type:** ${stats.paginationType ?? "-"}
+- **Sorted:** ${stats.sorted !== undefined ? (stats.sorted ? "Yes" : "No") : "-"}
+- **Aggregation:** ${stats.aggregationInfo ?? "-"}
 - **Average Duration:** ${Math.ceil(avgDuration)}ms
 - **Min Duration:** ${minDuration}ms
 - **Max Duration:** ${maxDuration}ms
