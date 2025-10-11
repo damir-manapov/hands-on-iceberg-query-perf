@@ -20,9 +20,9 @@ export const TABLE_CONFIGS: TableConfig[] = [
     tableBase: "narrow",
     totalRows: [
       1_000_000,
-      10_000_000,
-      100_000_000,
-      1_000_000_000,
+      // 10_000_000,
+      // 100_000_000,
+      // 1_000_000_000,
     ],
     batchRows: 1_000_000,
     enabled: true,
@@ -69,8 +69,8 @@ export const TABLE_CONFIGS: TableConfig[] = [
     tableBase: "wide",
     totalRows: [1_000_000, 10_000_000, 100_000_000],
     batchRows: 500_000,
-    enabled: true,
-    // enabled: false,
+    // enabled: true,
+    enabled: false,
     columns: {
       id: { kind: "bigint", min: 1, max: 1, nullable: 0 },
       row_1: {

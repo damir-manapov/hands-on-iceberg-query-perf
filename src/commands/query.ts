@@ -23,6 +23,18 @@ interface QueryResult {
   aggregationInfo?: string;
 }
 
+interface QueryArgs {
+  sql: string;
+  description: string;
+  queryType: "COUNT" | "PAGINATION" | "AGGREGATION";
+  metadata: {
+    filter: string;
+    paginationType?: string;
+    sorted?: boolean;
+    aggregationInfo?: string;
+  };
+}
+
 interface QueryStats {
   query: string;
   filter: string;
@@ -256,145 +268,128 @@ async function processTable(
     return;
   }
 
-  // Use iterations from query set
-  const results: QueryResult[] = [];
-
   // Get query configurations for this table
   const filters = queryConfig.filters;
   const aggregationColumns = queryConfig.aggregationColumns;
   const paginationColumns = queryConfig.paginationColumns;
 
-  console.log(`\n🔍 Running ${iterations} iterations for each query...`);
+  console.log(`\n🔍 Building query configurations...`);
 
-  // Run queries for each filter
+  // Build array of query arguments (one per query type, not per iteration)
+  const queryArgs: QueryArgs[] = [];
+
+  // Build column list for pagination queries
+  const paginationColumnList = paginationColumns
+    .map((col: PaginationColumn) => col.column)
+    .join(", ");
+
   for (const filter of filters) {
     console.log(
-      `\n📋 Processing filter: ${filter.description || filter.whereClause}`
+      `📋 Adding query configs for filter: ${filter.description || filter.whereClause}`
     );
 
-    // COUNT queries
     const where = filter.whereClause ? `WHERE ${filter.whereClause}` : "";
-    const countSQL = `SELECT COUNT(*) as count FROM ${fullTableName} ${where}`;
-    for (let i = 0; i < iterations; i++) {
-      const result = await runQuery(
-        client,
-        countSQL,
-        `Count query (${filter.description || filter.whereClause})`,
-        "COUNT",
-        {
-          filter: filter.description || filter.whereClause,
-        }
-      );
-      results.push(result);
-      if (i < iterations - 1) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-    }
+    const filterName = filter.description || filter.whereClause;
 
-    // PAGINATION queries - run for all filters with all pagination columns
-    // Build column list for pagination queries
-    const paginationColumnList = paginationColumns
-      .map((col: PaginationColumn) => col.column)
-      .join(", ");
+    // COUNT queries
+    const countSQL = `SELECT COUNT(*) as count FROM ${fullTableName} ${where}`;
+    queryArgs.push({
+      sql: countSQL,
+      description: `Count query (${filterName})`,
+      queryType: "COUNT",
+      metadata: {
+        filter: filterName,
+      },
+    });
 
     // First page (no sort)
     const firstPageSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} LIMIT 100`;
-    for (let i = 0; i < iterations; i++) {
-      const result = await runQuery(
-        client,
-        firstPageSQL,
-        `First page (${filter.description || filter.whereClause})`,
-        "PAGINATION",
-        {
-          filter: filter.description || filter.whereClause,
-          paginationType: "first page",
-          sorted: false,
-        }
-      );
-      results.push(result);
-      if (i < iterations - 1) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-    }
+    queryArgs.push({
+      sql: firstPageSQL,
+      description: `First page (${filterName})`,
+      queryType: "PAGINATION",
+      metadata: {
+        filter: filterName,
+        paginationType: "first page",
+        sorted: false,
+      },
+    });
 
     // First page (sorted by idColumn)
     const firstPageSortedSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} ORDER BY ${tableConfig.idColumn} LIMIT 100`;
-    for (let i = 0; i < iterations; i++) {
-      const result = await runQuery(
-        client,
-        firstPageSortedSQL,
-        `First page sorted (${filter.description || filter.whereClause})`,
-        "PAGINATION",
-        {
-          filter: filter.description || filter.whereClause,
-          paginationType: "first page",
-          sorted: true,
-        }
-      );
-      results.push(result);
-      if (i < iterations - 1) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-    }
+    queryArgs.push({
+      sql: firstPageSortedSQL,
+      description: `First page sorted (${filterName})`,
+      queryType: "PAGINATION",
+      metadata: {
+        filter: filterName,
+        paginationType: "first page",
+        sorted: true,
+      },
+    });
 
     // 100th page (no sort)
     const hundredthPageSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} OFFSET 9900 LIMIT 100`;
-    for (let i = 0; i < iterations; i++) {
-      const result = await runQuery(
-        client,
-        hundredthPageSQL,
-        `100th page (${filter.description || filter.whereClause})`,
-        "PAGINATION",
-        {
-          filter: filter.description || filter.whereClause,
-          paginationType: "100th page",
-          sorted: false,
-        }
-      );
-      results.push(result);
-      if (i < iterations - 1) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-    }
+    queryArgs.push({
+      sql: hundredthPageSQL,
+      description: `100th page (${filterName})`,
+      queryType: "PAGINATION",
+      metadata: {
+        filter: filterName,
+        paginationType: "100th page",
+        sorted: false,
+      },
+    });
 
     // 100th page (sorted by idColumn)
     const hundredthPageSortedSQL = `SELECT ${paginationColumnList} FROM ${fullTableName} ${where} ORDER BY ${tableConfig.idColumn} OFFSET 9900 LIMIT 100`;
-    for (let i = 0; i < iterations; i++) {
-      const result = await runQuery(
-        client,
-        hundredthPageSortedSQL,
-        `100th page sorted (${filter.description || filter.whereClause})`,
-        "PAGINATION",
-        {
-          filter: filter.description || filter.whereClause,
-          paginationType: "100th page",
-          sorted: true,
-        }
-      );
-      results.push(result);
-      if (i < iterations - 1) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-    }
+    queryArgs.push({
+      sql: hundredthPageSortedSQL,
+      description: `100th page sorted (${filterName})`,
+      queryType: "PAGINATION",
+      metadata: {
+        filter: filterName,
+        paginationType: "100th page",
+        sorted: true,
+      },
+    });
 
     // AGGREGATION queries
     for (const aggCol of aggregationColumns) {
       const aggregationSQL = `SELECT ${aggCol.column}, COUNT(*) as count FROM ${fullTableName} ${where} GROUP BY ${aggCol.column}`;
-      for (let i = 0; i < iterations; i++) {
-        const result = await runQuery(
-          client,
-          aggregationSQL,
-          `Aggregation (${filter.description || filter.whereClause}, ${aggCol.column})`,
-          "AGGREGATION",
-          {
-            filter: filter.description || filter.whereClause,
-            aggregationInfo: aggCol.column,
-          }
-        );
-        results.push(result);
-        if (i < iterations - 1) {
-          await new Promise(resolve => setTimeout(resolve, 100));
-        }
+      queryArgs.push({
+        sql: aggregationSQL,
+        description: `Aggregation (${filterName}, ${aggCol.column})`,
+        queryType: "AGGREGATION",
+        metadata: {
+          filter: filterName,
+          aggregationInfo: aggCol.column,
+        },
+      });
+    }
+  }
+
+  console.log(`\n🚀 Executing ${queryArgs.length} query types with ${iterations} iterations each...`);
+
+  // Execute all queries with iterations
+  const results: QueryResult[] = [];
+  for (let i = 0; i < queryArgs.length; i++) {
+    const args = queryArgs[i];
+    
+    // Run this query configuration multiple times (iterations)
+    for (let iteration = 0; iteration < iterations; iteration++) {
+      const result = await runQuery(
+        client,
+        args.sql,
+        args.description,
+        args.queryType,
+        args.metadata
+      );
+      results.push(result);
+
+      // Add delay between iterations (except for the last iteration of the last query)
+      if (!(i === queryArgs.length - 1 && iteration === iterations - 1)) {
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
     }
   }
