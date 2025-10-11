@@ -22,6 +22,7 @@ export interface QuerySet {
   name: string;
   enabled: boolean;
   iterations: number;
+  concurrencySimulationStreams: number;
   tableConfigs: TableQueryConfig[];
 }
 
@@ -31,6 +32,67 @@ export function createQuerySets(): QuerySet[] {
       name: "basic",
       enabled: true,
       iterations: 3,
+      concurrencySimulationStreams: 0,
+      tableConfigs: [
+        {
+          tableBase: "narrow",
+          filters: [
+            { whereClause: "", description: "no filters" },
+            // { whereClause: "status = 'paid'" },
+            // { whereClause: "country = 'US'" },
+            // { whereClause: "age > 30" },
+            // { whereClause: "amount > 1000" },
+            // { whereClause: "created_at >= DATE '2024-06-01'" },
+            // { whereClause: "status = 'paid' AND country = 'US'" },
+            // { whereClause: "age BETWEEN 25 AND 45" },
+            // { whereClause: "contains(tags, 'alpha')" },
+            // { whereClause: "note IS NOT NULL" },
+          ],
+          aggregationColumns: [
+            { column: "status" },
+            // { column: "country" },
+            // { column: "age" },
+          ],
+          paginationColumns: [
+            { column: "id" },
+            { column: "status" },
+            { column: "country" },
+            { column: "age" },
+          ],
+        },
+        {
+          tableBase: "wide",
+          filters: [
+            { whereClause: "", description: "no filters" },
+            { whereClause: "row_9 > 5000" },
+            { whereClause: "row_28 = 'value1'" },
+            { whereClause: "row_48 = 'enum1'" },
+            { whereClause: "row_10 > 2000" },
+            { whereClause: "row_1 >= TIMESTAMP '2024-06-01 00:00:00'" },
+            { whereClause: "row_28 = 'value1' AND row_48 = 'enum1'" },
+            { whereClause: "row_9 BETWEEN 2000 AND 8000" },
+            { whereClause: "row_54 = 'tag1'" },
+            { whereClause: "row_29 IS NOT NULL" },
+          ],
+          aggregationColumns: [
+            { column: "row_28" },
+            { column: "row_48" },
+            { column: "row_54" },
+          ],
+          paginationColumns: [
+            { column: "id" },
+            { column: "row_28" },
+            { column: "row_48" },
+            { column: "row_9" },
+          ],
+        },
+      ],
+    },
+    {
+      name: "basicWithParallel30",
+      enabled: true,
+      iterations: 3,
+      concurrencySimulationStreams: 30,
       tableConfigs: [
         {
           tableBase: "narrow",
@@ -90,6 +152,7 @@ export function createQuerySets(): QuerySet[] {
       name: "extended",
       enabled: false,
       iterations: 5,
+      concurrencySimulationStreams: 0,
       tableConfigs: [
         {
           tableBase: "narrow",

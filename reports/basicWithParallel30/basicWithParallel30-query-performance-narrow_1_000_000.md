@@ -1,7 +1,7 @@
 # Query Performance Report
 
 **Table:** iceberg.lab.narrow_1_000_000  
-**Generated:** 2025-10-11T16:58:59.634Z  
+**Generated:** 2025-10-11T16:59:14.366Z  
 **Total Rows:** 1,000,000  
 **Table Size:** 29.3 MB
 
@@ -9,22 +9,22 @@
 
 - **Total Queries:** 18
 - **Iterations:** 3
-- **Concurrency Simulation Streams:** 0
-- **Average Duration:** 764ms
-- **Fastest Query:** 761ms
-- **Slowest Query:** 766ms
-- **95th Percentile:** 766ms
+- **Concurrency Simulation Streams:** 30
+- **Average Duration:** 639ms
+- **Fastest Query:** 606ms
+- **Slowest Query:** 826ms
+- **95th Percentile:** 771ms
 
 ## Query Results
 
 | Filter | Type | Pagination Type | Sorted | Aggregation | Count/Rows | Avg Duration (ms) | Min Duration (ms) | Max Duration (ms) | P95 Duration (ms) |
 |--------|------|-----------------|--------|-------------|------------|-------------------|-------------------|-------------------|-------------------|
-| no filters | COUNT | - | - | - | 1,000,000 | 763 | 761 | 764 | 764 |
-| no filters | PAGINATION | first page | No | - | 100 | 763 | 761 | 764 | 764 |
-| no filters | PAGINATION | first page | Yes | - | 100 | 763 | 762 | 765 | 765 |
-| no filters | PAGINATION | 100th page | No | - | 100 | 763 | 761 | 763 | 763 |
-| no filters | PAGINATION | 100th page | Yes | - | 100 | 766 | 764 | 766 | 766 |
-| no filters | AGGREGATION | - | - | status | 4 | 763 | 762 | 763 | 763 |
+| no filters | COUNT | - | - | - | 1,000,000 | 734 | 614 | 826 | 820 |
+| no filters | PAGINATION | first page | No | - | 100 | 660 | 609 | 761 | 746 |
+| no filters | PAGINATION | first page | Yes | - | 100 | 609 | 608 | 611 | 611 |
+| no filters | PAGINATION | 100th page | No | - | 100 | 607 | 606 | 608 | 608 |
+| no filters | PAGINATION | 100th page | Yes | - | 100 | 612 | 608 | 616 | 616 |
+| no filters | AGGREGATION | - | - | status | 4 | 611 | 607 | 616 | 616 |
 
 ## Query Details
 
@@ -34,10 +34,10 @@
 - **Pagination Type:** -
 - **Sorted:** -
 - **Aggregation:** -
-- **Average Duration:** 763ms
-- **Min Duration:** 761ms
-- **Max Duration:** 764ms
-- **P95 Duration:** 764ms
+- **Average Duration:** 734ms
+- **Min Duration:** 614ms
+- **Max Duration:** 826ms
+- **P95 Duration:** 820ms
 
 ### no filters - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000  LIMIT 100`
@@ -45,10 +45,10 @@
 - **Pagination Type:** first page
 - **Sorted:** No
 - **Aggregation:** -
-- **Average Duration:** 763ms
-- **Min Duration:** 761ms
-- **Max Duration:** 764ms
-- **P95 Duration:** 764ms
+- **Average Duration:** 660ms
+- **Min Duration:** 609ms
+- **Max Duration:** 761ms
+- **P95 Duration:** 746ms
 
 ### no filters - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000  ORDER BY id LIMIT 100`
@@ -56,10 +56,10 @@
 - **Pagination Type:** first page
 - **Sorted:** Yes
 - **Aggregation:** -
-- **Average Duration:** 763ms
-- **Min Duration:** 762ms
-- **Max Duration:** 765ms
-- **P95 Duration:** 765ms
+- **Average Duration:** 609ms
+- **Min Duration:** 608ms
+- **Max Duration:** 611ms
+- **P95 Duration:** 611ms
 
 ### no filters - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000  OFFSET 9900 LIMIT 100`
@@ -67,10 +67,10 @@
 - **Pagination Type:** 100th page
 - **Sorted:** No
 - **Aggregation:** -
-- **Average Duration:** 763ms
-- **Min Duration:** 761ms
-- **Max Duration:** 763ms
-- **P95 Duration:** 763ms
+- **Average Duration:** 607ms
+- **Min Duration:** 606ms
+- **Max Duration:** 608ms
+- **P95 Duration:** 608ms
 
 ### no filters - PAGINATION
 - **SQL:** `SELECT id, status, country, age FROM iceberg.lab.narrow_1_000_000  ORDER BY id OFFSET 9900 LIMIT 100`
@@ -78,10 +78,10 @@
 - **Pagination Type:** 100th page
 - **Sorted:** Yes
 - **Aggregation:** -
-- **Average Duration:** 766ms
-- **Min Duration:** 764ms
-- **Max Duration:** 766ms
-- **P95 Duration:** 766ms
+- **Average Duration:** 612ms
+- **Min Duration:** 608ms
+- **Max Duration:** 616ms
+- **P95 Duration:** 616ms
 
 ### no filters - AGGREGATION
 - **SQL:** `SELECT status, COUNT(*) as count FROM iceberg.lab.narrow_1_000_000  GROUP BY status`
@@ -89,8 +89,8 @@
 - **Pagination Type:** -
 - **Sorted:** -
 - **Aggregation:** status
-- **Average Duration:** 763ms
-- **Min Duration:** 762ms
-- **Max Duration:** 763ms
-- **P95 Duration:** 763ms
+- **Average Duration:** 611ms
+- **Min Duration:** 607ms
+- **Max Duration:** 616ms
+- **P95 Duration:** 616ms
 

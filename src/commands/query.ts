@@ -115,6 +115,39 @@ async function getTableMetadata(
   };
 }
 
+function createRandomQuery(queryArgs: QueryArgs[]): string {
+  if (queryArgs.length === 0) {
+    throw new Error("Cannot create random query: no query arguments available");
+  }
+  
+  const randomIndex = Math.floor(Math.random() * queryArgs.length);
+  return queryArgs[randomIndex].sql;
+}
+
+async function runRandomQueries(
+  client: TrinoClient,
+  queryArgs: QueryArgs[],
+  abortSignal: AbortSignal
+): Promise<void> {
+  const runRandomQuery = async () => {
+    try {
+      const randomSQL = createRandomQuery(queryArgs);
+      await client.query(randomSQL);
+    } catch (error) {
+      // Silently ignore random query errors to not interfere with main measurements
+      console.warn(`Random query failed: ${error}`);
+    }
+  };
+  
+  const runContinuously = async () => {
+    while (!abortSignal.aborted) {
+      await runRandomQuery();
+    }
+  };
+  
+  runContinuously();
+}
+
 async function runQuery(
   client: TrinoClient,
   sql: string,
@@ -174,7 +207,8 @@ function generateMarkdownReport(
     p95Duration: number;
   },
   timestamp: string,
-  iterations: number
+  iterations: number,
+  concurrencySimulationStreams: number
 ): string {
   const report = `# Query Performance Report
 
@@ -187,6 +221,7 @@ function generateMarkdownReport(
 
 - **Total Queries:** ${overallStats.totalQueries}
 - **Iterations:** ${iterations}
+- **Concurrency Simulation Streams:** ${concurrencySimulationStreams}
 - **Average Duration:** ${formatMs(overallStats.avgDuration)}ms
 - **Fastest Query:** ${formatMs(overallStats.minDuration)}ms
 - **Slowest Query:** ${formatMs(overallStats.maxDuration)}ms
@@ -249,7 +284,8 @@ async function processTable(
   tableName: string,
   fullTableName: string,
   querySetName: string,
-  iterations: number
+  iterations: number,
+  concurrencySimulationStreams: number
 ): Promise<void> {
   console.log(`\n🚀 Running query performance tests on ${fullTableName}`);
 
@@ -370,6 +406,19 @@ async function processTable(
   }
 
   console.log(`\n🚀 Executing ${queryArgs.length} query types with ${iterations} iterations each...`);
+  if (concurrencySimulationStreams > 0) {
+    console.log(`🎲 Concurrency simulation: ${concurrencySimulationStreams} parallel continuous streams`);
+  }
+
+  // Create abort controller for concurrency simulation
+  const abortController = new AbortController();
+
+  // Start configured number of parallel concurrency simulation workloads in background
+  const concurrencySimulationPromises = concurrencySimulationStreams > 0
+    ? Array.from({ length: concurrencySimulationStreams }, () =>
+        runRandomQueries(client, queryArgs, abortController.signal)
+      )
+    : [];
 
   // Execute all queries with iterations
   const results: QueryResult[] = [];
@@ -393,6 +442,13 @@ async function processTable(
       }
     }
   }
+
+  // Cancel concurrency simulation as soon as main queries finish
+  abortController.abort();
+  console.log(`\n✅ Main queries completed, stopping concurrency simulation workloads`);
+
+  // Wait for all concurrency simulation workloads to finish gracefully
+  await Promise.all(concurrencySimulationPromises);
 
   // Overall statistics
   const allDurations = results.map(r => r.duration);
@@ -457,7 +513,8 @@ async function processTable(
     queryStats,
     overallStats,
     timestamp,
-    iterations
+    iterations,
+    concurrencySimulationStreams
   );
 
   // Write report to file
@@ -531,7 +588,8 @@ async function main() {
           tableName,
           fullTableName,
           querySet.name,
-          querySet.iterations
+          querySet.iterations,
+          querySet.concurrencySimulationStreams
         );
       }
     }
