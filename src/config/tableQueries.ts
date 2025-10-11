@@ -11,12 +11,32 @@ export interface PaginationColumn {
   column: string;
 }
 
-export interface TableQueryConfig {
+export interface TableInfo {
+  tableBase: string;
+  rowsCount: number;
+}
+
+export interface MultiTableQuery {
+  sql: string;
+  description: string;
+  queryType: "COUNT" | "PAGINATION" | "AGGREGATION";
+}
+
+export interface SingleTableConfig {
+  type: "singleTable";
   tableBase: string;
   filters: FilterCondition[];
   aggregationColumns: AggregationColumn[];
   paginationColumns: PaginationColumn[];
 }
+
+export interface SeveralTablesConfig {
+  type: "severalTables";
+  tables: TableInfo[];
+  queries: MultiTableQuery[];
+}
+
+export type TableQueryConfig = SingleTableConfig | SeveralTablesConfig;
 
 export interface QuerySet {
   name: string;
@@ -35,6 +55,7 @@ export function createQuerySets(): QuerySet[] {
       concurrencySimulationStreams: 0,
       tableConfigs: [
         {
+          type: "singleTable",
           tableBase: "narrow",
           filters: [
             { whereClause: "", description: "no filters" },
@@ -61,6 +82,7 @@ export function createQuerySets(): QuerySet[] {
           ],
         },
         {
+          type: "singleTable",
           tableBase: "wide",
           filters: [
             { whereClause: "", description: "no filters" },
@@ -95,6 +117,7 @@ export function createQuerySets(): QuerySet[] {
       concurrencySimulationStreams: 30,
       tableConfigs: [
         {
+          type: "singleTable",
           tableBase: "narrow",
           filters: [
             { whereClause: "", description: "no filters" },
@@ -121,6 +144,7 @@ export function createQuerySets(): QuerySet[] {
           ],
         },
         {
+          type: "singleTable",
           tableBase: "wide",
           filters: [
             { whereClause: "", description: "no filters" },
@@ -155,6 +179,7 @@ export function createQuerySets(): QuerySet[] {
       concurrencySimulationStreams: 0,
       tableConfigs: [
         {
+          type: "singleTable",
           tableBase: "narrow",
           filters: [
             { whereClause: "", description: "no filters" },
@@ -186,6 +211,48 @@ export function createQuerySets(): QuerySet[] {
             { column: "age" },
             { column: "amount" },
             { column: "created_at" },
+          ],
+        },
+      ],
+    },
+    {
+      name: "multiTableWithParallel3",
+      enabled: true,
+      iterations: 3,
+      concurrencySimulationStreams: 3,
+      tableConfigs: [
+        {
+          type: "severalTables",
+          tables: [
+            { tableBase: "narrow", rowsCount: 1000000 },
+            { tableBase: "wide", rowsCount: 100000 },
+          ],
+          queries: [
+            {
+              sql: "SELECT COUNT(*) FROM {table1} JOIN {table2} ON {table1}.id = {table2}.id",
+              description: "Join count query",
+              queryType: "COUNT",
+            },
+            {
+              sql: "SELECT {table1}.status, COUNT(*) FROM {table1} JOIN {table2} ON {table1}.id = {table2}.id GROUP BY {table1}.status",
+              description: "Join aggregation by status",
+              queryType: "AGGREGATION",
+            },
+            {
+              sql: "SELECT {table1}.country, COUNT(*) FROM {table1} JOIN {table2} ON {table1}.id = {table2}.id GROUP BY {table1}.country",
+              description: "Join aggregation by country",
+              queryType: "AGGREGATION",
+            },
+            {
+              sql: "SELECT {table1}.* FROM {table1} JOIN {table2} ON {table1}.id = {table2}.id LIMIT 100",
+              description: "Join pagination query",
+              queryType: "PAGINATION",
+            },
+            {
+              sql: "SELECT {table1}.status, {table2}.row_28, COUNT(*) FROM {table1} JOIN {table2} ON {table1}.id = {table2}.id GROUP BY {table1}.status, {table2}.row_28",
+              description: "Complex multi-column aggregation",
+              queryType: "AGGREGATION",
+            },
           ],
         },
       ],

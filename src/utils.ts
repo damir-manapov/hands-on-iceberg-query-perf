@@ -19,7 +19,7 @@ export function humanSize(bytes: number | null | undefined): string {
 }
 
 export const humanNumber = (num: number | null | undefined): string =>
-  num?.toLocaleString("en-US").replaceAll(",", "_") ?? "";
+  num?.toLocaleString("en-US").replace(/,/g, "_") ?? "";
 
 export function makeBatches(
   startId: number,

@@ -7,20 +7,31 @@ import * as path from "node:path";
 import { TrinoClient } from "../TrinoClient";
 import { TABLE_CONFIGS } from "../config/tableConfigs";
 import { createTrinoConfig } from "../config/trinoConfig";
-import { createQuerySets, TableQueryConfig } from "../config/tableQueries";
+import { createQuerySets, TableQueryConfig, SingleTableConfig, SeveralTablesConfig } from "../config/tableQueries";
 import { humanNumber } from "../utils";
 import { TableConfig } from "../types";
 import { PaginationColumn } from "../config/tableQueries";
 
 interface QueryResult {
   query: string;
-  duration: number;
   count: number;
   filter: string;
   queryType: "COUNT" | "PAGINATION" | "AGGREGATION";
   paginationType?: string;
   sorted?: boolean;
   aggregationInfo?: string;
+  runs: QueryRun[];
+}
+
+interface MultiTableQueryResult {
+  query: string;
+  count: number;
+  filter: string;
+  queryType: "COUNT" | "PAGINATION" | "AGGREGATION";
+  paginationType?: string;
+  sorted?: boolean;
+  aggregationInfo?: string;
+  runs: QueryRun[];
 }
 
 interface QueryArgs {
@@ -33,6 +44,10 @@ interface QueryArgs {
     sorted?: boolean;
     aggregationInfo?: string;
   };
+}
+
+function calculateAverageDuration(durations: number[]): number {
+  return durations.reduce((sum, duration) => sum + duration, 0) / durations.length;
 }
 
 interface QueryStats {
@@ -71,7 +86,7 @@ function formatBytes(bytes: number): string {
 }
 
 function formatMs(value: number): string {
-  return Math.ceil(value).toLocaleString().replaceAll(",", "_");
+  return Math.ceil(value).toLocaleString().replace(/,/g, "_");
 }
 
 function calculatePercentile(values: number[], percentile: number): number {
@@ -158,40 +173,55 @@ async function runQuery(
     paginationType?: string;
     sorted?: boolean;
     aggregationInfo?: string;
-  }
+  },
+  iterations: number = 1
 ): Promise<QueryResult> {
   console.log(`\n🔍 ${description}`);
   console.log(`SQL: ${sql}`);
 
-  const startTime = Date.now();
-  const result = await client.query(sql);
-  const duration = Date.now() - startTime;
+  const runs: QueryRun[] = [];
+  let totalCount = 0;
 
-  // Extract count based on query type
-  const count =
-    queryType === "COUNT"
-      ? ((result[0] as { count: number })?.count ?? 0)
-      : result.length;
+  for (let i = 0; i < iterations; i++) {
+    const startTime = Date.now();
+    const result = await client.query(sql);
+    const duration = Date.now() - startTime;
 
-  const labels = {
-    COUNT: "Count",
-    PAGINATION: "Rows returned",
-    AGGREGATION: "Result rows",
-  };
+    runs.push({ duration, runNumber: i + 1 });
 
-  console.log(
-    `✅ ${labels[queryType]}: ${count.toLocaleString()}, Duration: ${duration}ms`
-  );
+    // Extract count based on query type (use first run's count)
+    if (i === 0) {
+      totalCount =
+        queryType === "COUNT"
+          ? ((result[0] as { count: number })?.count ?? 0)
+          : result.length;
+    }
+
+    const labels = {
+      COUNT: "Count",
+      PAGINATION: "Rows returned",
+      AGGREGATION: "Result rows",
+    };
+
+    console.log(
+      `✅ ${labels[queryType]}: ${totalCount.toLocaleString()}, Duration: ${duration}ms`
+    );
+
+    // Add delay between iterations (except for the last iteration)
+    if (i < iterations - 1) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  }
 
   return {
     query: sql,
-    duration,
-    count,
+    count: totalCount,
     filter: metadata.filter,
     queryType,
     paginationType: metadata.paginationType,
     sorted: metadata.sorted,
     aggregationInfo: metadata.aggregationInfo,
+    runs,
   };
 }
 
@@ -240,7 +270,7 @@ ${queryStats
 
     // Calculate statistics from runs array
     const durations = stats.runs.map(r => r.duration);
-    const avgDuration = durations.reduce((a, b) => a + b, 0) / durations.length;
+    const avgDuration = calculateAverageDuration(durations);
     const minDuration = Math.min(...durations);
     const maxDuration = Math.max(...durations);
     const p95Duration = calculatePercentile(durations, 95);
@@ -254,7 +284,7 @@ ${queryStats
 ${queryStats
   .map(stats => {
     const durations = stats.runs.map(r => r.duration);
-    const avgDuration = durations.reduce((a, b) => a + b, 0) / durations.length;
+    const avgDuration = calculateAverageDuration(durations);
     const minDuration = Math.min(...durations);
     const maxDuration = Math.max(...durations);
     const p95Duration = calculatePercentile(durations, 95);
@@ -280,7 +310,7 @@ ${queryStats
 async function processTable(
   client: TrinoClient,
   tableConfig: TableConfig,
-  queryConfig: TableQueryConfig,
+  queryConfig: SingleTableConfig,
   tableName: string,
   fullTableName: string,
   querySetName: string,
@@ -422,25 +452,17 @@ async function processTable(
 
   // Execute all queries with iterations
   const results: QueryResult[] = [];
-  for (let i = 0; i < queryArgs.length; i++) {
-    const args = queryArgs[i];
-    
-    // Run this query configuration multiple times (iterations)
-    for (let iteration = 0; iteration < iterations; iteration++) {
-      const result = await runQuery(
-        client,
-        args.sql,
-        args.description,
-        args.queryType,
-        args.metadata
-      );
-      results.push(result);
-
-      // Add delay between iterations (except for the last iteration of the last query)
-      if (!(i === queryArgs.length - 1 && iteration === iterations - 1)) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-    }
+  for (const args of queryArgs) {
+    // Run this query configuration with iterations
+    const result = await runQuery(
+      client,
+      args.sql,
+      args.description,
+      args.queryType,
+      args.metadata,
+      iterations
+    );
+    results.push(result);
   }
 
   // Cancel concurrency simulation as soon as main queries finish
@@ -451,7 +473,10 @@ async function processTable(
   await Promise.all(concurrencySimulationPromises);
 
   // Overall statistics
-  const allDurations = results.map(r => r.duration);
+  const allDurations = results.map(r => {
+    const durations = r.runs.map(run => run.duration);
+    return calculateAverageDuration(durations);
+  });
   const overallAvg =
     allDurations.reduce((a, b) => a + b, 0) / allDurations.length;
   const overallMin = Math.min(...allDurations);
@@ -491,10 +516,7 @@ async function processTable(
         sorted: firstRun.sorted,
         aggregationInfo: firstRun.aggregationInfo,
         count: firstRun.count,
-        runs: runs.map((run, index) => ({
-          duration: run.duration,
-          runNumber: index + 1,
-        })),
+        runs: runs.flatMap(run => run.runs),
       };
     }
   );
@@ -532,6 +554,165 @@ async function processTable(
   console.log(`\n📄 Markdown report saved to: ${reportFile}`);
 }
 
+async function processMultiTable(
+  client: TrinoClient,
+  queryConfig: SeveralTablesConfig,
+  querySetName: string,
+  iterations: number,
+  concurrencySimulationStreams: number
+): Promise<void> {
+  console.log(`\n🚀 Running multi-table query performance tests`);
+  
+  // Build query arguments for multi-table queries
+  const queryArgs: QueryArgs[] = [];
+  
+  for (const query of queryConfig.queries) {
+    // Replace placeholders in SQL with actual table names
+    let sql = query.sql;
+    queryConfig.tables.forEach((tableInfo, i) => {
+      const tableName = `${tableInfo.tableBase}_${humanNumber(tableInfo.rowsCount).replace(/,/g, "")}`;
+      const fullTableName = `iceberg.performance.${tableName}`;
+      
+      // Replace placeholder {table1}, {table2}, etc. with actual table names
+      sql = sql.replace(new RegExp(`\\{table${i + 1}\\}`, 'g'), fullTableName);
+    });
+    
+    queryArgs.push({
+      sql,
+      description: query.description,
+      queryType: query.queryType,
+      metadata: {
+        filter: "multi-table query",
+        paginationType: query.queryType === "PAGINATION" ? "multi-table" : undefined,
+        sorted: false,
+        aggregationInfo: query.queryType === "AGGREGATION" ? "multi-table aggregation" : undefined,
+      },
+    });
+  }
+  
+  if (queryArgs.length === 0) {
+    console.log("⏭️  No queries configured for multi-table test");
+    return;
+  }
+  
+  console.log(`\n🚀 Executing ${queryArgs.length} multi-table query types with ${iterations} iterations each...`);
+  if (concurrencySimulationStreams > 0) {
+    console.log(`🎲 Concurrency simulation: ${concurrencySimulationStreams} parallel continuous streams`);
+  }
+
+  // Create abort controller for concurrency simulation
+  const abortController = new AbortController();
+
+  // Start configured number of parallel concurrency simulation workloads in background
+  const concurrencySimulationPromises = concurrencySimulationStreams > 0
+    ? Array.from({ length: concurrencySimulationStreams }, () =>
+        runRandomQueries(client, queryArgs, abortController.signal)
+      )
+    : [];
+
+  // Execute all queries with iterations
+  const results: MultiTableQueryResult[] = [];
+  for (const args of queryArgs) {
+    console.log(`\n📊 Testing ${args.description} (${args.queryType})`);
+    
+    const result = await runQuery(
+      client,
+      args.sql,
+      args.description,
+      args.queryType,
+      args.metadata,
+      iterations
+    );
+    
+    results.push(result);
+    
+    // Calculate statistics from runs array for logging
+    const runs = result.runs.map(r => r.duration);
+    const avgDuration = calculateAverageDuration(runs);
+    const minDuration = Math.min(...runs);
+    const maxDuration = Math.max(...runs);
+    const sortedRuns = [...runs].sort((a, b) => a - b);
+    const p95Duration = sortedRuns[Math.floor(sortedRuns.length * 0.95)];
+    
+    console.log(`  📈 Average: ${formatMs(avgDuration)}ms | Min: ${formatMs(minDuration)}ms | Max: ${formatMs(maxDuration)}ms | P95: ${formatMs(p95Duration)}ms`);
+  }
+
+  // Cancel concurrency simulation as soon as main queries finish
+  abortController.abort();
+  console.log(`\n✅ Main queries completed, stopping concurrency simulation workloads`);
+
+  // Wait for all concurrency simulation workloads to finish gracefully
+  await Promise.all(concurrencySimulationPromises);
+
+  // Overall statistics
+  const allDurations = results.map(r => {
+    const durations = r.runs.map(run => run.duration);
+    return calculateAverageDuration(durations);
+  });
+  const overallAvg =
+    allDurations.reduce((a, b) => a + b, 0) / allDurations.length;
+  const overallMin = Math.min(...allDurations);
+  const overallMax = Math.max(...allDurations);
+  const sortedDurations = [...allDurations].sort((a, b) => a - b);
+  const overallP95 =
+    sortedDurations[Math.floor(sortedDurations.length * 0.95)];
+
+  console.log(`\n📊 Overall Statistics:`);
+  console.log(`  Total Queries: ${results.length}`);
+  console.log(`  Average Duration: ${formatMs(overallAvg)}ms`);
+  console.log(`  Fastest Query: ${formatMs(overallMin)}ms`);
+  console.log(`  Slowest Query: ${formatMs(overallMax)}ms`);
+  console.log(`  95th Percentile: ${formatMs(overallP95)}ms`);
+
+  // Generate and save report
+  const timestamp = new Date().toISOString();
+  const queryStats = results.map(result => ({
+    query: result.query,
+    filter: result.filter,
+    count: result.count,
+    runs: result.runs,
+    queryType: result.queryType,
+  }));
+
+  const overallStats = {
+    totalQueries: results.length,
+    avgDuration: overallAvg,
+    minDuration: overallMin,
+    maxDuration: overallMax,
+    p95Duration: overallP95,
+  };
+
+  // Create a combined table metadata for multi-table queries
+  const combinedTableMetadata = {
+    totalRows: queryConfig.tables.reduce((sum, table) => sum + table.rowsCount, 0),
+    totalSizeBytes: 0, // We don't have size info for multi-table queries
+    totalSizeHuman: "N/A",
+  };
+
+  const markdownReport = generateMarkdownReport(
+    `Multi-table (${queryConfig.tables.map(t => t.tableBase).join(', ')})`,
+    combinedTableMetadata,
+    queryStats,
+    overallStats,
+    timestamp,
+    iterations,
+    concurrencySimulationStreams
+  );
+
+  // Write report to file
+  const reportDir = path.join("reports", querySetName);
+  if (!fs.existsSync(reportDir)) {
+    fs.mkdirSync(reportDir, { recursive: true });
+  }
+
+  const reportFileName = `${querySetName}-multi-table-query-performance.md`;
+  const reportPath = path.join(reportDir, reportFileName);
+  fs.writeFileSync(reportPath, markdownReport);
+
+  console.log(`\n📄 Report saved: ${reportPath}`);
+  console.log(`\n✅ Completed performance tests for multi-table queries`);
+}
+
 async function main() {
   // Trino connection
   const trino = createTrinoConfig("query");
@@ -553,40 +734,51 @@ async function main() {
 
     console.log(`\n📋 Processing query set: ${querySet.name}`);
 
-    // Process each table in this query set
-    for (let i = 0; i < TABLE_CONFIGS.length; i++) {
-      if (TABLE_CONFIGS[i].enabled === false) {
-        console.log(
-          `⏭️  Skipping disabled table: ${TABLE_CONFIGS[i].tableBase}`
+    // Process each table configuration in this query set
+    for (const queryConfig of querySet.tableConfigs) {
+      if (queryConfig.type === "singleTable") {
+        // Handle single table configuration
+        const tableConfig = TABLE_CONFIGS.find(
+          config => config.tableBase === queryConfig.tableBase
         );
-        continue;
-      }
 
-      const tableConfig = TABLE_CONFIGS[i];
-      const queryConfig = querySet.tableConfigs.find(
-        config => config.tableBase === tableConfig.tableBase
-      );
+        if (!tableConfig) {
+          console.log(
+            `⏭️  No table config found for table: ${queryConfig.tableBase} in set: ${querySet.name}`
+          );
+          continue;
+        }
 
-      if (!queryConfig) {
-        console.log(
-          `⏭️  No query config found for table: ${tableConfig.tableBase} in set: ${querySet.name}`
-        );
-        continue;
-      }
+        if (tableConfig.enabled === false) {
+          console.log(
+            `⏭️  Skipping disabled table: ${tableConfig.tableBase}`
+          );
+          continue;
+        }
 
-      // Process each row count for this table
-      for (const totalRows of tableConfig.totalRows) {
-        const rowCountSuffix = humanNumber(totalRows).replace(/,/g, "");
+        // Process each row count for this table
+        for (const totalRows of tableConfig.totalRows) {
+          const rowCountSuffix = humanNumber(totalRows).replace(/,/g, "");
 
-        const tableName = `${tableConfig.tableBase}_${rowCountSuffix}`;
-        const fullTableName = `${tableConfig.catalog}.${tableConfig.schema}.${tableName}`;
+          const tableName = `${tableConfig.tableBase}_${rowCountSuffix}`;
+          const fullTableName = `${tableConfig.catalog}.${tableConfig.schema}.${tableName}`;
 
-        await processTable(
+          await processTable(
+            client,
+            tableConfig,
+            queryConfig,
+            tableName,
+            fullTableName,
+            querySet.name,
+            querySet.iterations,
+            querySet.concurrencySimulationStreams
+          );
+        }
+      } else if (queryConfig.type === "severalTables") {
+        // Handle multi-table configuration
+        await processMultiTable(
           client,
-          tableConfig,
           queryConfig,
-          tableName,
-          fullTableName,
           querySet.name,
           querySet.iterations,
           querySet.concurrencySimulationStreams
