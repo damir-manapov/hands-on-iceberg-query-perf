@@ -32,19 +32,19 @@ When testing pagination performance, the main focus areas are:
 - **Sorted vs unsorted pagination**: Comparing performance between ordered and unordered result sets, as sorting adds computational overhead
 - **Concurrent query execution**: Understanding how pagination performance degrades when multiple users execute queries simultaneously vs single-user scenarios
 
-#### Measures
+#### Performance Measurements
 
-On 100m table it takes subsecond for count request and 1, 100th page without sorting. With sorting it may take up to takes 2-3 sec for first and 100th page. It helps to add filter that will narrow files to scan, for example id > 50_000_000 though. 100th page with sort and "amount > 1000" filter takes 11sec on 1b table and 6 sec with "amount > 1000 AND id > 500_000_000" filter.
+On a 100M row table, count requests and pagination (1st and 100th page) without sorting take less than a second. With sorting, it may take 2-3 seconds for both the first and 100th page. Adding filters that narrow the files to scan can help significantly - for example, using `id > 50_000_000`. The 100th page with sorting and an "amount > 1000" filter takes 11 seconds on a 1B row table, but only 6 seconds with the combined filter "amount > 1000 AND id > 500_000_000".
 
-Query contention
+**Query Contention**
 
-With contention of 30 paraller requests it seems not to affect perf much on 100m table, while queries works with the same table. increases time taken three times
+With 30 parallel requests running against the same table, performance doesn't seem to be significantly affected on a 100M row table. However, when queries compete for resources, execution time can increase by up to three times.
 
-Increasing count of rows:
+**Scaling with Row Count:**
 
-With 1b rows getting page increases to 6-10 seconds, it takes three times slower while increasing count of rows in 10 times.
+With 1B rows, pagination performance increases to 6-10 seconds, becoming three times slower when the row count increases by 10 times.
 
-Running queries on wide table inscreases taken time twice.
+Running queries on wide tables increases execution time by approximately twice.
 
 ## Commands
 
