@@ -4,6 +4,7 @@
 
 import { TrinoClient } from "../../TrinoClient";
 import { QueryResult, QueryArgs, QueryRun } from "./types";
+import { formatMs } from "./utils";
 
 export async function runQuery(
   client: TrinoClient,
@@ -46,7 +47,7 @@ export async function runQuery(
     };
 
     console.log(
-      `✅ ${labels[queryType]}: ${totalCount.toLocaleString()}, Duration: ${duration}ms`
+      `✅ ${labels[queryType]}: ${totalCount.toLocaleString()}, Duration: ${formatMs(duration)}ms`
     );
 
     // Add delay between iterations (except for the last iteration)

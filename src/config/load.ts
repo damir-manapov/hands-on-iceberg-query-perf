@@ -19,3 +19,5 @@ export const LOAD = {
 // 10ml -> 300mb, 40sec
 // 100ml -> 2.9gb, 2.7min
 // billion -> 29gb, 26min
+// 10b
+// 30b

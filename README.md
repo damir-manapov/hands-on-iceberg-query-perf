@@ -14,13 +14,47 @@ The benchmarking suite evaluates:
 - **Concurrency simulation** with parallel query streams
 - **Statistical analysis** including percentiles, averages, and performance distributions
 
+## Important Disclaimer
+
+⚠️ **Performance measurements are hardware-dependent**: The query performance results obtained from this benchmarking suite are highly dependent on your specific hardware configuration, including CPU, memory, storage type (SSD vs HDD), and available resources. 
+
+The measurements provided should be considered as **reference values** for relative comparison between different query types and configurations, rather than absolute performance benchmarks. For production planning, always test on hardware that closely matches your target environment.
+
+## Reference measures
+
+### Pagination
+
+When testing pagination performance, the main focus areas are:
+
+- **Count queries**: Essential for building pagination UI components that need to know total record counts and calculate page numbers
+- **First page retrieval**: Measuring performance of `LIMIT` queries without `OFFSET` to establish baseline pagination speed
+- **Deep pagination**: Testing `OFFSET` queries for accessing pages far into the dataset (e.g., 100th page), which typically shows performance degradation
+- **Sorted vs unsorted pagination**: Comparing performance between ordered and unordered result sets, as sorting adds computational overhead
+- **Concurrent query execution**: Understanding how pagination performance degrades when multiple users execute queries simultaneously vs single-user scenarios
+
+#### Measures
+
+On 100m table it takes subsecond for count request and 1, 100th page without sorting. With sorting it may take up to takes 2-3 sec for first and 100th page. It helps to add filter that will narrow files to scan, for example id > 50_000_000 though. 100th page with sort and "amount > 1000" filter takes 11sec on 1b table and 6 sec with "amount > 1000 AND id > 500_000_000" filter.
+
+Query contention
+
+With contention of 30 paraller requests it seems not to affect perf much on 100m table, while queries works with the same table. increases time taken three times
+
+Increasing count of rows:
+
+With 1b rows getting page increases to 6-10 seconds, it takes three times slower while increasing count of rows in 10 times.
+
+Running queries on wide table inscreases taken time twice.
+
+## Commands
+
 * Start environment `yarn compose:up`
 * Define your schema: `src/config/tableConfig.ts`
 * Generate data: `yarn generate`
 * Test query performance: `yarn query`
 * Lint code: `yarn lint` (TypeScript type checking) or `yarn lint:fix` (ESLint with auto-fix)
-* Stop environment with volumes deletion: `yarn compose:clean`
-* Del environments and restart from scratch: `yarn compose:clean && yarn compose:up && sleep 5 && yarn generate`
+* Stop environment with volumes deletion: `yarn compose:reset`
+* Del environments and restart from scratch: `yarn compose:reset && yarn compose:up && sleep 5 && yarn generate`
 
 ## Docker Compose via yarn scripts
 
@@ -31,7 +65,7 @@ You can manage the stack using convenient yarn scripts (wrapping `docker compose
 * Restart: `yarn compose:restart`
 * Logs (follow): `yarn compose:logs`
 * Status: `yarn compose:ps`
-* Clean teardown (remove volumes/orphans): `yarn compose:clean`
+* Clean teardown (remove volumes/orphans): `yarn compose:reset`
 * Execute in container: `yarn compose:exec -it trino trino`
 * Base command: `yarn compose:base` (for custom docker compose commands)
 
@@ -71,7 +105,7 @@ ALTER TABLE iceberg.lab.events_zstd_l06 EXECUTE optimize;
 
 ## Troubleshooting
 
-* Down with volume remove: `yarn compose:clean`
+* Down with volume remove: `yarn compose:reset`
 * All logs: `yarn compose:logs`
 * Service logs: `yarn compose:base logs [service]`
 * Last 10 log lines: `yarn compose:base logs [service] | tail -10`

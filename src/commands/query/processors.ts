@@ -21,7 +21,7 @@ import {
 } from "./reporting";
 import { buildQueryArgs, buildMultiTableQueryArgs } from "./builders";
 
-export async function processTable(
+export async function processSingleTable(
   client: TrinoClient,
   tableConfig: TableConfig,
   queryConfig: SingleTableConfig,
@@ -102,10 +102,10 @@ export async function processTable(
 
   console.log(`\n🎯 OVERALL STATISTICS for ${tableName}`);
   console.log(`Total queries run: ${results.length}`);
-  console.log(`Average duration: ${overallStats.avgDuration.toFixed(1)}ms`);
-  console.log(`Fastest query: ${overallStats.minDuration}ms`);
-  console.log(`Slowest query: ${overallStats.maxDuration}ms`);
-  console.log(`95th percentile: ${overallStats.p95Duration.toFixed(1)}ms`);
+  console.log(`Average duration: ${formatMs(overallStats.avgDuration)}ms`);
+  console.log(`Fastest query: ${formatMs(overallStats.minDuration)}ms`);
+  console.log(`Slowest query: ${formatMs(overallStats.maxDuration)}ms`);
+  console.log(`95th percentile: ${formatMs(overallStats.p95Duration)}ms`);
 
   // Generate markdown report
   const timestamp = new Date().toISOString();

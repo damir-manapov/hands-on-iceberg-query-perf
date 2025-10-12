@@ -7,7 +7,7 @@ import { TABLE_CONFIGS } from "../../config/tableConfigs";
 import { createTrinoConfig } from "../../config/trinoConfig";
 import { createQuerySets } from "../../config/tableQueries";
 import { humanNumber } from "../../utils";
-import { processTable, processMultiTable } from "./processors";
+import { processSingleTable, processMultiTable } from "./processors";
 
 async function main() {
   // Trino connection
@@ -57,7 +57,7 @@ async function main() {
           const tableName = `${tableConfig.tableBase}_${rowCountSuffix}`;
           const fullTableName = `${tableConfig.catalog}.${tableConfig.schema}.${tableName}`;
 
-          await processTable(
+          await processSingleTable(
             client,
             tableConfig,
             queryConfig,

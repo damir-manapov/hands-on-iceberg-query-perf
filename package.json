@@ -18,7 +18,7 @@
     "compose:restart": "yarn compose:down && yarn compose:up",
     "compose:logs": "yarn compose:base logs -f --tail=300",
     "compose:ps": "yarn compose:base ps",
-    "compose:clean": "yarn compose:base down -v --remove-orphans",
+    "compose:reset": "yarn compose:base down -v --remove-orphans",
     "compose:exec": "yarn compose:base exec"
   },
   "devDependencies": {
