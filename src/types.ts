@@ -60,6 +60,7 @@ export type TrinoConfig = {
   user: string;
   source?: string;
   basicAuth?: { username: string; password: string };
+  sessionProperties?: Record<string, string>;
 };
 
 export type SizeRow = {

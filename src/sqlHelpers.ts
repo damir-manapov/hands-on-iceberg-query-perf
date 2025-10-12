@@ -125,7 +125,8 @@ export function createSchemaSQL(cfg: TableConfig) {
 
 export function createFirstRowSQL(cfg: TableConfig, tableName: string): string {
   const fq = `${cfg.catalog}.${cfg.schema}.${tableName}`;
-  return `SELECT * FROM ${fq} ORDER BY ${cfg.idColumn} LIMIT 1`;
+  // Use direct lookup for ID 1 instead of ORDER BY to avoid memory issues with large tables
+  return `SELECT * FROM ${fq} WHERE ${cfg.idColumn} = 1 LIMIT 1`;
 }
 
 export function createLastRowSQL(cfg: TableConfig, tableName: string): string {

@@ -2,6 +2,10 @@ import { TrinoConfig } from "./types";
 
 export class TrinoClient {
   constructor(private cfg: TrinoConfig) {}
+
+  get config(): TrinoConfig {
+    return this.cfg;
+  }
   private baseUrl() {
     return `${this.cfg.host}:${this.cfg.port}`;
   }
@@ -16,6 +20,12 @@ export class TrinoClient {
       const { username, password } = this.cfg.basicAuth;
       h["Authorization"] =
         `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`;
+    }
+    if (this.cfg.sessionProperties) {
+      const sessionProps = Object.entries(this.cfg.sessionProperties)
+        .map(([key, value]) => `${key}=${value}`)
+        .join(",");
+      h["X-Trino-Session"] = sessionProps;
     }
     return h;
   }

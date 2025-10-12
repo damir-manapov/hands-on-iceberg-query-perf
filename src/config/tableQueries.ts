@@ -68,13 +68,13 @@ export const CONNECTIONS: Record<string, ConnectionConfig> = {
     port: 8080,
     description: "Single-node Trino",
   },
-  "two-node-cluster": {
-    id: "two-node-cluster",
-    name: "two-node-cluster",
-    host: "http://localhost",
-    port: 8081,
-    description: "two-node Trino cluster",
-  },
+  // "two-node-cluster": {
+  //   id: "two-node-cluster",
+  //   name: "two-node-cluster",
+  //   host: "http://localhost",
+  //   port: 8081,
+  //   description: "two-node Trino cluster",
+  // },
 };
 
 // Helper function to get connection by ID
@@ -368,21 +368,21 @@ export function createQuerySets(): QuerySet[] {
         },
       ],
     },
-    {
-      name: "paginationNoContentionCluster",
-      enabled: true,
-      iterations: 3,
-      concurrencySimulationStreams: 0,
-      connectionId: "two-node-cluster",
-      tableConfigs: paginationTableConfig,
-    },
-    {
-      name: "paginationContention30Cluster",
-      enabled: true,
-      iterations: 3,
-      concurrencySimulationStreams: 30,
-      connectionId: "two-node-cluster",
-      tableConfigs: paginationTableConfig,
-    },
+    // {
+    //   name: "paginationNoContentionCluster",
+    //   enabled: true,
+    //   iterations: 3,
+    //   concurrencySimulationStreams: 0,
+    //   connectionId: "two-node-cluster",
+    //   tableConfigs: paginationTableConfig,
+    // },
+    // {
+    //   name: "paginationContention30Cluster",
+    //   enabled: true,
+    //   iterations: 3,
+    //   concurrencySimulationStreams: 30,
+    //   connectionId: "two-node-cluster",
+    //   tableConfigs: paginationTableConfig,
+    // },
   ];
 }

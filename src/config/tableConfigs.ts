@@ -81,6 +81,12 @@ export const TABLE_CONFIGS: TableConfig[] = [
     // enabled: false,
     columns: {
       id: { kind: "bigint", min: 1, max: 1, nullable: 0 },
+      created_at: {
+        kind: "monotonic_timestamp",
+        start: "2024-01-01",
+        end: "2025-01-01",
+        nullable: 0,
+      },
       row_1: {
         kind: "timestamp",
         start: "2024-01-01",

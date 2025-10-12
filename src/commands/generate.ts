@@ -141,27 +141,50 @@ async function loadTable(
 }
 
 async function optimizeTable(client: TrinoClient, fq: string) {
-  const sql = `ALTER TABLE ${fq} EXECUTE optimize`;
+  const optimizeSql = `ALTER TABLE ${fq} EXECUTE optimize`;
+  const expireSnapshotsSql = `ALTER TABLE ${fq} EXECUTE expire_snapshots(retention_threshold => '1s')`;
+  const removeOrphanFilesSql = `ALTER TABLE ${fq} EXECUTE remove_orphan_files(retention_threshold => '1s')`;
+
   try {
     console.log(`🔧 Optimizing table ${fq}...`);
-    await client.execute(sql);
+    await client.execute(optimizeSql);
     console.log(`✅ Table ${fq} optimized successfully`);
+
+    // Create a new client with session properties for cleanup
+    console.log(`⚙️ Creating cleanup client with 1s retention...`);
+    const cleanupClient = new TrinoClient({
+      ...client.config,
+      sessionProperties: {
+        "iceberg.expire_snapshots_min_retention": "1s",
+        "iceberg.remove_orphan_files_min_retention": "1s",
+      },
+    });
+
+    console.log(`🗑️ Expiring old snapshots for ${fq}...`);
+    await cleanupClient.execute(expireSnapshotsSql);
+    console.log(`✅ Old snapshots expired for ${fq}`);
+
+    console.log(`🧹 Removing orphan files for ${fq}...`);
+    await cleanupClient.execute(removeOrphanFilesSql);
+    console.log(`✅ Orphan files removed for ${fq}`);
   } catch (e: unknown) {
     const err = e as { message?: string; stack?: string } | string;
     const errorMessage =
       typeof err === "string" ? err : err?.message || String(err);
     const stack = typeof err === "object" && err?.stack ? err.stack : undefined;
 
-    console.error(`\n🚨 OPTIMIZE ERROR for ${fq}:`);
+    console.error(`\n🚨 OPTIMIZE/MAINTENANCE ERROR for ${fq}:`);
     console.error(`   Message: ${errorMessage}`);
     if (stack) {
       console.error(`   Stack trace:`);
       console.error(stack);
     }
-    console.error(`   SQL: ${sql}`);
+    console.error(`   SQL: ${optimizeSql}`);
+    console.error(`   SQL: ${expireSnapshotsSql}`);
+    console.error(`   SQL: ${removeOrphanFilesSql}`);
     console.error(`\n`);
 
-    throw new Error(`Optimize failed for ${fq}: ${errorMessage}`);
+    throw new Error(`Optimize/Maintenance failed for ${fq}: ${errorMessage}`);
   }
 }
 
