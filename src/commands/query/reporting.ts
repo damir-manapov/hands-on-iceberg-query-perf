@@ -15,14 +15,16 @@ export function generateMarkdownReport(
   overallStats: OverallStats,
   timestamp: string,
   iterations: number,
-  concurrencySimulationStreams: number
+  concurrencySimulationStreams: number,
+  connectionDescription: string
 ): string {
   const report = `# Query Performance Report
 
 **Table:** ${tableName}  
 **Generated:** ${timestamp}  
 **Total Rows:** ${tableMetadata.totalRows.toLocaleString()}  
-**Table Size:** ${tableMetadata.totalSizeHuman}
+**Table Size:** ${tableMetadata.totalSizeHuman}  
+**Trino Configuration:** ${connectionDescription}
 
 ## Summary
 

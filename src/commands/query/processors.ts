@@ -29,7 +29,8 @@ export async function processSingleTable(
   fullTableName: string,
   querySetName: string,
   iterations: number,
-  concurrencySimulationStreams: number
+  concurrencySimulationStreams: number,
+  connectionDescription: string
 ): Promise<void> {
   console.log(`\n🚀 Running query performance tests on ${fullTableName}`);
 
@@ -118,7 +119,8 @@ export async function processSingleTable(
     overallStats,
     timestamp,
     iterations,
-    concurrencySimulationStreams
+    concurrencySimulationStreams,
+    connectionDescription
   );
 
   // Write report to file
@@ -131,7 +133,8 @@ export async function processMultiTable(
   queryConfig: SeveralTablesConfig,
   querySetName: string,
   iterations: number,
-  concurrencySimulationStreams: number
+  concurrencySimulationStreams: number,
+  connectionDescription: string
 ): Promise<void> {
   console.log(`\n🚀 Running multi-table query performance tests`);
 
@@ -258,7 +261,8 @@ export async function processMultiTable(
     overallStats,
     timestamp,
     iterations,
-    concurrencySimulationStreams
+    concurrencySimulationStreams,
+    connectionDescription
   );
 
   // Write report to file

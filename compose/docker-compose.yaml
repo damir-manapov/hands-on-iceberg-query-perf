@@ -4,6 +4,8 @@ services:
     depends_on:
       trino:
         condition: service_healthy
+      trino-coordinator:
+        condition: service_healthy
 
   minio:
     image: quay.io/minio/minio:latest
@@ -114,7 +116,7 @@ services:
       # - ./trino/jvm4g.config:/etc/trino/jvm.config:ro
     networks: [lake]
 
-  # Three-node Trino cluster
+  # two-node Trino cluster
   trino-coordinator:
     image: trinodb/trino:latest
     depends_on:
@@ -151,7 +153,6 @@ services:
     volumes:
       - ./trino/catalog:/etc/trino/catalog:ro
       - ./trino/cluster-worker.properties:/etc/trino/config.properties:ro
-      - ./trino/jvm.config:/etc/trino/jvm.config:ro
     networks: [lake]
 
   trino-worker-2:
@@ -166,7 +167,6 @@ services:
     volumes:
       - ./trino/catalog:/etc/trino/catalog:ro
       - ./trino/cluster-worker.properties:/etc/trino/config.properties:ro
-      - ./trino/jvm.config:/etc/trino/jvm.config:ro
     networks: [lake]
 
 networks:

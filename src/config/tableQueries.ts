@@ -27,7 +27,7 @@ export interface ConnectionConfig {
   name: string;
   host: string;
   port: number;
-  description?: string;
+  description: string;
 }
 
 export interface ConnectionReference {
@@ -68,12 +68,12 @@ export const CONNECTIONS: Record<string, ConnectionConfig> = {
     port: 8080,
     description: "Single-node Trino",
   },
-  "three-node-cluster": {
-    id: "three-node-cluster",
-    name: "three-node-cluster",
+  "two-node-cluster": {
+    id: "two-node-cluster",
+    name: "two-node-cluster",
     host: "http://localhost",
     port: 8081,
-    description: "Three-node Trino cluster",
+    description: "two-node Trino cluster",
   },
 };
 
@@ -204,7 +204,7 @@ export function createQuerySets(): QuerySet[] {
     },
     {
       name: "paginationNoContention",
-      enabled: true,
+      enabled: false,
       iterations: 3,
       concurrencySimulationStreams: 0,
       connectionId: "single-node",
@@ -212,7 +212,7 @@ export function createQuerySets(): QuerySet[] {
     },
     {
       name: "paginationContention30",
-      enabled: true,
+      enabled: false,
       iterations: 3,
       concurrencySimulationStreams: 5,
       connectionId: "single-node",
@@ -373,7 +373,7 @@ export function createQuerySets(): QuerySet[] {
       enabled: true,
       iterations: 3,
       concurrencySimulationStreams: 0,
-      connectionId: "three-node-cluster",
+      connectionId: "two-node-cluster",
       tableConfigs: paginationTableConfig,
     },
     {
@@ -381,7 +381,7 @@ export function createQuerySets(): QuerySet[] {
       enabled: true,
       iterations: 3,
       concurrencySimulationStreams: 30,
-      connectionId: "three-node-cluster",
+      connectionId: "two-node-cluster",
       tableConfigs: paginationTableConfig,
     },
   ];

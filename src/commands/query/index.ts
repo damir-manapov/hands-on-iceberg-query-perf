@@ -67,7 +67,8 @@ async function main() {
             fullTableName,
             querySet.name,
             querySet.iterations,
-            querySet.concurrencySimulationStreams
+            querySet.concurrencySimulationStreams,
+            getConnectionById(querySet.connectionId).description
           );
         }
       } else if (queryConfig.type === "severalTables") {
@@ -77,7 +78,8 @@ async function main() {
           queryConfig,
           querySet.name,
           querySet.iterations,
-          querySet.concurrencySimulationStreams
+          querySet.concurrencySimulationStreams,
+          getConnectionById(querySet.connectionId).description
         );
       }
     }
