@@ -6,7 +6,8 @@ export const BASE_CONFIG = {
   catalog: process.env.TRINO_CATALOG ?? "iceberg",
   schema: process.env.TRINO_SCHEMA ?? "lab",
   format: "PARQUET" as const,
-  partitioning: ["date(created_at)"],
+  sorted_by: ["id", "created_at"],
+  partitioning: ["id"],
   idColumn: "id",
   //   tableProperties: {
   //     "write.target-file-size-bytes": 512 * 1024 * 1024, // 512 MB
@@ -18,7 +19,7 @@ const narrowColumns: Record<string, FieldSpec> = {
   user_name: { kind: "string", length: 16, nullable: 0 },
   amount: { kind: "double", min: 0, max: 10000, nullable: 0.05 },
   created_at: {
-    kind: "timestamp",
+    kind: "monotonic_timestamp",
     start: "2024-01-01",
     end: "2025-01-01",
     nullable: 0,
@@ -63,21 +64,6 @@ export const TABLE_CONFIGS: TableConfig[] = [
     batchRows: 1_000_000,
     enabled: true,
     // enabled: false,
-    columns: narrowColumns,
-  },
-  {
-    ...BASE_CONFIG,
-    tableBase: "narrow_sorted",
-    totalRows: [
-      // 1_000_000,
-      // 10_000_000,
-      100_000_000,
-      // 1_000_000_000,
-    ],
-    batchRows: 1_000_000,
-    enabled: true,
-    // enabled: false,
-    sorted_by: ["id", "created_at"],
     columns: narrowColumns,
   },
   {

@@ -7,8 +7,9 @@ import { TrinoClient } from "../TrinoClient";
 import {
   buildInsertSQL,
   createBaseTableSQL,
+  createFirstRowSQL,
+  createLastRowSQL,
   createSchemaSQL,
-  createSelectExamplesSQL,
   createVariantTableSQLs,
 } from "../sqlHelpers";
 import { humanNumber, humanSize, makeBatches } from "../utils";
@@ -102,7 +103,7 @@ async function loadTable(
     batches.map(b =>
       limiter.run(async () => {
         const label = `${tableName} #${b.index}/${batches.length} [${humanNumber(b.start)}..${humanNumber(b.end)}]`;
-        const sql = buildInsertSQL(b.start, b.end, cfg, tableName);
+        const sql = buildInsertSQL(b.start, b.end, cfg, tableName, totalRows);
         const t0 = Date.now();
         try {
           // Calculate ETA before starting the batch
@@ -275,11 +276,20 @@ async function main() {
           );
         }
 
-        const exampleRow = await client.query(
-          createSelectExamplesSQL(tableConfig, name)
+        // Show first and last rows ordered by ID
+        const firstRow = await client.query(
+          createFirstRowSQL(tableConfig, name)
         );
-        console.log(`Example row for ${name}:`);
-        console.log(JSON.stringify(exampleRow, null, 1));
+        console.log(
+          `\nFirst row (ordered by ${tableConfig.idColumn}) for ${name}:`
+        );
+        console.log(JSON.stringify(firstRow, null, 1));
+
+        const lastRow = await client.query(createLastRowSQL(tableConfig, name));
+        console.log(
+          `\nLast row (ordered by ${tableConfig.idColumn}) for ${name}:`
+        );
+        console.log(JSON.stringify(lastRow, null, 1));
 
         // Measure immediately and collect result
         const result = await measureSizes(

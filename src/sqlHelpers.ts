@@ -14,6 +14,10 @@ function sqlTypeOf(spec: FieldSpec): string {
       return "date";
     case "timestamp":
       return "timestamp(3)";
+    case "monotonic_date":
+      return "date";
+    case "monotonic_timestamp":
+      return "timestamp(3)";
     case "enum":
       if (spec.base === "string") return "varchar";
       if (spec.base === "int") return "integer";
@@ -62,7 +66,15 @@ function dateExpr(start: string, end: string) {
   const dspan = daysBetween(start, end);
   return `date_add('day', CAST(floor(random()*${dspan + 1}) AS integer), DATE '${start}')`;
 }
-function columnExpr(spec: FieldSpec): string {
+function monotonicDateExpr(start: string, end: string, totalRows: number) {
+  const dspan = daysBetween(start, end);
+  return `date_add('day', CAST(floor((id - 1) * ${dspan} / ${totalRows}) AS integer), DATE '${start}')`;
+}
+function monotonicTimestampExpr(start: string, end: string, totalRows: number) {
+  const dspan = daysBetween(start, end);
+  return `date_add('day', CAST(floor((id - 1) * ${dspan} / ${totalRows}) AS integer), TIMESTAMP '${start}')`;
+}
+function columnExpr(spec: FieldSpec, totalRows?: number): string {
   switch (spec.kind) {
     case "int":
       return wrapNullable(intExpr(spec.min, spec.max), spec.nullable);
@@ -82,13 +94,23 @@ function columnExpr(spec: FieldSpec): string {
       return wrapNullable(dateExpr(spec.start, spec.end), spec.nullable);
     case "timestamp":
       return wrapNullable(timestampExpr(spec.start, spec.end), spec.nullable);
+    case "monotonic_date":
+      return wrapNullable(
+        monotonicDateExpr(spec.start, spec.end, totalRows || 1000000),
+        spec.nullable
+      );
+    case "monotonic_timestamp":
+      return wrapNullable(
+        monotonicTimestampExpr(spec.start, spec.end, totalRows || 1000000),
+        spec.nullable
+      );
     case "enum":
       return wrapNullable(enumExpr(spec), spec.nullable);
     case "array": {
       const minLen = Math.max(0, spec.minLen);
       const span = Math.max(0, spec.maxLen - minLen);
       const nExpr = `${minLen} + CAST(floor(random()*${span + 1}) AS integer)`;
-      const elem = columnExpr(spec.element);
+      const elem = columnExpr(spec.element, totalRows);
       const arrExpr = `transform(sequence(1, ${nExpr}), x -> ${elem})`;
       return wrapNullable(arrExpr, spec.nullable);
     }
@@ -109,9 +131,14 @@ export function createBaseTableSQL(cfg: TableConfig) {
   return `CREATE TABLE IF NOT EXISTS ${fq} (\n${cols}\n)`;
 }
 
-export function createSelectExamplesSQL(cfg: TableConfig, tableName: string) {
+export function createFirstRowSQL(cfg: TableConfig, tableName: string): string {
   const fq = `${cfg.catalog}.${cfg.schema}.${tableName}`;
-  return `SELECT * FROM ${fq} LIMIT 1`;
+  return `SELECT * FROM ${fq} ORDER BY ${cfg.idColumn} LIMIT 1`;
+}
+
+export function createLastRowSQL(cfg: TableConfig, tableName: string): string {
+  const fq = `${cfg.catalog}.${cfg.schema}.${tableName}`;
+  return `SELECT * FROM ${fq} ORDER BY ${cfg.idColumn} DESC LIMIT 1`;
 }
 
 export function createVariantTableSQLs(
@@ -165,11 +192,11 @@ export function buildInsertSQL(
   rangeStart: number,
   rangeEnd: number,
   cfg: TableConfig,
-  tableName: string
+  tableName: string,
+  totalRows?: number
 ) {
   const fq = `${cfg.catalog}.${cfg.schema}.${tableName}`;
-  const idCol =
-    cfg.idColumn && cfg.columns[cfg.idColumn] ? cfg.idColumn : undefined;
+  const idCol = cfg.columns[cfg.idColumn] ? cfg.idColumn : undefined;
 
   // <= 10k elements per sequence()
   const BLOCK = 10_000;
@@ -179,7 +206,7 @@ export function buildInsertSQL(
         const typeCast = sqlTypeOf(spec);
         return `  CAST(id AS ${typeCast}) AS ${name}`;
       }
-      return `  ${columnExpr(spec)} AS ${name}`;
+      return `  ${columnExpr(spec, totalRows)} AS ${name}`;
     })
     .join(",\n");
 

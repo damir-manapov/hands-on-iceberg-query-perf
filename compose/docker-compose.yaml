@@ -138,7 +138,6 @@ services:
     volumes:
       - ./trino/catalog:/etc/trino/catalog:ro
       - ./trino/cluster-coordinator.properties:/etc/trino/config.properties:ro
-      - ./trino/jvm.config:/etc/trino/jvm.config:ro
     networks: [lake]
 
   trino-worker-1:
