@@ -46,8 +46,16 @@ export class TrinoClient {
       },
       body: sql,
     });
-    if (!res.ok)
-      throw new Error(`Trino POST ${res.status}: ${await res.text()}`);
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error(`\n🚨 TRINO CONNECTION ERROR:`);
+      console.error(`   Status: ${res.status} ${res.statusText}`);
+      console.error(`   URL: ${this.baseUrl()}/v1/statement`);
+      console.error(`   Response: ${errorText}`);
+      console.error(`   SQL: ${sql}`);
+      console.error(`\n`);
+      throw new Error(`Trino POST ${res.status}: ${errorText}`);
+    }
     let payload: TrinoPage = (await res.json()) as TrinoPage;
     let colNames: string[] | null = payload.columns?.map(c => c.name) ?? null;
     const rowsArr: unknown[][] = [];
@@ -67,11 +75,24 @@ export class TrinoClient {
     take(payload);
 
     while (payload.nextUri) {
-      if (payload.error)
+      if (payload.error) {
+        console.error(`\n🚨 TRINO QUERY ERROR:`);
+        console.error(`   Message: ${payload.error.message}`);
+        console.error(`   SQL: ${sql}`);
+        console.error(`\n`);
         throw new Error(`Trino error: ${payload.error.message}`);
+      }
       const poll = await fetch(payload.nextUri, { headers: this.headers() });
-      if (!poll.ok)
-        throw new Error(`Trino poll ${poll.status}: ${await poll.text()}`);
+      if (!poll.ok) {
+        const errorText = await poll.text();
+        console.error(`\n🚨 TRINO POLL ERROR:`);
+        console.error(`   Status: ${poll.status} ${poll.statusText}`);
+        console.error(`   URL: ${payload.nextUri}`);
+        console.error(`   Response: ${errorText}`);
+        console.error(`   SQL: ${sql}`);
+        console.error(`\n`);
+        throw new Error(`Trino poll ${poll.status}: ${errorText}`);
+      }
       payload = (await poll.json()) as TrinoPage;
       if (!colNames && payload.columns) {
         // late columns; extremely rare

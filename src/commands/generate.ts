@@ -118,12 +118,22 @@ async function loadTable(
           const progress = ((b.index / totalBatches) * 100).toFixed(1);
           console.log(`✔ OK ${label} in ${duration}s (${progress}% complete)`);
         } catch (e: unknown) {
-          const err = e as { message?: string } | string;
-          const message = `✖ FAIL ${label}: ${
-            typeof err === "string" ? err : err?.message || String(err)
-          }\n\nSql:${sql}`;
-          console.error(message);
-          throw new Error(message);
+          const err = e as { message?: string; stack?: string } | string;
+          const errorMessage =
+            typeof err === "string" ? err : err?.message || String(err);
+          const stack =
+            typeof err === "object" && err?.stack ? err.stack : undefined;
+
+          console.error(`\n🚨 ERROR in ${label}:`);
+          console.error(`   Message: ${errorMessage}`);
+          if (stack) {
+            console.error(`   Stack trace:`);
+            console.error(stack);
+          }
+          console.error(`   SQL: ${sql}`);
+          console.error(`\n`);
+
+          throw new Error(`FAIL ${label}: ${errorMessage}`);
         }
       })
     )
@@ -133,12 +143,25 @@ async function loadTable(
 async function optimizeTable(client: TrinoClient, fq: string) {
   const sql = `ALTER TABLE ${fq} EXECUTE optimize`;
   try {
+    console.log(`🔧 Optimizing table ${fq}...`);
     await client.execute(sql);
+    console.log(`✅ Table ${fq} optimized successfully`);
   } catch (e: unknown) {
-    const err = e as { message?: string } | string;
-    const msg = typeof err === "string" ? err : err?.message || String(err);
-    console.warn(`(optimize skipped for ${fq}): ${msg}, sql: ${sql}`);
-    throw new Error(msg);
+    const err = e as { message?: string; stack?: string } | string;
+    const errorMessage =
+      typeof err === "string" ? err : err?.message || String(err);
+    const stack = typeof err === "object" && err?.stack ? err.stack : undefined;
+
+    console.error(`\n🚨 OPTIMIZE ERROR for ${fq}:`);
+    console.error(`   Message: ${errorMessage}`);
+    if (stack) {
+      console.error(`   Stack trace:`);
+      console.error(stack);
+    }
+    console.error(`   SQL: ${sql}`);
+    console.error(`\n`);
+
+    throw new Error(`Optimize failed for ${fq}: ${errorMessage}`);
   }
 }
 
@@ -233,59 +256,81 @@ async function main() {
           `\n🚀 Processing table: ${name} (${humanNumber(totalRows)} rows, batch size: ${humanNumber(batchRows)})`
         );
 
-        // 1) Base schema
-        if (LOAD.createBaseSchema) {
-          console.log(`Ensuring schema exists for ${name}…`);
-          await client.execute(createSchemaSQL(tableConfig));
-        }
-        console.log(`Creating table ${name}…`);
-        await client.execute(createTableSQL(tableConfig, name));
+        try {
+          // 1) Base schema
+          if (LOAD.createBaseSchema) {
+            console.log(`Ensuring schema exists for ${name}…`);
+            await client.execute(createSchemaSQL(tableConfig));
+          }
+          console.log(`Creating table ${name}…`);
+          await client.execute(createTableSQL(tableConfig, name));
 
-        const t0 = Date.now();
-        await loadTable(
-          client,
-          limiter,
-          tableConfig,
-          name,
-          LOAD.startId,
-          totalRows,
-          batchRows
-        );
-        const durationMs = Date.now() - t0;
-        const durationMinutes = (durationMs / 60000).toFixed(1);
-        console.log(`Load finished for ${name} in ${durationMinutes}min`);
-
-        if (LOAD.compactAfterLoad) {
-          await optimizeTable(
+          const t0 = Date.now();
+          await loadTable(
             client,
-            `${tableConfig.catalog}.${tableConfig.schema}.${name}`
+            limiter,
+            tableConfig,
+            name,
+            LOAD.startId,
+            totalRows,
+            batchRows
+          );
+          const durationMs = Date.now() - t0;
+          const durationMinutes = (durationMs / 60000).toFixed(1);
+          console.log(`Load finished for ${name} in ${durationMinutes}min`);
+
+          if (LOAD.compactAfterLoad) {
+            await optimizeTable(
+              client,
+              `${tableConfig.catalog}.${tableConfig.schema}.${name}`
+            );
+          }
+
+          // Show first and last rows ordered by ID
+          const firstRow = await client.query(
+            createFirstRowSQL(tableConfig, name)
+          );
+          console.log(
+            `\nFirst row (ordered by ${tableConfig.idColumn}) for ${name}:`
+          );
+          console.log(JSON.stringify(firstRow, null, 1));
+
+          const lastRow = await client.query(
+            createLastRowSQL(tableConfig, name)
+          );
+          console.log(
+            `\nLast row (ordered by ${tableConfig.idColumn}) for ${name}:`
+          );
+          console.log(JSON.stringify(lastRow, null, 1));
+
+          // Measure immediately and collect result
+          const result = await measureSizes(
+            client,
+            tableConfig,
+            name,
+            connectionId,
+            connection.name
+          );
+          connectionResults.push(result);
+        } catch (e: unknown) {
+          const err = e as { message?: string; stack?: string } | string;
+          const errorMessage =
+            typeof err === "string" ? err : err?.message || String(err);
+          const stack =
+            typeof err === "object" && err?.stack ? err.stack : undefined;
+
+          console.error(`\n🚨 TABLE PROCESSING ERROR for ${name}:`);
+          console.error(`   Message: ${errorMessage}`);
+          if (stack) {
+            console.error(`   Stack trace:`);
+            console.error(stack);
+          }
+          console.error(`\n`);
+
+          throw new Error(
+            `Table processing failed for ${name}: ${errorMessage}`
           );
         }
-
-        // Show first and last rows ordered by ID
-        const firstRow = await client.query(
-          createFirstRowSQL(tableConfig, name)
-        );
-        console.log(
-          `\nFirst row (ordered by ${tableConfig.idColumn}) for ${name}:`
-        );
-        console.log(JSON.stringify(firstRow, null, 1));
-
-        const lastRow = await client.query(createLastRowSQL(tableConfig, name));
-        console.log(
-          `\nLast row (ordered by ${tableConfig.idColumn}) for ${name}:`
-        );
-        console.log(JSON.stringify(lastRow, null, 1));
-
-        // Measure immediately and collect result
-        const result = await measureSizes(
-          client,
-          tableConfig,
-          name,
-          connectionId,
-          connection.name
-        );
-        connectionResults.push(result);
       }
     }
 
@@ -321,6 +366,12 @@ async function main() {
 }
 
 main().catch(e => {
-  console.error(e);
+  console.error(`\n🚨 FATAL ERROR:`);
+  console.error(`   ${e}`);
+  if (e instanceof Error && e.stack) {
+    console.error(`\n   Stack trace:`);
+    console.error(e.stack);
+  }
+  console.error(`\n   Process exiting with code 1\n`);
   process.exit(1);
 });

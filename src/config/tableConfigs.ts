@@ -7,7 +7,8 @@ export const BASE_CONFIG = {
   schema: process.env.TRINO_SCHEMA ?? "lab",
   format: "PARQUET" as const,
   sorted_by: ["id", "created_at"],
-  partitioning: ["id"],
+  // partitioning: ["bucket(id, 100)"],
+  partitioning: ["day(created_at)"],
   idColumn: "id",
   //   tableProperties: {
   //     "write.target-file-size-bytes": 512 * 1024 * 1024, // 512 MB
