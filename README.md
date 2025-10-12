@@ -1,8 +1,18 @@
-# Hands on iceberg compression codecs and their compression levels through Trino
+# Hands on iceberg query performance
 
-Project compares storage size with different copmression codecs and levels, also it gives you ability to play with trino.
+This project measures and analyzes query performance on Apache Iceberg tables with different data characteristics and query patterns. It provides comprehensive benchmarking tools to evaluate how various factors like table size, data distribution, and query complexity affect performance.
 
-It cotains docker compose to get all up and runnig, generates charts and gives you ability to define shema with stings, numbers, dates and random elements from an array.
+The project includes a complete Docker Compose environment with Trino and MinIO, automated data generation with configurable schemas, and detailed performance reporting with statistical analysis.
+
+## What it measures
+
+The benchmarking suite evaluates:
+- **Count queries** with various filter conditions
+- **Pagination queries** (first page, deep pagination, sorted vs unsorted)
+- **Aggregation queries** with GROUP BY operations
+- **Multi-table joins** and complex queries
+- **Concurrency simulation** with parallel query streams
+- **Statistical analysis** including percentiles, averages, and performance distributions
 
 * Start environment `yarn compose:up`
 * Define your schema: `src/config/tableConfig.ts`
@@ -90,10 +100,10 @@ WITH (sorted_by = ARRAY['order_date']);
 * Format code: `yarn format`
 * Check formatting: `yarn format:check`
 
-# Generate data
+# Generate data and run performance tests
 
-* Run: `yarn generate`
-* Test query performance: `yarn query`
+* Generate test data: `yarn generate`
+* Run query performance benchmarks: `yarn query`
 
 ## Algorithms
 You need [Mermaid Preview](https://marketplace.visualstudio.com/items?itemName=vstirbu.vscode-mermaid-preview) extension to see gparhs in [vsc](https://code.visualstudio.com/)
