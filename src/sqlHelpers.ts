@@ -125,6 +125,10 @@ export function createVariantTableSQLs(
   const extraProps: [string, string][] = [];
   if (cfg.format) props.push(`format = '${cfg.format}'`);
   // if (cfg.partitioning?.length) props.push(`partitioning = ARRAY[${cfg.partitioning.map(p => `'${p}'`).join(", ")}]`); // FIXME
+  if (cfg.sorted_by?.length)
+    props.push(
+      `sorted_by = ARRAY[${cfg.sorted_by.map(col => `'${col}'`).join(", ")}]`
+    );
   if (cfg.tableProperties) {
     for (const [k, v] of Object.entries(cfg.tableProperties)) {
       const val =

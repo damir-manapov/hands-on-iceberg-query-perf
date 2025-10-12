@@ -46,6 +46,57 @@ export interface QuerySet {
   tableConfigs: TableQueryConfig[];
 }
 
+const paginationTableConfig: TableQueryConfig[] = [
+  {
+    type: "singleTable",
+    tableBase: "narrow",
+    filters: [
+      { whereClause: "", description: "no filters" },
+      { whereClause: "status = 'paid'" },
+      { whereClause: "country = 'US'" },
+      { whereClause: "age > 30" },
+      { whereClause: "created_at >= DATE '2024-06-01'" },
+      { whereClause: "amount > 1000" },
+      { whereClause: "id > 50000000" },
+      { whereClause: "id > 500000000" },
+      { whereClause: "amount > 1000 AND id > 50000000" },
+      { whereClause: "amount > 1000 AND id > 500000000" },
+      { whereClause: "contains(tags, 'alpha')" },
+      { whereClause: "note IS NOT NULL" },
+    ],
+    aggregationColumns: [],
+    paginationColumns: [
+      { column: "id" },
+      { column: "status" },
+      { column: "country" },
+      { column: "age" },
+    ],
+  },
+  {
+    type: "singleTable",
+    tableBase: "wide",
+    filters: [
+      { whereClause: "", description: "no filters" },
+      { whereClause: "row_9 > 5000" },
+      { whereClause: "row_28 = 'value1'" },
+      { whereClause: "row_48 = 'enum1'" },
+      { whereClause: "row_10 > 2000" },
+      { whereClause: "row_1 >= TIMESTAMP '2024-06-01 00:00:00'" },
+      { whereClause: "row_28 = 'value1' AND row_48 = 'enum1'" },
+      { whereClause: "row_9 BETWEEN 2000 AND 8000" },
+      { whereClause: "row_54 = 'tag1'" },
+      { whereClause: "row_29 IS NOT NULL" },
+    ],
+    aggregationColumns: [],
+    paginationColumns: [
+      { column: "id" },
+      { column: "row_28" },
+      { column: "row_48" },
+      { column: "row_9" },
+    ],
+  },
+];
+
 export function createQuerySets(): QuerySet[] {
   return [
     {
@@ -115,113 +166,14 @@ export function createQuerySets(): QuerySet[] {
       enabled: true,
       iterations: 3,
       concurrencySimulationStreams: 0,
-      tableConfigs: [
-        {
-          type: "singleTable",
-          tableBase: "narrow",
-          filters: [
-            { whereClause: "", description: "no filters" },
-            { whereClause: "status = 'paid'" },
-            { whereClause: "country = 'US'" },
-            { whereClause: "age > 30" },
-            { whereClause: "created_at >= DATE '2024-06-01'" },
-            { whereClause: "amount > 1000" },
-            { whereClause: "id > 50000000" },
-            { whereClause: "id > 500000000" },
-            { whereClause: "amount > 1000 AND id > 50000000" },
-            { whereClause: "amount > 1000 AND id > 500000000" },
-            { whereClause: "contains(tags, 'alpha')" },
-            { whereClause: "note IS NOT NULL" },
-          ],
-          aggregationColumns: [],
-          paginationColumns: [
-            { column: "id" },
-            { column: "status" },
-            { column: "country" },
-            { column: "age" },
-          ],
-        },
-        {
-          type: "singleTable",
-          tableBase: "wide",
-          filters: [
-            { whereClause: "", description: "no filters" },
-            { whereClause: "row_9 > 5000" },
-            { whereClause: "row_28 = 'value1'" },
-            { whereClause: "row_48 = 'enum1'" },
-            { whereClause: "row_10 > 2000" },
-            { whereClause: "row_1 >= TIMESTAMP '2024-06-01 00:00:00'" },
-            { whereClause: "row_28 = 'value1' AND row_48 = 'enum1'" },
-            { whereClause: "row_9 BETWEEN 2000 AND 8000" },
-            { whereClause: "row_54 = 'tag1'" },
-            { whereClause: "row_29 IS NOT NULL" },
-          ],
-          aggregationColumns: [],
-          paginationColumns: [
-            { column: "id" },
-            { column: "row_28" },
-            { column: "row_48" },
-            { column: "row_9" },
-          ],
-        },
-      ],
+      tableConfigs: paginationTableConfig,
     },
     {
       name: "paginationContention30",
       enabled: true,
       iterations: 3,
       concurrencySimulationStreams: 5,
-      tableConfigs: [
-        {
-          type: "singleTable",
-          tableBase: "narrow",
-          filters: [
-            { whereClause: "", description: "no filters" },
-            { whereClause: "status = 'paid'" },
-            { whereClause: "country = 'US'" },
-            { whereClause: "age > 30" },
-            { whereClause: "created_at >= DATE '2024-06-01'" },
-            { whereClause: "amount > 1000" },
-            { whereClause: "id > 50000000" },
-            { whereClause: "id > 500000000" },
-            { whereClause: "amount > 1000 AND id > 50000000" },
-            { whereClause: "amount > 1000 AND id > 500000000" },
-            { whereClause: "contains(tags, 'alpha')" },
-            { whereClause: "note IS NOT NULL" },
-          ],
-          aggregationColumns: [],
-          paginationColumns: [
-            { column: "id" },
-            { column: "status" },
-            { column: "country" },
-            { column: "age" },
-          ],
-        },
-        {
-          type: "singleTable",
-          tableBase: "wide",
-          filters: [
-            { whereClause: "", description: "no filters" },
-            { whereClause: "row_9 > 5000" },
-            { whereClause: "row_28 = 'a'" },
-            { whereClause: "row_10 > 2000" },
-            { whereClause: "row_1 >= TIMESTAMP '2024-06-01 00:00:00'" },
-            {
-              whereClause:
-                "row_1 >= TIMESTAMP '2024-06-01 00:00:00' AND row_28 = 'a'",
-            },
-            { whereClause: "row_9 BETWEEN 2000 AND 8000" },
-            { whereClause: "row_29 IS NOT NULL" },
-          ],
-          aggregationColumns: [],
-          paginationColumns: [
-            { column: "id" },
-            { column: "row_28" },
-            { column: "row_48" },
-            { column: "row_9" },
-          ],
-        },
-      ],
+      tableConfigs: paginationTableConfig,
     },
     {
       name: "basicWithParallel30",

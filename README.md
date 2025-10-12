@@ -38,7 +38,7 @@ On a 100M row table, count requests and pagination (1st and 100th page) without 
 
 **Query Contention**
 
-With 30 parallel requests running against the same table, performance doesn't seem to be significantly affected on a 100M row table. However, when queries compete for resources, execution time can increase by up to three times.
+With 30 parallel requests running against the same table, execution time increases sugnificantly. Probably it may be cept increasing count of trino nodes.
 
 **Scaling with Row Count:**
 

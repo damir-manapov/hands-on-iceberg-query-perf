@@ -1,4 +1,4 @@
-import { TableConfig } from "../types";
+import { FieldSpec, TableConfig } from "../types";
 import { generateRandomStrings } from "../utils";
 
 // Base configuration shared across all tables
@@ -11,6 +11,43 @@ export const BASE_CONFIG = {
   //   tableProperties: {
   //     "write.target-file-size-bytes": 512 * 1024 * 1024, // 512 MB
   //   },
+};
+
+const narrowColumns: Record<string, FieldSpec> = {
+  id: { kind: "bigint", min: 1, max: 1, nullable: 0 },
+  user_name: { kind: "string", length: 16, nullable: 0 },
+  amount: { kind: "double", min: 0, max: 10000, nullable: 0.05 },
+  created_at: {
+    kind: "timestamp",
+    start: "2024-01-01",
+    end: "2025-01-01",
+    nullable: 0,
+  },
+  status: {
+    kind: "enum",
+    base: "string",
+    values: ["new", "paid", "delivered", "canceled"],
+    nullable: 0,
+  },
+  country: {
+    kind: "enum",
+    base: "string",
+    values: ["KZ", "US", "DE", "TR", "PL"],
+    nullable: 0.02,
+  },
+  age: { kind: "int", min: 18, max: 78, nullable: 0.03 },
+  note: { kind: "string", length: 8, nullable: 0.1 },
+  tags: {
+    kind: "array",
+    element: {
+      kind: "enum",
+      base: "string",
+      values: ["alpha", "beta", "gamma", "delta"],
+    },
+    minLen: 1,
+    maxLen: 3,
+    nullable: 0.1,
+  },
 };
 
 // Array of table configurations
@@ -26,42 +63,22 @@ export const TABLE_CONFIGS: TableConfig[] = [
     batchRows: 1_000_000,
     enabled: true,
     // enabled: false,
-    columns: {
-      id: { kind: "bigint", min: 1, max: 1, nullable: 0 },
-      user_name: { kind: "string", length: 16, nullable: 0 },
-      amount: { kind: "double", min: 0, max: 10000, nullable: 0.05 },
-      created_at: {
-        kind: "timestamp",
-        start: "2024-01-01",
-        end: "2025-01-01",
-        nullable: 0,
-      },
-      status: {
-        kind: "enum",
-        base: "string",
-        values: ["new", "paid", "delivered", "canceled"],
-        nullable: 0,
-      },
-      country: {
-        kind: "enum",
-        base: "string",
-        values: ["KZ", "US", "DE", "TR", "PL"],
-        nullable: 0.02,
-      },
-      age: { kind: "int", min: 18, max: 78, nullable: 0.03 },
-      note: { kind: "string", length: 8, nullable: 0.1 },
-      tags: {
-        kind: "array",
-        element: {
-          kind: "enum",
-          base: "string",
-          values: ["alpha", "beta", "gamma", "delta"],
-        },
-        minLen: 1,
-        maxLen: 3,
-        nullable: 0.1,
-      },
-    },
+    columns: narrowColumns,
+  },
+  {
+    ...BASE_CONFIG,
+    tableBase: "narrow_sorted",
+    totalRows: [
+      // 1_000_000,
+      // 10_000_000,
+      100_000_000,
+      // 1_000_000_000,
+    ],
+    batchRows: 1_000_000,
+    enabled: true,
+    // enabled: false,
+    sorted_by: ["id", "created_at"],
+    columns: narrowColumns,
   },
   {
     ...BASE_CONFIG,

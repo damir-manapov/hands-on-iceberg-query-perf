@@ -34,6 +34,7 @@ export type TableConfig = {
   tableBase: string; // base name used for variants, e.g. "events"
   format?: "PARQUET" | "ORC" | "AVRO";
   partitioning?: string[];
+  sorted_by?: string[]; // array of column names to sort by
   tableProperties?: Record<string, string | number | boolean>;
   columns: Record<string, FieldSpec>;
   idColumn?: string;
