@@ -5,15 +5,11 @@
 import { TrinoClient } from "../../TrinoClient";
 import { TABLE_CONFIGS } from "../../config/tableConfigs";
 import { createTrinoConfig } from "../../config/trinoConfig";
-import { createQuerySets } from "../../config/tableQueries";
+import { createQuerySets, getConnectionById } from "../../config/tableQueries";
 import { humanNumber } from "../../utils";
 import { processSingleTable, processMultiTable } from "./processors";
 
 async function main() {
-  // Trino connection
-  const trino = createTrinoConfig("query");
-  const client = new TrinoClient(trino);
-
   // Get query sets
   const querySets = createQuerySets();
 
@@ -28,7 +24,13 @@ async function main() {
       continue;
     }
 
-    console.log(`\n📋 Processing query set: ${querySet.name}`);
+    console.log(
+      `\n📋 Processing query set: ${querySet.name} (${getConnectionById(querySet.connectionId).description})`
+    );
+
+    // Create Trino connection for this query set
+    const trino = createTrinoConfig("query", querySet.connectionId);
+    const client = new TrinoClient(trino);
 
     // Process each table configuration in this query set
     for (const queryConfig of querySet.tableConfigs) {

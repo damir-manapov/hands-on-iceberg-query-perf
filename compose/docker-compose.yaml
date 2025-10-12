@@ -84,6 +84,7 @@ services:
       retries: 60
     networks: [lake]
 
+  # Single-node Trino (original)
   trino:
     image: trinodb/trino:latest
     depends_on:
@@ -111,6 +112,61 @@ services:
       # 4gb
       # - ./trino/config4g.properties:/etc/trino/config.properties:ro
       # - ./trino/jvm4g.config:/etc/trino/jvm.config:ro
+    networks: [lake]
+
+  # Three-node Trino cluster
+  trino-coordinator:
+    image: trinodb/trino:latest
+    depends_on:
+      nessie:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    environment:
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=UTC"
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio12345}
+    ports:
+      - "8081:8080"  # Coordinator on different port
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/v1/info | grep -q '\"starting\"[[:space:]]*:[[:space:]]*false'"]
+      interval: 5s
+      timeout: 3s
+      retries: 60
+    volumes:
+      - ./trino/catalog:/etc/trino/catalog:ro
+      - ./trino/cluster-coordinator.properties:/etc/trino/config.properties:ro
+      - ./trino/jvm.config:/etc/trino/jvm.config:ro
+    networks: [lake]
+
+  trino-worker-1:
+    image: trinodb/trino:latest
+    depends_on:
+      trino-coordinator:
+        condition: service_healthy
+    environment:
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=UTC"
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio12345}
+    volumes:
+      - ./trino/catalog:/etc/trino/catalog:ro
+      - ./trino/cluster-worker.properties:/etc/trino/config.properties:ro
+      - ./trino/jvm.config:/etc/trino/jvm.config:ro
+    networks: [lake]
+
+  trino-worker-2:
+    image: trinodb/trino:latest
+    depends_on:
+      trino-coordinator:
+        condition: service_healthy
+    environment:
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=UTC"
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio12345}
+    volumes:
+      - ./trino/catalog:/etc/trino/catalog:ro
+      - ./trino/cluster-worker.properties:/etc/trino/config.properties:ro
+      - ./trino/jvm.config:/etc/trino/jvm.config:ro
     networks: [lake]
 
 networks:

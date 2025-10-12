@@ -62,4 +62,6 @@ export type SizeRow = {
   bytes_per_row: number;
   manifest_bytes?: number;
   total_bytes?: number;
+  connection_id: string;
+  connection_name: string;
 };

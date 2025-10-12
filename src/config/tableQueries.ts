@@ -22,6 +22,18 @@ export interface MultiTableQuery {
   queryType: "COUNT" | "PAGINATION" | "AGGREGATION";
 }
 
+export interface ConnectionConfig {
+  id: string;
+  name: string;
+  host: string;
+  port: number;
+  description?: string;
+}
+
+export interface ConnectionReference {
+  connectionId: string;
+}
+
 export interface SingleTableConfig {
   type: "singleTable";
   tableBase: string;
@@ -43,7 +55,35 @@ export interface QuerySet {
   enabled: boolean;
   iterations: number;
   concurrencySimulationStreams: number;
+  connectionId: string;
   tableConfigs: TableQueryConfig[];
+}
+
+// Centralized connection configurations
+export const CONNECTIONS: Record<string, ConnectionConfig> = {
+  "single-node": {
+    id: "single-node",
+    name: "single-node",
+    host: "http://localhost",
+    port: 8080,
+    description: "Single-node Trino",
+  },
+  "three-node-cluster": {
+    id: "three-node-cluster",
+    name: "three-node-cluster",
+    host: "http://localhost",
+    port: 8081,
+    description: "Three-node Trino cluster",
+  },
+};
+
+// Helper function to get connection by ID
+export function getConnectionById(connectionId: string): ConnectionConfig {
+  const connection = CONNECTIONS[connectionId];
+  if (!connection) {
+    throw new Error(`Connection with ID '${connectionId}' not found`);
+  }
+  return connection;
 }
 
 const paginationTableConfig: TableQueryConfig[] = [
@@ -104,6 +144,7 @@ export function createQuerySets(): QuerySet[] {
       enabled: false,
       iterations: 3,
       concurrencySimulationStreams: 0,
+      connectionId: "single-node",
       tableConfigs: [
         {
           type: "singleTable",
@@ -166,6 +207,7 @@ export function createQuerySets(): QuerySet[] {
       enabled: true,
       iterations: 3,
       concurrencySimulationStreams: 0,
+      connectionId: "single-node",
       tableConfigs: paginationTableConfig,
     },
     {
@@ -173,6 +215,7 @@ export function createQuerySets(): QuerySet[] {
       enabled: true,
       iterations: 3,
       concurrencySimulationStreams: 5,
+      connectionId: "single-node",
       tableConfigs: paginationTableConfig,
     },
     {
@@ -180,6 +223,7 @@ export function createQuerySets(): QuerySet[] {
       enabled: false,
       iterations: 3,
       concurrencySimulationStreams: 30,
+      connectionId: "single-node",
       tableConfigs: [
         {
           type: "singleTable",
@@ -242,6 +286,7 @@ export function createQuerySets(): QuerySet[] {
       enabled: false,
       iterations: 5,
       concurrencySimulationStreams: 0,
+      connectionId: "single-node",
       tableConfigs: [
         {
           type: "singleTable",
@@ -285,6 +330,7 @@ export function createQuerySets(): QuerySet[] {
       enabled: false,
       iterations: 3,
       concurrencySimulationStreams: 3,
+      connectionId: "single-node",
       tableConfigs: [
         {
           type: "severalTables",
@@ -321,6 +367,22 @@ export function createQuerySets(): QuerySet[] {
           ],
         },
       ],
+    },
+    {
+      name: "paginationNoContentionCluster",
+      enabled: true,
+      iterations: 3,
+      concurrencySimulationStreams: 0,
+      connectionId: "three-node-cluster",
+      tableConfigs: paginationTableConfig,
+    },
+    {
+      name: "paginationContention30Cluster",
+      enabled: true,
+      iterations: 3,
+      concurrencySimulationStreams: 30,
+      connectionId: "three-node-cluster",
+      tableConfigs: paginationTableConfig,
     },
   ];
 }

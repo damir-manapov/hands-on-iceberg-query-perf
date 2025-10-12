@@ -16,6 +16,7 @@ import { Limiter } from "../Limiter";
 import { TABLE_CONFIGS } from "../config/tableConfigs";
 import { LOAD } from "../config/load";
 import { createTrinoConfig } from "../config/trinoConfig";
+import { CONNECTIONS } from "../config/tableQueries";
 // Fixed codec setup: always use zstd with level 6
 const FIXED_CODEC = "zstd" as const;
 const FIXED_LEVEL = 6 as const;
@@ -146,7 +147,9 @@ async function measureSizes(
   cfg: TableConfig,
   name: string,
   codec: string,
-  level: number
+  level: number,
+  connectionId: string,
+  connectionName: string
 ): Promise<SizeRow> {
   const filesTbl = `"${name}$files"`;
   const baseSQL = `SELECT SUM(file_size_in_bytes) AS data_bytes, SUM(record_count) AS rows, (SUM(file_size_in_bytes) / NULLIF(SUM(record_count),0)) AS bytes_per_row FROM ${cfg.catalog}.${cfg.schema}.${filesTbl}`;
@@ -160,7 +163,16 @@ async function measureSizes(
   const bytes_per_row = Number(filesRes?.[0]?.bytes_per_row ?? 0);
 
   if (!LOAD.includeManifestBytes) {
-    return { table_name: name, codec, level, rows, data_bytes, bytes_per_row };
+    return {
+      table_name: name,
+      codec,
+      level,
+      rows,
+      data_bytes,
+      bytes_per_row,
+      connection_id: connectionId,
+      connection_name: connectionName,
+    };
   }
 
   // manifests (optional)
@@ -184,96 +196,117 @@ async function measureSizes(
     bytes_per_row,
     manifest_bytes,
     total_bytes,
+    connection_id: connectionId,
+    connection_name: connectionName,
   };
 }
 
 async function main() {
-  // Trino connection
-  const trino = createTrinoConfig("load");
-  const client = new TrinoClient(trino);
-  const limiter = new Limiter(LOAD.concurrency);
-
   const codec = FIXED_CODEC;
   const level = FIXED_LEVEL;
-  const results: SizeRow[] = [];
+  const allResults: SizeRow[] = [];
 
-  // Process each table configuration
-  for (const tableConfig of TABLE_CONFIGS) {
-    if (tableConfig.enabled === false) {
-      console.log(`⏭️  Skipping disabled table: ${tableConfig.tableBase}`);
-      continue;
-    }
-    // Process each row count for this table
-    for (const totalRows of tableConfig.totalRows) {
-      const batchRows = tableConfig.batchRows;
+  // Process each connection
+  for (const [connectionId, connection] of Object.entries(CONNECTIONS)) {
+    console.log(
+      `\n🔗 Processing connection: ${connection.description} (${connection.host}:${connection.port})`
+    );
 
-      // Generate dynamic table name with row count
-      const rowCountSuffix = humanNumber(totalRows).replace(/,/g, "");
-      const name = `${tableConfig.tableBase}_${rowCountSuffix}`;
+    // Trino connection for this specific connection
+    const trino = createTrinoConfig("load", connectionId);
+    const client = new TrinoClient(trino);
+    const limiter = new Limiter(LOAD.concurrency);
 
-      console.log(
-        `\n🚀 Processing table: ${name} (${humanNumber(totalRows)} rows, batch size: ${humanNumber(batchRows)})`
-      );
+    const connectionResults: SizeRow[] = [];
 
-      // 1) Base schema + base table
-      if (LOAD.createBaseSchema) {
-        console.log(`Ensuring schema + base table exist for ${name}…`);
-        await client.execute(createSchemaSQL(tableConfig));
-        await client.execute(createBaseTableSQL(tableConfig));
+    // Process each table configuration
+    for (const tableConfig of TABLE_CONFIGS) {
+      if (tableConfig.enabled === false) {
+        console.log(`⏭️  Skipping disabled table: ${tableConfig.tableBase}`);
+        continue;
       }
-      console.log(`Creating table ${name} (codec=${codec}, level=${level})…`);
-      const variantTableSQLs = createVariantTableSQLs(
-        tableConfig,
-        name,
-        codec,
-        level
-      );
-      for (const sql of variantTableSQLs) {
-        await client.execute(sql);
-      }
+      // Process each row count for this table
+      for (const totalRows of tableConfig.totalRows) {
+        const batchRows = tableConfig.batchRows;
 
-      const t0 = Date.now();
-      await loadTable(
-        client,
-        limiter,
-        tableConfig,
-        name,
-        LOAD.startId,
-        totalRows,
-        batchRows
-      );
-      const durationMs = Date.now() - t0;
-      const durationMinutes = (durationMs / 60000).toFixed(1);
-      console.log(`Load finished for ${name} in ${durationMinutes}min`);
+        // Generate dynamic table name with row count
+        const rowCountSuffix = humanNumber(totalRows).replace(/,/g, "");
+        const name = `${tableConfig.tableBase}_${rowCountSuffix}`;
 
-      if (LOAD.compactAfterLoad) {
-        await optimizeTable(
-          client,
-          `${tableConfig.catalog}.${tableConfig.schema}.${name}`
+        console.log(
+          `\n🚀 Processing table: ${name} (${humanNumber(totalRows)} rows, batch size: ${humanNumber(batchRows)})`
         );
+
+        // 1) Base schema + base table
+        if (LOAD.createBaseSchema) {
+          console.log(`Ensuring schema + base table exist for ${name}…`);
+          await client.execute(createSchemaSQL(tableConfig));
+          await client.execute(createBaseTableSQL(tableConfig));
+        }
+        console.log(`Creating table ${name} (codec=${codec}, level=${level})…`);
+        const variantTableSQLs = createVariantTableSQLs(
+          tableConfig,
+          name,
+          codec,
+          level
+        );
+        for (const sql of variantTableSQLs) {
+          await client.execute(sql);
+        }
+
+        const t0 = Date.now();
+        await loadTable(
+          client,
+          limiter,
+          tableConfig,
+          name,
+          LOAD.startId,
+          totalRows,
+          batchRows
+        );
+        const durationMs = Date.now() - t0;
+        const durationMinutes = (durationMs / 60000).toFixed(1);
+        console.log(`Load finished for ${name} in ${durationMinutes}min`);
+
+        if (LOAD.compactAfterLoad) {
+          await optimizeTable(
+            client,
+            `${tableConfig.catalog}.${tableConfig.schema}.${name}`
+          );
+        }
+
+        const exampleRow = await client.query(
+          createSelectExamplesSQL(tableConfig, name)
+        );
+        console.log(`Example row for ${name}:`);
+        console.log(JSON.stringify(exampleRow, null, 1));
+
+        // Measure immediately and collect result
+        const result = await measureSizes(
+          client,
+          tableConfig,
+          name,
+          codec,
+          level,
+          connectionId,
+          connection.name
+        );
+        connectionResults.push(result);
       }
-
-      const exampleRow = await client.query(
-        createSelectExamplesSQL(tableConfig, name)
-      );
-      console.log(`Example row for ${name}:`);
-      console.log(JSON.stringify(exampleRow, null, 1));
-
-      // Measure immediately and collect result
-      const result = await measureSizes(
-        client,
-        tableConfig,
-        name,
-        codec,
-        level
-      );
-      results.push(result);
     }
+
+    // Add results to overall results
+    allResults.push(...connectionResults);
+
+    console.log(
+      `\n✅ Completed data generation for connection: ${connection.description}`
+    );
   }
 
   // 3) Print results & CSV
   console.log("\n📊 RESULTS (bytes rounded):");
-  const prettyResults = results.map(result => ({
+  const prettyResults = allResults.map(result => ({
+    connection: result.connection_name,
     table: result.table_name,
     codec: result.codec,
     level: result.level,

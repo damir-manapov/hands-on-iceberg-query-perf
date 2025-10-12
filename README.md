@@ -30,6 +30,7 @@ When testing pagination performance, the main focus areas are:
 - **First page retrieval**: Measuring performance of `LIMIT` queries without `OFFSET` to establish baseline pagination speed
 - **Deep pagination**: Testing `OFFSET` queries for accessing pages far into the dataset (e.g., 100th page), which typically shows performance degradation
 - **Sorted vs unsorted pagination**: Comparing performance between ordered and unordered result sets, as sorting adds computational overhead
+- **Multi-node performance comparison**: Compare query performance between single-node and three-node Trino clusters
 - **Concurrent query execution**: Understanding how pagination performance degrades when multiple users execute queries simultaneously vs single-user scenarios
 
 #### Performance Measurements
@@ -76,7 +77,8 @@ yarn compose:up
 
 ## Dashboards / endpoints
 
-* Trino: http://localhost:8080
+* Trino (single-node): http://localhost:8080
+* Trino (three-node cluster): http://localhost:8081
 * MinIO console: http://localhost:9001 (user/pass from env)
 
 # Working with iceberg through Trino
