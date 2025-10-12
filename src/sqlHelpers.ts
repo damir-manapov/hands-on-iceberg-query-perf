@@ -123,14 +123,6 @@ export function createSchemaSQL(cfg: TableConfig) {
   return `CREATE SCHEMA IF NOT EXISTS ${cfg.catalog}.${cfg.schema}`;
 }
 
-export function createBaseTableSQL(cfg: TableConfig) {
-  const fq = `${cfg.catalog}.${cfg.schema}.${cfg.tableBase}_base`;
-  const cols = Object.entries(cfg.columns)
-    .map(([n, s]) => `  ${n} ${sqlTypeOf(s)}`)
-    .join(",\n");
-  return `CREATE TABLE IF NOT EXISTS ${fq} (\n${cols}\n)`;
-}
-
 export function createFirstRowSQL(cfg: TableConfig, tableName: string): string {
   const fq = `${cfg.catalog}.${cfg.schema}.${tableName}`;
   return `SELECT * FROM ${fq} ORDER BY ${cfg.idColumn} LIMIT 1`;
@@ -141,21 +133,21 @@ export function createLastRowSQL(cfg: TableConfig, tableName: string): string {
   return `SELECT * FROM ${fq} ORDER BY ${cfg.idColumn} DESC LIMIT 1`;
 }
 
-export function createVariantTableSQLs(
-  cfg: TableConfig,
-  name: string,
-  codec: string,
-  level?: number
-): string[] {
-  const fq = `${cfg.catalog}.${cfg.schema}.${name}`;
+export function createTableSQL(cfg: TableConfig, tableName: string): string {
+  const fq = `${cfg.catalog}.${cfg.schema}.${tableName}`;
   const props: string[] = [];
-  const extraProps: [string, string][] = [];
+
   if (cfg.format) props.push(`format = '${cfg.format}'`);
-  // if (cfg.partitioning?.length) props.push(`partitioning = ARRAY[${cfg.partitioning.map(p => `'${p}'`).join(", ")}]`); // FIXME
-  if (cfg.sorted_by?.length)
+  if (cfg.partitioning?.length) {
+    props.push(
+      `partitioning = ARRAY[${cfg.partitioning.map(col => `'${col}'`).join(", ")}]`
+    );
+  }
+  if (cfg.sorted_by?.length) {
     props.push(
       `sorted_by = ARRAY[${cfg.sorted_by.map(col => `'${col}'`).join(", ")}]`
     );
+  }
   if (cfg.tableProperties) {
     for (const [k, v] of Object.entries(cfg.tableProperties)) {
       const val =
@@ -169,23 +161,17 @@ export function createVariantTableSQLs(
       props.push(`"${k}" = ${val}`);
     }
   }
-  extraProps.push(["write.parquet.compression-codec", codec]);
-  if (typeof level === "number")
-    extraProps.push(["write.parquet.compression-level", level.toString()]);
 
-  // There is some problems setting extra_properties via WITH in CRETE statement, so setting them by ALTER stmnt
-  const alterByExtraProps = extraProps.map(
-    ([key, value]) =>
-      `ALTER TABLE ${fq} SET PROPERTIES extra_properties = map_from_entries(ARRAY[ROW('${key}', '${value}')])`
-  );
+  const columns = Object.entries(cfg.columns)
+    .map(([name, spec]) => `  ${name} ${sqlTypeOf(spec)}`)
+    .join(",\n");
 
-  return [
-    `CREATE TABLE IF NOT EXISTS ${fq} (LIKE ${cfg.catalog}.${cfg.schema}.${cfg.tableBase}_base)
-WITH (
-  ${props.join(",\n  ")}
-)`,
-    ...alterByExtraProps,
-  ];
+  const withClause =
+    props.length > 0 ? `\nWITH (\n  ${props.join(",\n  ")}\n)` : "";
+
+  return `CREATE TABLE IF NOT EXISTS ${fq} (
+${columns}
+)${withClause}`;
 }
 
 export function buildInsertSQL(

@@ -6,11 +6,10 @@ import { SizeRow, TableConfig } from "../types";
 import { TrinoClient } from "../TrinoClient";
 import {
   buildInsertSQL,
-  createBaseTableSQL,
   createFirstRowSQL,
   createLastRowSQL,
   createSchemaSQL,
-  createVariantTableSQLs,
+  createTableSQL,
 } from "../sqlHelpers";
 import { humanNumber, humanSize, makeBatches } from "../utils";
 import { Limiter } from "../Limiter";
@@ -147,8 +146,6 @@ async function measureSizes(
   client: TrinoClient,
   cfg: TableConfig,
   name: string,
-  codec: string,
-  level: number,
   connectionId: string,
   connectionName: string
 ): Promise<SizeRow> {
@@ -166,8 +163,8 @@ async function measureSizes(
   if (!LOAD.includeManifestBytes) {
     return {
       table_name: name,
-      codec,
-      level,
+      codec: FIXED_CODEC,
+      level: FIXED_LEVEL,
       rows,
       data_bytes,
       bytes_per_row,
@@ -190,8 +187,8 @@ async function measureSizes(
   const total_bytes = data_bytes + manifest_bytes;
   return {
     table_name: name,
-    codec,
-    level,
+    codec: FIXED_CODEC,
+    level: FIXED_LEVEL,
     rows,
     data_bytes,
     bytes_per_row,
@@ -203,8 +200,6 @@ async function measureSizes(
 }
 
 async function main() {
-  const codec = FIXED_CODEC;
-  const level = FIXED_LEVEL;
   const allResults: SizeRow[] = [];
 
   // Process each connection
@@ -238,22 +233,13 @@ async function main() {
           `\n🚀 Processing table: ${name} (${humanNumber(totalRows)} rows, batch size: ${humanNumber(batchRows)})`
         );
 
-        // 1) Base schema + base table
+        // 1) Base schema
         if (LOAD.createBaseSchema) {
-          console.log(`Ensuring schema + base table exist for ${name}…`);
+          console.log(`Ensuring schema exists for ${name}…`);
           await client.execute(createSchemaSQL(tableConfig));
-          await client.execute(createBaseTableSQL(tableConfig));
         }
-        console.log(`Creating table ${name} (codec=${codec}, level=${level})…`);
-        const variantTableSQLs = createVariantTableSQLs(
-          tableConfig,
-          name,
-          codec,
-          level
-        );
-        for (const sql of variantTableSQLs) {
-          await client.execute(sql);
-        }
+        console.log(`Creating table ${name}…`);
+        await client.execute(createTableSQL(tableConfig, name));
 
         const t0 = Date.now();
         await loadTable(
@@ -296,8 +282,6 @@ async function main() {
           client,
           tableConfig,
           name,
-          codec,
-          level,
           connectionId,
           connection.name
         );
