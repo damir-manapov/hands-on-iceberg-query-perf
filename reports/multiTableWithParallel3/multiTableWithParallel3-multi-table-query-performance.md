@@ -1,29 +1,30 @@
 # Query Performance Report
 
 **Table:** Multi-table (narrow, wide)  
-**Generated:** 2025-10-12T15:52:57.020Z  
+**Generated:** 2025-10-14T02:36:36.107Z  
 **Total Rows:** 1,100,000  
-**Table Size:** N/A
+**Table Size:** N/A  
+**Trino Configuration:** Single-node Trino
 
 ## Summary
 
 - **Total Queries:** 5
 - **Iterations:** 3
 - **Concurrency Simulation Streams:** 3
-- **Average Duration:** 315ms
-- **Fastest Query:** 305ms
-- **Slowest Query:** 335ms
-- **95th Percentile:** 335ms
+- **Average Duration:** 313ms
+- **Fastest Query:** 264ms
+- **Slowest Query:** 355ms
+- **95th Percentile:** 355ms
 
 ## Query Results
 
 | Filter | Type | Pagination Type | Sorted | Aggregation | Count/Rows | Avg Duration (ms) | Min Duration (ms) | Max Duration (ms) | P95 Duration (ms) |
 |--------|------|-----------------|--------|-------------|------------|-------------------|-------------------|-------------------|-------------------|
-| multi-table query | COUNT | - | - | - | 0 | 335 | 324 | 348 | 347 |
-| multi-table query | AGGREGATION | - | - | - | 0 | 319 | 315 | 322 | 322 |
-| multi-table query | AGGREGATION | - | - | - | 0 | 310 | 305 | 319 | 318 |
-| multi-table query | PAGINATION | - | - | - | 0 | 305 | 304 | 306 | 306 |
-| multi-table query | AGGREGATION | - | - | - | 0 | 305 | 304 | 306 | 306 |
+| multi-table query | COUNT | - | - | - | 0 | 355 | 319 | 424 | 414 |
+| multi-table query | AGGREGATION | - | - | - | 0 | 317 | 311 | 327 | 326 |
+| multi-table query | AGGREGATION | - | - | - | 0 | 315 | 308 | 318 | 318 |
+| multi-table query | PAGINATION | - | - | - | 0 | 264 | 163 | 315 | 315 |
+| multi-table query | AGGREGATION | - | - | - | 0 | 314 | 310 | 320 | 319 |
 
 ## Query Details
 
@@ -33,10 +34,10 @@
 - **Pagination Type:** -
 - **Sorted:** -
 - **Aggregation:** -
-- **Average Duration:** 335ms
-- **Min Duration:** 324ms
-- **Max Duration:** 348ms
-- **P95 Duration:** 347ms
+- **Average Duration:** 355ms
+- **Min Duration:** 319ms
+- **Max Duration:** 424ms
+- **P95 Duration:** 414ms
 
 ### multi-table query - AGGREGATION
 - **SQL:** `SELECT iceberg.performance.narrow_1_000_000.status, COUNT(*) FROM iceberg.performance.narrow_1_000_000 JOIN iceberg.performance.wide_100_000 ON iceberg.performance.narrow_1_000_000.id = iceberg.performance.wide_100_000.id GROUP BY iceberg.performance.narrow_1_000_000.status`
@@ -44,10 +45,10 @@
 - **Pagination Type:** -
 - **Sorted:** -
 - **Aggregation:** -
-- **Average Duration:** 319ms
-- **Min Duration:** 315ms
-- **Max Duration:** 322ms
-- **P95 Duration:** 322ms
+- **Average Duration:** 317ms
+- **Min Duration:** 311ms
+- **Max Duration:** 327ms
+- **P95 Duration:** 326ms
 
 ### multi-table query - AGGREGATION
 - **SQL:** `SELECT iceberg.performance.narrow_1_000_000.country, COUNT(*) FROM iceberg.performance.narrow_1_000_000 JOIN iceberg.performance.wide_100_000 ON iceberg.performance.narrow_1_000_000.id = iceberg.performance.wide_100_000.id GROUP BY iceberg.performance.narrow_1_000_000.country`
@@ -55,9 +56,9 @@
 - **Pagination Type:** -
 - **Sorted:** -
 - **Aggregation:** -
-- **Average Duration:** 310ms
-- **Min Duration:** 305ms
-- **Max Duration:** 319ms
+- **Average Duration:** 315ms
+- **Min Duration:** 308ms
+- **Max Duration:** 318ms
 - **P95 Duration:** 318ms
 
 ### multi-table query - PAGINATION
@@ -66,10 +67,10 @@
 - **Pagination Type:** -
 - **Sorted:** -
 - **Aggregation:** -
-- **Average Duration:** 305ms
-- **Min Duration:** 304ms
-- **Max Duration:** 306ms
-- **P95 Duration:** 306ms
+- **Average Duration:** 264ms
+- **Min Duration:** 163ms
+- **Max Duration:** 315ms
+- **P95 Duration:** 315ms
 
 ### multi-table query - AGGREGATION
 - **SQL:** `SELECT iceberg.performance.narrow_1_000_000.status, iceberg.performance.wide_100_000.row_28, COUNT(*) FROM iceberg.performance.narrow_1_000_000 JOIN iceberg.performance.wide_100_000 ON iceberg.performance.narrow_1_000_000.id = iceberg.performance.wide_100_000.id GROUP BY iceberg.performance.narrow_1_000_000.status, iceberg.performance.wide_100_000.row_28`
@@ -77,8 +78,8 @@
 - **Pagination Type:** -
 - **Sorted:** -
 - **Aggregation:** -
-- **Average Duration:** 305ms
-- **Min Duration:** 304ms
-- **Max Duration:** 306ms
-- **P95 Duration:** 306ms
+- **Average Duration:** 314ms
+- **Min Duration:** 310ms
+- **Max Duration:** 320ms
+- **P95 Duration:** 319ms
 
