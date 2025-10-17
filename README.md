@@ -1,5 +1,24 @@
 # Hands on iceberg query performance
 
+## Temp
+
+
+Сделал новый проект для замеров производительности запросов: https://github.com/damir-manapov/hands-on-iceberg-query-perf
+
+Вот тут `src/config/tableQueries.ts` лежат запросы для замеров производителььности, там определены фильтры, для каждого запускается запрос на количество элементов, попадающих под фильтр, 1 и 100 страницы с сортировкой и без, агрегаты. Каждый запрос запускается несколько раз. Результаты пишутся в `md` отчеты в папку `reports` по одному файлу на табилцу (на каждый конфиг таблицы + желаемое количество записей в таблице)
+Вот тут лежат конфиги таблиц: `src/config/tableConfigs.ts` Там определено какие колонки, как их генерить, какие размеры должны быть у табилц (массив, на каждый размер генерится по отдельной таблице)
+Для отладочных целей можно закомментить все запросы кроме пары, агрегации, все генерации в табилцах кроме минимальных
+
+Примеры отчетов:
+* https://github.com/damir-manapov/hands-on-iceberg-query-perf/blob/main/reports/query-performance-narrow_1_000_000_000.md
+* https://github.com/damir-manapov/hands-on-iceberg-query-perf/blob/main/reports/query-performance-wide_100_000_000.md
+
+
+Запросы разбиты в наборы, сохраняются в паодпапки в `reports`
+Добавлена возможность устанавливать количество параллельных потоков для запросов (параллельных запросов к таблице), в `src/config/tableQueries.ts`. Параллельные запросы выбираются случайно и служат для эмутяции параллельных запросов к таблице. Замеряются основные запросы, выполняющиеся последователььно.
+Добавлена возможность замера join запросов к нескольким таблицам, в `src/config/tableQueries.ts`.
+
+
 This project measures and analyzes query performance on Apache Iceberg tables with different data characteristics and query patterns. It provides comprehensive benchmarking tools to evaluate how various factors like table size, data distribution, and query complexity affect performance.
 
 The project includes a complete Docker Compose environment with Trino and MinIO, automated data generation with configurable schemas, and detailed performance reporting with statistical analysis.
