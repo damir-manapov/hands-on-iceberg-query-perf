@@ -150,9 +150,18 @@ const paginationOnTailTableConfig: TableQueryConfig[] = [
       { whereClause: "amount > 1000 AND created_at >= DATE '2024-10-01'" },
       { whereClause: "id > 50000000 AND created_at >= DATE '2024-10-01'" },
       { whereClause: "id > 500000000 AND created_at >= DATE '2024-10-01'" },
-      { whereClause: "amount > 1000 AND id > 50000000 AND created_at >= DATE '2024-10-01'" },
-      { whereClause: "amount > 1000 AND id > 500000000 AND created_at >= DATE '2024-10-01'" },
-      { whereClause: "contains(tags, 'alpha') AND created_at >= DATE '2024-10-01'" },
+      {
+        whereClause:
+          "amount > 1000 AND id > 50000000 AND created_at >= DATE '2024-10-01'",
+      },
+      {
+        whereClause:
+          "amount > 1000 AND id > 500000000 AND created_at >= DATE '2024-10-01'",
+      },
+      {
+        whereClause:
+          "contains(tags, 'alpha') AND created_at >= DATE '2024-10-01'",
+      },
       { whereClause: "note IS NOT NULL AND created_at >= DATE '2024-10-01'" },
     ],
     aggregationColumns: [],
@@ -171,9 +180,18 @@ const paginationOnTailTableConfig: TableQueryConfig[] = [
       { whereClause: "row_9 > 5000 AND created_at >= DATE '2024-10-01'" },
       { whereClause: "row_28 = 'c' AND created_at >= DATE '2024-10-01'" },
       { whereClause: "row_10 > 2000 AND created_at >= DATE '2024-10-01'" },
-      { whereClause: "row_1 >= TIMESTAMP '2024-06-01 00:00:00' AND created_at >= DATE '2024-10-01'" },
-      { whereClause: "row_10 > 2000 AND row_28 = 'c' AND created_at >= DATE '2024-10-01'" },
-      { whereClause: "row_9 BETWEEN 2000 AND 8000 AND created_at >= DATE '2024-10-01'" },
+      {
+        whereClause:
+          "row_1 >= TIMESTAMP '2024-06-01 00:00:00' AND created_at >= DATE '2024-10-01'",
+      },
+      {
+        whereClause:
+          "row_10 > 2000 AND row_28 = 'c' AND created_at >= DATE '2024-10-01'",
+      },
+      {
+        whereClause:
+          "row_9 BETWEEN 2000 AND 8000 AND created_at >= DATE '2024-10-01'",
+      },
       { whereClause: "row_29 IS NOT NULL AND created_at >= DATE '2024-10-01'" },
     ],
     aggregationColumns: [],
