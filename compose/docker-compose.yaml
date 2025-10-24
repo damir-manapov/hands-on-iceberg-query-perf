@@ -4,12 +4,13 @@ services:
     depends_on:
       trino:
         condition: service_healthy
+      jupyter:
+        condition: service_healthy
       # trino-coordinator:
       #   condition: service_healthy
 
   minio:
     image: quay.io/minio/minio:latest
-    container_name: minio
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
@@ -167,6 +168,47 @@ services:
   #     - ./trino/catalog:/etc/trino/catalog:ro
   #     - ./trino/cluster-worker.properties:/etc/trino/config.properties:ro
   #   networks: [lake]
+
+  jupyter:
+    image: jupyter/pyspark-notebook:x86_64-spark-3.5.0
+    container_name: jupyter-spark
+    depends_on:
+      nessie:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    environment:
+      # AWS credentials for MinIO access
+      AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-minio}
+      AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-minio12345}
+      AWS_DEFAULT_REGION: us-east-1
+      # MinIO endpoint configuration
+      AWS_ENDPOINT_URL: http://minio:9000
+      AWS_ENDPOINT_URL_S3: http://minio:9000
+      # Spark configuration for Iceberg
+      SPARK_CONF_DIR: /opt/spark/conf
+      PYSPARK_PYTHON: python3
+      PYSPARK_DRIVER_PYTHON: python3
+    ports:
+      - "8888:8888"   # Jupyter notebook port
+    volumes:
+      - ./jupyter:/home/jovyan/work
+      - ./jupyter/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf:ro
+    networks: [lake]
+    command: >
+      bash -c "
+      pip install -r /home/jovyan/work/requirements.txt &&
+      wget -O /opt/conda/lib/python3.11/site-packages/pyspark/jars/iceberg-spark-runtime-3.5_2.12-1.4.2.jar https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-3.5_2.12/1.4.2/iceberg-spark-runtime-3.5_2.12-1.4.2.jar &&
+      wget -O /opt/conda/lib/python3.11/site-packages/pyspark/jars/iceberg-nessie-1.4.2.jar https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-nessie/1.4.2/iceberg-nessie-1.4.2.jar &&
+      wget -O /opt/conda/lib/python3.11/site-packages/pyspark/jars/iceberg-aws-bundle-1.4.2.jar https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-aws-bundle/1.4.2/iceberg-aws-bundle-1.4.2.jar &&
+      wget -O /opt/conda/lib/python3.11/site-packages/pyspark/jars/nessie-spark-extensions-3.5_2.12-0.104.5.jar https://repo1.maven.org/maven2/org/projectnessie/nessie-integrations/nessie-spark-extensions-3.5_2.12/0.104.5/nessie-spark-extensions-3.5_2.12-0.104.5.jar &&
+      start-notebook.sh
+      --NotebookApp.token=''
+      --NotebookApp.password=''
+      --NotebookApp.allow_origin='*'
+      --NotebookApp.ip='0.0.0.0'
+      --NotebookApp.open_browser=False
+      "
 
 networks:
   lake: {}
